@@ -1,7 +1,8 @@
 ﻿const { chromium } = require('playwright');
 
 (async () => {
-    const browser = await chromium.launch({ headless: false, slowMo: 250 });
+    const isCI = process.env.CI === 'true';
+    const browser = await chromium.launch({ headless: isCI });
     const context = await browser.newContext();
     const page = await context.newPage();
 
