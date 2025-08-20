@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\C# webscraper\\BmwCarChecker\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|c:\\c# webscraper\\bmwcarchecker\\utils\\file_manager.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|solutionrelative:utils\\file_manager.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|c:\\c# webscraper\\bmwcarchecker\\main_scraper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|solutionrelative:main_scraper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|c:\\c# webscraper\\bmwcarchecker\\data\\output.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|solutionrelative:data\\output.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|c:\\c# webscraper\\bmwcarchecker\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7AE6EFF1-4BF7-97C9-BDD8-C29D741FB0CD}|BmwCarChecker.esproj|solutionrelative:package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "output.json",
+              "DocumentMoniker": "C:\\C# webscraper\\BmwCarChecker\\data\\output.json",
+              "RelativeDocumentMoniker": "data\\output.json",
+              "ToolTip": "C:\\C# webscraper\\BmwCarChecker\\data\\output.json",
+              "RelativeToolTip": "data\\output.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-13T21:41:14.649Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "main_scraper.js",
+              "DocumentMoniker": "C:\\C# webscraper\\BmwCarChecker\\main_scraper.js",
+              "RelativeDocumentMoniker": "main_scraper.js",
+              "ToolTip": "C:\\C# webscraper\\BmwCarChecker\\main_scraper.js",
+              "RelativeToolTip": "main_scraper.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-08-13T21:27:57.843Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "file_manager.js",
+              "DocumentMoniker": "C:\\C# webscraper\\BmwCarChecker\\utils\\file_manager.js",
+              "RelativeDocumentMoniker": "utils\\file_manager.js",
+              "ToolTip": "C:\\C# webscraper\\BmwCarChecker\\utils\\file_manager.js",
+              "RelativeToolTip": "utils\\file_manager.js",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAwA4AAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-08-13T21:24:32.146Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\C# webscraper\\BmwCarChecker\\package.json",
+              "RelativeDocumentMoniker": "package.json",
+              "ToolTip": "C:\\C# webscraper\\BmwCarChecker\\package.json",
+              "RelativeToolTip": "package.json",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAwCAAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-13T21:13:26.015Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
