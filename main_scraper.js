@@ -1,4 +1,6 @@
 ﻿const { chromium } = require('playwright');
+const { evaluateSpecs } = require('./utils/specEvaluator');
+const { formatEmailAlert } = require('./utils/alertFormatter');
 
 (async () => {
     const isCI = process.env.CI === 'true';
@@ -188,8 +190,29 @@
         else
         {
             console.log(`💾 New vehicle found: ${vehicleData.id} — saving`);
+
+            const enriched = evaluateSpecs(vehicleData);
+            const enriched = evaluateSpecs(vehicleData);
+            const { subject, body } = formatEmailAlert(enriched);
+
+            console.log(`📧 ${subject}`);
+            console.log(body);
+
+            // Optional: save to alerts.txt
+            fs.appendFileSync('data/alerts.txt', `${subject}\n${body}\n\n`);
+
+            const alert = `
+            🚗 ${enriched.title}
+            ⭐ Spec Score: ${enriched.scorePercent}%
+            ✅ Matched: ${enriched.matchedSpecs.join(', ') || 'None'}
+            ${enriched.meetsRequirements ? '' : `❌ Missing Required: ${enriched.missingRequired.join(', ')}`}
+            🔗 ${enriched.url}
+            `;
+
+            console.log(alert);
+
             const output = loadJSON('output.json') || [];
-            output.push(vehicleData);
+            output.push(enriched);
             saveJSON('output.json', output);
 
             seen.add(vehicleData.id);
