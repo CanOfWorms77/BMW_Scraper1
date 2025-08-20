@@ -9,15 +9,9 @@ jobs:
   run-scraper:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: BMW_Scraper1  # 👈 this matches the folder GitHub creates
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          path: BMW_Scraper1  # 👈 this ensures the repo is checked out into BMW_Scraper1
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -37,9 +31,8 @@ jobs:
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git
           git add data/seen_vehicles.json data/output.json
           git commit -m "Update vehicle data"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
