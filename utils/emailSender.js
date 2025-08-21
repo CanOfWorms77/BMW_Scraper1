@@ -2,9 +2,7 @@
 
 async function sendEmail({ subject, body }) {
     const transporter = nodemailer.createTransport({
-        host: 'smtp.office365.com',
-        port: 587,
-        secure: false,
+        service: 'gmail',
         auth: {
             user: process.env.ALERT_EMAIL_USER,
             pass: process.env.ALERT_EMAIL_PASS
