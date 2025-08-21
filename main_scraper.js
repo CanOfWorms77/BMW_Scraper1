@@ -1,5 +1,7 @@
 ﻿const { chromium } = require('playwright');
 const { evaluateSpecs } = require('./utils/specEvaluator');
+require('dotenv').config();
+const { sendEmail } = require('./utils/emailSender');
 const { formatEmailAlert } = require('./utils/alertFormatter');
 
 (async () => {
@@ -192,8 +194,9 @@ const { formatEmailAlert } = require('./utils/alertFormatter');
             console.log(`💾 New vehicle found: ${vehicleData.id} — saving`);
 
             const enriched = evaluateSpecs(vehicleData);
-            const enriched = evaluateSpecs(vehicleData);
             const { subject, body } = formatEmailAlert(enriched);
+
+            await sendEmail({ subject, body });
 
             console.log(`📧 ${subject}`);
             console.log(body);
