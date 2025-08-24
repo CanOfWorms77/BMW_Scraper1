@@ -2,7 +2,7 @@ const specWeights = {
     "Technology Plus Pack": 4,
     "Comfort Plus Pack": 4,
     "Sky Lounge": 4,
-    "Soft-close Doors": 1,
+    "Soft close Doors": 3,
     "Sun Protection Glass": 1,
     "Bowers & Wilkins": 4,
     "Front Massage Seats": 3,
@@ -20,35 +20,40 @@ const specWeights = {
     "Integral Active Steering": 2
 };
 
-const requiredSpecs = [
-    "Comfort Plus Pack",
-    "Driving Assistant Professional"
-];
+const maxScore = Object.values(specWeights).reduce((sum, val) => sum + val, 0); // e.g. 44
 
-const maxScore = Object.values(specWeights).reduce((sum, val) => sum + val, 0); // 44
+function normalize(text) {
+    return text.toLowerCase().replace(/[^\w\s]/gi, '');
+}
 
 function evaluateSpecs(vehicle) {
-    const specText = vehicle.specs?.join(" ").toLowerCase();
-    const matchedSpecs = [];
-    let specScore = 0;
+    const foundSpecs = vehicle.features || [];
+    let score = 0;
+    const matched = [];
+    const matchedKeys = new Set();
 
-    for (const [keyword, weight] of Object.entries(specWeights)) {
-        if (specText?.includes(keyword.toLowerCase())) {
-            matchedSpecs.push(keyword);
-            specScore += weight;
+    for (const spec of foundSpecs) {
+        for (const [key, weight] of Object.entries(specWeights)) {
+            if (spec.toLowerCase().includes(key.toLowerCase()) && !matchedKeys.has(key)) {
+                score += weight;
+                matched.push({ spec: key, matchedText: spec, weight });
+                matchedKeys.add(key);
+            }
         }
     }
 
-    const missingRequired = requiredSpecs.filter(req => !matchedSpecs.includes(req));
-    const scorePercent = Math.round((specScore / maxScore) * 100);
+    const scorePercent = Math.round((score / maxScore) * 100); // no cap — rare 100% is allowed
+
+    const unmatchedSpecs = foundSpecs.filter(spec =>
+        !matched.some(m => m.matchedText === spec)
+    );
 
     return {
         ...vehicle,
-        matchedSpecs,
-        specScore,
+        score,
         scorePercent,
-        meetsRequirements: missingRequired.length === 0,
-        missingRequired
+        matchedSpecs: matched,
+        unmatchedSpecs
     };
 }
 
