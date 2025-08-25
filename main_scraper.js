@@ -24,8 +24,6 @@ import parseExpectedCount from './parseExpectedCount.js';
 import runScraper from './runScraper.js'; // Your main scraping loop
 
 const argv = yargs(hideBin(process.argv)).argv;
-const auditMode = argv.audit;
-const verboseMode = argv.verbose;
 
 const auditPath = path.resolve(process.cwd(), 'audit');
 
