@@ -15,7 +15,6 @@ const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1], 10) : Infinit
 
 const retryCount = parseInt(process.env.RETRY_COUNT || '0');
 
-import fs from 'fs';
 import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -27,7 +26,6 @@ import runScraper from './runScraper.js'; // Your main scraping loop
 const argv = yargs(hideBin(process.argv)).argv;
 const auditMode = argv.audit;
 const verboseMode = argv.verbose;
-
 
 const auditPath = path.resolve(process.cwd(), 'audit');
 
