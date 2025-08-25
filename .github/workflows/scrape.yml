@@ -24,8 +24,11 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install
 
-      - name: Run scraper
-        run: node main_scraper.js
+      - name: Ensure audit directory exists
+        run: mkdir -p audit
+
+      - name: Run scraper with audit + verbose
+        run: node main_scraper.js --audit --verbose
 
       - name: Commit updated JSON
         run: |
@@ -36,3 +39,10 @@ jobs:
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload audit logs (optional)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: audit-logs
+          path: audit/
