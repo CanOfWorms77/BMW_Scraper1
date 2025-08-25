@@ -8,7 +8,7 @@ const { loadJSON, saveJSON } = require('./utils/file_manager');
 const fs = require('fs');
 
 const dryRun = process.argv.includes('--dry');
-const verbose = process.argv.includes('--verbose');
+const verboseMode = process.argv.includes('--verbose');
 const auditMode = process.argv.includes('--audit');
 const maxPagesArg = process.argv.find(arg => arg.startsWith('--max-pages='));
 const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1], 10) : Infinity;
@@ -432,6 +432,8 @@ function restartScript() {
     process.exit(1); // exit current run
 }
 
+
+
 (async () => {
     const { browser, context, page } = await setupBrowser();
 
@@ -541,7 +543,9 @@ function restartScript() {
             );
         }
 
-        restartScript();
+        if (typeof restartScript === 'function') {
+            restartScript();
+        }
     } finally {
         await browser.close();
     }

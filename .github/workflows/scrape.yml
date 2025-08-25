@@ -28,7 +28,8 @@ jobs:
         run: mkdir -p audit
 
       - name: Run scraper with audit + verbose
-        run: node main_scraper.js --audit --verbose
+        run: node main_scraper.cjs --audit --verbose
+
 
       - name: Commit updated JSON
         run: |
