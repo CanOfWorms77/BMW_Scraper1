@@ -18,10 +18,6 @@ const retryCount = parseInt(process.env.RETRY_COUNT || '0');
 import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import setupBrowser from './setupBrowser.js';
-import navigateAndFilter from './navigateAndFilter.js';
-import parseExpectedCount from './parseExpectedCount.js';
-import runScraper from './runScraper.js'; // Your main scraping loop
 
 const argv = yargs(hideBin(process.argv)).argv;
 
