@@ -1,0 +1,63 @@
+URL: https://usedcars.bmw.co.uk/vehicle/202504161396526?quoteref=ccacdeb6-fd50-4e97-8d0e-f7a0f33b7c98
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202504191514359?quoteref=41d1de9b-8fc5-469f-b2ac-d1cb2a04f8d5
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202504241652391?quoteref=44499f7e-02f5-4f1d-8dc2-ed78c407847e
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202505021967028?quoteref=76ae24a3-eef1-4e86-b5b6-fc8d98d70376
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202505072133749?quoteref=b7320dbb-75bb-470b-ac4d-e8f4ec2f8180
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202505092209932?quoteref=898543b8-fe9f-4252-9909-80bff6efb0df
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202505092215358?quoteref=1aa23609-1e24-4822-9399-172f1b223bc7
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202506063234204?quoteref=6db533a1-52e1-45da-95fb-b6062e56051c
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202506263886730?quoteref=175e6a5e-ddbf-4982-b437-296b507208a7
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202506283965350?quoteref=751e8db0-f1e3-48fd-aff8-5dd02148e253
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202506304017134?quoteref=12eeaecd-908f-4d06-a86e-d5080222ef0e
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507024094135?quoteref=4a5a723e-752a-4f79-9f0f-58c8c6b27e74
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507074228611?quoteref=2443ed37-0e54-405d-a4d1-2bb32fe74b91
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507074233733?quoteref=fd15afa9-f4ea-4a46-9df3-887cba18218f
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507084292951?quoteref=e1719ca9-331f-4693-939e-1b0fef6b4196
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507114389614?quoteref=d3ab5087-b09b-4b12-81c4-ec554e579660
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507144455748?quoteref=33388ddf-9ec3-4cfd-9f81-67f93aaf00c0
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507154491301?quoteref=c4848c53-6513-4caf-b4f2-3aae61e435db
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507164528729?quoteref=548caaab-6c50-4730-83ef-ca80b6053998
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202507174575572?quoteref=c06eb5ff-6885-4d58-8b96-1b201a7a75dc
+Error: Missing UVL.AD payload
+
+URL: https://usedcars.bmw.co.uk/vehicle/202508145429904?quoteref=c6db9d5f-fbc1-4da3-a421-3b36a71ed2a8
+Error: Missing UVL.AD payload
+
