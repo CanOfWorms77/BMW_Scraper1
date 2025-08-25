@@ -82,6 +82,7 @@
     "uri-js": "^4.4.1",
     "which": "^2.0.2",
     "word-wrap": "^1.2.5",
+    "yargs": "^18.0.0",
     "yocto-queue": "^0.1.0"
   },
   "description": ""
