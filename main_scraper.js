@@ -15,6 +15,26 @@ const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1], 10) : Infinit
 
 const retryCount = parseInt(process.env.RETRY_COUNT || '0');
 
+import fs from 'fs';
+import path from 'path';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+import setupBrowser from './setupBrowser.js';
+import navigateAndFilter from './navigateAndFilter.js';
+import parseExpectedCount from './parseExpectedCount.js';
+import runScraper from './runScraper.js'; // Your main scraping loop
+
+const argv = yargs(hideBin(process.argv)).argv;
+const auditMode = argv.audit;
+const verboseMode = argv.verbose;
+
+
+const auditPath = path.resolve(process.cwd(), 'audit');
+
+if (auditMode && !fs.existsSync(auditPath)) {
+    fs.mkdirSync(auditPath, { recursive: true });
+}
+
 if (retryCount >= 3) {
     console.error('🛑 Max retries reached. Aborting.');
     fs.appendFileSync('audit/restart_log.txt',
@@ -421,15 +441,33 @@ function restartScript() {
 
 (async () => {
     const { browser, context, page } = await setupBrowser();
+
     try {
+        if (auditMode) {
+            const auditPath = path.resolve(process.cwd(), 'audit');
+            if (!fs.existsSync(auditPath)) {
+                fs.mkdirSync(auditPath, { recursive: true });
+                if (verboseMode) console.log(`✅ Created audit directory at: ${auditPath}`);
+            } else {
+                if (verboseMode) console.log(`📁 Audit directory already exists: ${auditPath}`);
+            }
+        }
+
         await navigateAndFilter(page);
+
         const expectedCount = await parseExpectedCount(page);
         const expectedPages = expectedCount ? Math.ceil(expectedCount / 23) : null;
+
+        if (verboseMode) {
+            console.log(`🔍 Expected vehicle count: ${expectedCount}`);
+            console.log(`📄 Estimated pages: ${expectedPages}`);
+        }
 
         const seen = new Set(loadJSON('seen_vehicles.json')?.map(id => id.split('?')[0].trim()) || []);
         const results = [];
         const seenVehicles = new Map();
-        let detailPage = await context.newPage();
+        const detailPage = await context.newPage();
+
         let pageNumber = 1;
         let hasNextPage = true;
 
@@ -440,25 +478,33 @@ function restartScript() {
                 expectedCount,
                 seen,
                 seenVehicles,
-                results
+                results,
+                auditMode,
+                verboseMode
             });
+
             hasNextPage = pageData.hasNextPage;
             pageNumber++;
         }
 
-        await finaliseRun({ seen, results, seenVehicles, expectedCount });
-        await retryFailedExtractions(context);
+        await finaliseRun({ seen, results, seenVehicles, expectedCount, auditMode, verboseMode });
+        await retryFailedExtractions(context, auditMode, verboseMode);
 
+        if (verboseMode) console.log('✅ Scraper run completed successfully.');
     } catch (err) {
         console.error('❌ Error:', err);
+
         await page.screenshot({ path: 'error-screenshot.png' });
 
-        fs.appendFileSync('audit/restart_log.txt',
-            `${new Date().toISOString()} — Restarting due to: ${err.message}\n`);
+        if (auditMode) {
+            const restartLogPath = path.resolve(process.cwd(), 'audit/restart_log.txt');
+            fs.appendFileSync(
+                restartLogPath,
+                `${new Date().toISOString()} — Restarting due to: ${err.message}\n`
+            );
+        }
 
         restartScript();
-
-
     } finally {
         await browser.close();
     }
