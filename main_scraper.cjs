@@ -306,6 +306,7 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
         const body = `Here are the top matches:\n\n${lines}`;
 
         if (!dryRun) {
+            if (verboseMode) console.log('📤 Attempting to send email...');
             await sendEmail({ subject, body });
             console.log(`📧 Sent digest with ${sorted.length} vehicles`);
         } else {
