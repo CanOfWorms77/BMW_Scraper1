@@ -42,7 +42,7 @@ jobs:
 
       - name: Upload audit logs (optional)
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: audit-logs
           path: audit/
