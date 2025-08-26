@@ -2,7 +2,16 @@
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Runs every hour
+    # Every 2 hours from 7am to 7pm UTC+1 (BST)
+    - cron: '0 6 * * *'   # 7am BST
+    - cron: '0 8 * * *'   # 9am BST
+    - cron: '0 10 * * *'  # 11am BST
+    - cron: '0 12 * * *'  # 1pm BST
+    - cron: '0 14 * * *'  # 3pm BST
+    - cron: '0 16 * * *'  # 5pm BST
+    - cron: '0 18 * * *'  # 7pm BST
+    - cron: '0 22 * * *'  # 11pm BST
+
   workflow_dispatch:
 
 jobs:
@@ -10,38 +19,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: 🧾 Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: 🛠️ Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm install
 
-      - name: Install Playwright browsers
+      - name: 🎭 Install Playwright browsers
         run: npx playwright install
 
-      - name: Ensure audit directory exists
+      - name: 📁 Ensure audit directory exists
         run: mkdir -p audit
 
-      - name: Run scraper with audit + verbose
+      - name: 🚀 Run scraper with audit + verbose
         run: node main_scraper.cjs --audit --verbose
 
-
-      - name: Commit updated JSON
+      - name: 📤 Commit updated JSON if changes exist
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git add data/seen_vehicles.json data/output.json
-          git commit -m "Update vehicle data"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
+          if git diff --cached --quiet; then
+            echo "🟡 No changes to commit."
+          else
+            git commit -m "Update vehicle data"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload audit logs (optional)
+      - name: 📦 Upload audit logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
