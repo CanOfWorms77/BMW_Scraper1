@@ -19,6 +19,8 @@ const path = require('path');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
+const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+const rawDetailsPath = path.resolve('audit', `raw_details_${timestamp}.txt`);
 
 const argv = yargs(hideBin(process.argv)).argv;
 
@@ -155,6 +157,9 @@ async function scrapePage(page, detailPage, context, {
             const html = await container.evaluate(el => el.outerHTML);
             fs.appendFileSync('audit/missing_anchors.txt', `Page ${pageNumber}, Container ${i}:\n${html}\n\n`);
         }
+
+        fs.appendFileSync(rawDetailsPath, `Page ${pageNumber} — ${vehicle.title}\n`);
+        fs.appendFileSync(rawDetailsPath, JSON.stringify(vehicle, null, 2) + '\n\n');
     }
 
     if (auditMode) {
@@ -503,6 +508,14 @@ function restartScript() {
                     auditMode,
                     verboseMode
                 });
+
+                const score = calculateScore(pageData.extracted, pageData.expected);
+
+                if (score < 30 || pageData.extracted.model !== pageData.expected.model) {
+                    console.warn(`❌ Model mismatch or low score (${score}%). Aborting run.`);
+                    fs.appendFileSync(rawDetailsPath, `❌ Aborted due to mismatch at page ${pageNumber}\n`);
+                    process.exit(1);
+                }
 
                 // Defensive: Validate pageData structure
                 if (!pageData || typeof pageData.hasNextPage !== 'boolean') {
