@@ -13,8 +13,6 @@ const auditMode = process.argv.includes('--audit');
 const maxPagesArg = process.argv.find(arg => arg.startsWith('--max-pages='));
 const maxPages = maxPagesArg ? parseInt(maxPagesArg.split('=')[1], 10) : Infinity;
 
-const retryCount = parseInt(process.env.RETRY_COUNT || '0');
-
 const path = require('path');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
@@ -30,6 +28,7 @@ if (auditMode && !fs.existsSync(auditPath)) {
     fs.mkdirSync(auditPath, { recursive: true });
 }
 
+const retryCount = parseInt(process.env.RETRY_COUNT || '0');
 if (retryCount >= 3) {
     console.error('🛑 Max retries reached. Aborting.');
     fs.appendFileSync('audit/restart_log.txt',
@@ -96,10 +95,15 @@ async function navigateAndFilter(page) {
         if (menu) menu.scrollTop = menu.scrollHeight;
     });
 
-    await page.waitForTimeout(1000);
-    const variant50e = page.locator('#variant >> .react-select-option:has-text("50e")');
-    await variant50e.click();
-    console.log('✅ Selected variant: 50e');
+    await page.waitForTimeout(1200);
+    try {
+        const variantOption = page.locator('#variant .react-select-option:has-text("50e")');
+        await variantOption.waitFor({ state: 'visible', timeout: 10000 });
+        await variantOption.click();
+        console.log('✅ Variant "50e" selected');
+    } catch (err) {
+        throw new Error(`Variant selection failed: ${err.message}`);
+    }
 
     await page.waitForTimeout(1500);
     await page.click('button.uvl-c-expected-results-btn');
@@ -437,6 +441,7 @@ function restartScript() {
     spawn(process.argv[0], args, {
         stdio: 'inherit',
         detached: true
+        env: { ...process.env, RETRY_COUNT: retryCount + 1 }
     }).unref();
 
     process.exit(1); // exit current run
@@ -551,7 +556,13 @@ function restartScript() {
     } catch (err) {
         console.error('❌ Error:', err);
 
-        await page.screenshot({ path: 'error-screenshot.png' });
+        try {
+            if (page && !page.isClosed?.()) {
+                await page.screenshot({ path: 'error-screenshot.png' });
+            }
+        } catch (screenshotErr) {
+            console.warn(`⚠️ Failed to capture error screenshot: ${screenshotErr.message}`);
+        }
 
         if (auditMode) {
             const restartLogPath = path.resolve(process.cwd(), 'audit/restart_log.txt');
