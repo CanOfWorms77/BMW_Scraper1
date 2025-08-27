@@ -157,9 +157,6 @@ async function scrapePage(page, detailPage, context, {
             const html = await container.evaluate(el => el.outerHTML);
             fs.appendFileSync('audit/missing_anchors.txt', `Page ${pageNumber}, Container ${i}:\n${html}\n\n`);
         }
-
-        fs.appendFileSync(rawDetailsPath, `Page ${pageNumber} — ${vehicle.title}\n`);
-        fs.appendFileSync(rawDetailsPath, JSON.stringify(vehicle, null, 2) + '\n\n');
     }
 
     if (auditMode) {
