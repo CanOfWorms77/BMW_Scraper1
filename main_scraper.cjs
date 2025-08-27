@@ -434,17 +434,25 @@ async function retryFailedExtractions(context) {
 }
 
 function restartScript() {
-    const { spawn } = require('child_process');
-    const args = process.argv.slice(1); // preserve flags like --audit, --headless
+    const retryCount = parseInt(process.env.RETRY_COUNT || '0');
 
+    if (retryCount >= 3) {
+        console.error('🛑 Max retries reached inside restartScript. Aborting.');
+        fs.appendFileSync('audit/restart_log.txt',
+            `${new Date().toISOString()} — Aborted inside restartScript after ${retryCount} retries\n`);
+        process.exit(1);
+    }
+
+    const args = process.argv.slice(1);
     console.log(`🔁 Restarting scraper with args: ${args.join(' ')}`);
+
     spawn(process.argv[0], args, {
         stdio: 'inherit',
-        detached: true
+        detached: true,
         env: { ...process.env, RETRY_COUNT: retryCount + 1 }
     }).unref();
 
-    process.exit(1); // exit current run
+    process.exit(1);
 }
 
 
