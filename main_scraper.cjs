@@ -234,6 +234,13 @@ async function scrapePage(page, detailPage, context, {
         results.push(enriched);
         seen.add(vehicleId);
 
+        // ✅ Log raw details per vehicle
+        if (auditMode && rawDetailsPath) {
+            fs.appendFileSync(rawDetailsPath, `Page ${pageNumber} — ${vehicleData.title || 'Untitled'}\n`);
+            fs.appendFileSync(rawDetailsPath, JSON.stringify(vehicleData, null, 2) + '\n\n');
+        }
+
+
         await new Promise(res => setTimeout(res, 1500));
         if (results.length % 25 === 0) {
             await detailPage.close();
