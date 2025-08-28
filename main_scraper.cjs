@@ -95,14 +95,27 @@ async function navigateAndFilter(page) {
         if (menu) menu.scrollTop = menu.scrollHeight;
     });
 
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(2000);
+    const variantOption = page.locator('#variant .react-select-option:has-text("50e")');
+
     try {
-        const variantOption = page.locator('#variant .react-select-option:has-text("50e")');
         await variantOption.waitFor({ state: 'visible', timeout: 10000 });
         await variantOption.click();
         console.log('✅ Variant "50e" selected');
     } catch (err) {
-        throw new Error(`Variant selection failed: ${err.message}`);
+        console.warn('⚠️ First attempt failed — retrying...');
+        await page.waitForTimeout(2000);
+
+        try {
+            await variantOption.click();
+            console.log('✅ Variant "50e" selected on retry');
+        } catch (finalErr) {
+            const msg = `Variant "50e" failed twice — aborting model`;
+            console.warn(`❌ ${msg}`);
+            fs.appendFileSync('audit/variant_failure.txt',
+                `${new Date().toISOString()} — ${modelName} — ${msg}\n`);
+            throw new Error(msg); // ✅ force model-level failure
+        }
     }
 
     await page.waitForTimeout(1500);
@@ -434,16 +447,17 @@ async function retryFailedExtractions(context) {
 }
 
 function restartScript() {
+    const { spawn } = require('child_process'); // ✅ must be inside the function or accessible globally
+    const args = process.argv.slice(1);
     const retryCount = parseInt(process.env.RETRY_COUNT || '0');
 
     if (retryCount >= 3) {
-        console.error('🛑 Max retries reached inside restartScript. Aborting.');
+        console.error('🛑 Max retries reached. Aborting.');
         fs.appendFileSync('audit/restart_log.txt',
-            `${new Date().toISOString()} — Aborted inside restartScript after ${retryCount} retries\n`);
+            `${new Date().toISOString()} — Aborted after ${retryCount} retries\n`);
         process.exit(1);
     }
 
-    const args = process.argv.slice(1);
     console.log(`🔁 Restarting scraper with args: ${args.join(' ')}`);
 
     spawn(process.argv[0], args, {
