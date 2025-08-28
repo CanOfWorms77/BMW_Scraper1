@@ -113,7 +113,7 @@ async function navigateAndFilter(page) {
             const msg = `Variant "50e" failed twice — aborting model`;
             console.warn(`❌ ${msg}`);
             fs.appendFileSync('audit/variant_failure.txt',
-                `${new Date().toISOString()} — ${modelName} — ${msg}\n`);
+                `${new Date().toISOString()} — ${msg}\n`);
             throw new Error(msg); // ✅ force model-level failure
         }
     }
