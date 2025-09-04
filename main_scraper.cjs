@@ -36,17 +36,42 @@ if (retryCount >= 3) {
     process.exit(1);
 }
 
-async function safeGoto(page, url, retries = 3) {
+async function safeGoto(page, url, vehicleId = 'unknown', retries = 3) {
+
+    console.log('✅ safeGoto module loaded');
+
     for (let i = 0; i < retries; i++) {
         try {
             if (page.isClosed?.()) throw new Error('Target page is closed');
-            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
-            return;
+
+            const response = await Promise.race([
+                page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 }),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ goto timeout')), 20000))
+            ]);
+
+            if (!response || !response.ok()) {
+                console.warn(`⚠️ Navigation failed: ${response?.status()} — ${url}`);
+                fs.appendFileSync('audit/bad_responses.txt', `Vehicle ID: ${vehicleId}, Status: ${response?.status()} — ${url}\n`);
+                continue;
+            }
+
+            await page.waitForTimeout(2000); // allow rendering
+
+            const content = await page.content();
+            if (!content || content.length < 1000) {
+                console.warn(`⚠️ Page content too short — possible blank page: ${url}`);
+                fs.writeFileSync(`audit/blank_vehicle_${vehicleId}.html`, content);
+                await page.screenshot({ path: `audit/blank_vehicle_${vehicleId}.png` });
+                continue; // retry
+            }
+
+            return; // success
         } catch (err) {
             console.warn(`⚠️ Retry ${i + 1} failed for ${url}: ${err.message}`);
             await new Promise(res => setTimeout(res, 1500));
         }
     }
+
     throw new Error(`❌ Failed to load ${url} after ${retries} attempts`);
 }
 
@@ -146,34 +171,41 @@ async function scrapePage(page, detailPage, context, {
     expectedCount,
     seen,
     seenVehicles,
-    results
+    results,
+    seenRegistrations
 }) {
     console.log(`📄 Scraping page ${pageNumber}`);
 
     const containers = await page.locator('.uvl-c-advert').elementHandles();
-    const hrefs = [];
+    const vehiclesToProcess = [];
 
     for (let i = 0; i < containers.length; i++) {
         const container = containers[i];
-        const linkHandles = await container.$$('a[href*="/vehicle/"]');
-        let added = false;
 
-        for (const linkHandle of linkHandles) {
-            const href = await linkHandle.getAttribute('href');
-            const idMatch = href?.match(/vehicle\/([^?]+)/);
-            const id = idMatch ? idMatch[1].trim() : null;
+        const regHandle = await container.$('span[itemprop="vehicleRegistration"]');
+        const regText = regHandle ? await regHandle.innerText() : null;
+        const registration = regText?.trim();
 
-            if (id) {
-                hrefs.push(href);
-                added = true;
-                break;
+        const linkHandle = await container.$('a[href*="/vehicle/"]');
+        const href = linkHandle ? await linkHandle.getAttribute('href') : null;
+
+        if (!registration || !href) {
+            if (auditMode) {
+                const html = await container.evaluate(el => el.outerHTML);
+                fs.appendFileSync('audit/missing_data.txt', `Page ${pageNumber}, Container ${i}:\n${html}\n\n`);
             }
+            continue;
         }
 
-        if (!added && auditMode) {
-            const html = await container.evaluate(el => el.outerHTML);
-            fs.appendFileSync('audit/missing_anchors.txt', `Page ${pageNumber}, Container ${i}:\n${html}\n\n`);
+        if (seenRegistrations.has(registration)) {
+            console.log(`⏭️ Skipping already-seen registration: ${registration}`);
+            if (auditMode) {
+                fs.appendFileSync('audit/skipped_registrations.txt', `Page ${pageNumber}, Index ${i}: ${registration}\n`);
+            }
+            continue;
         }
+
+        vehiclesToProcess.push({ registration, href });
     }
 
     if (auditMode) {
@@ -183,35 +215,21 @@ async function scrapePage(page, detailPage, context, {
         fs.writeFileSync(`audit/page_${pageNumber}_containers.html`, containerHTML.join('\n\n'));
     }
 
-    const uniqueHrefs = Array.from(new Set(hrefs.map(h => h.trim())));
-    console.log(`✅ Unique vehicle links: ${uniqueHrefs.length}`);
-
-    if (auditMode) {
-        fs.writeFileSync(`audit/page_${pageNumber}_raw_blocks.html`, hrefs.join('\n\n'));
-        await page.screenshot({ path: `audit/page-${pageNumber}-pre.png` });
-        fs.appendFileSync('audit/page_counts.txt',
-            `Page ${pageNumber}: ${hrefs.length} raw links, ${uniqueHrefs.length} unique listings\n`
-        );
-    }
+    console.log(`✅ Vehicles to process: ${vehiclesToProcess.length}`);
 
     const expectedOnPage = (pageNumber < expectedPages) ? 23 : (expectedCount % 23 || 23);
-    if (uniqueHrefs.length < expectedOnPage) {
-        console.warn(`⚠️ Page ${pageNumber} has only ${uniqueHrefs.length} listings — expected ${expectedOnPage}`);
-        fs.appendFileSync('audit/short_pages.txt', `Page ${pageNumber}: ${uniqueHrefs.length} listings (expected ${expectedOnPage})\n`);
+    if (vehiclesToProcess.length < expectedOnPage) {
+        console.warn(`⚠️ Page ${pageNumber} has only ${vehiclesToProcess.length} listings — expected ${expectedOnPage}`);
+        fs.appendFileSync('audit/short_pages.txt', `Page ${pageNumber}: ${vehiclesToProcess.length} listings (expected ${expectedOnPage})\n`);
     }
 
-    for (let i = 0; i < uniqueHrefs.length; i++) {
-        const href = uniqueHrefs[i];
+    for (let i = 0; i < vehiclesToProcess.length; i++) {
+        const { registration, href } = vehiclesToProcess[i];
         const fullUrl = new URL(href, 'https://usedcars.bmw.co.uk').toString();
         const vehicleIdMatch = fullUrl.match(/vehicle\/([^?]+)/);
         const vehicleId = vehicleIdMatch ? vehicleIdMatch[1].trim() : `unknown-${Date.now()}`;
 
-        if (seen.has(vehicleId)) {
-            if (auditMode) {
-                fs.appendFileSync('audit/skipped_links.txt', `Page ${pageNumber}, Index ${i}: ${vehicleId}\n`);
-            }
-            continue;
-        }
+        const gracePass = pageNumber === 1 && i < 3;
 
         seenVehicles.set(vehicleId, { page: pageNumber, index: i, link: fullUrl });
         console.log(`🔍 Extracting data from: ${fullUrl}`);
@@ -219,10 +237,23 @@ async function scrapePage(page, detailPage, context, {
         let start = Date.now();
         if (!detailPage || detailPage.isClosed?.()) {
             detailPage = await context.newPage();
+            await detailPage.setViewportSize({ width: 1280, height: 800 });
         }
-        await safeGoto(detailPage, fullUrl);
-        const loadTime = Date.now() - start;
-        console.log(`⏱️ Page load took ${loadTime}ms`);
+
+        try {
+            await safeGoto(detailPage, fullUrl, vehicleId);
+            const loadTime = Date.now() - start;
+            console.log(`⏱️ Page load took ${loadTime}ms`);
+        } catch (err) {
+            console.error(`❌ safeGoto threw an error for ${fullUrl}:`, err.message);
+            fs.appendFileSync('audit/safeGoto_errors.txt', `Vehicle ID: ${vehicleId}, Error: ${err.message} — ${fullUrl}\n`);
+            continue;
+        }
+
+        if (i === 0 && auditMode) {
+            const html = await detailPage.content();
+            fs.writeFileSync(`audit/first_vehicle_debug.html`, html);
+        }
 
         let vehicleData;
         try {
@@ -230,6 +261,15 @@ async function scrapePage(page, detailPage, context, {
                 extractVehicleDataFromPage(detailPage),
                 new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ Extraction timeout')), 10000))
             ]);
+
+            if (!vehicleData || Object.keys(vehicleData).length === 0) {
+                console.warn(`⚠️ Empty vehicle data — retrying with fresh tab`);
+                detailPage = await context.newPage();
+                await detailPage.setViewportSize({ width: 1280, height: 800 });
+                await safeGoto(detailPage, fullUrl);
+                vehicleData = await extractVehicleDataFromPage(detailPage);
+            }
+
         } catch (err) {
             console.warn(`⚠️ Extraction failed for ${fullUrl}: ${err.message}`);
             fs.appendFileSync('data/reprocess_queue.txt', `${vehicleId} — ${fullUrl}\n`);
@@ -239,26 +279,29 @@ async function scrapePage(page, detailPage, context, {
         }
 
         vehicleData.id = vehicleId;
+        vehicleData.registration = registration;
+        seen.add(vehicleId);
+        seenRegistrations.add(registration);
+
         if (auditMode) {
             fs.appendFileSync('audit/raw_vehicle_data.txt',
                 JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
         }
+
         const enriched = evaluateSpecs(vehicleData);
         enriched.timestamp = new Date().toISOString();
         results.push(enriched);
-        seen.add(vehicleId);
 
-        // ✅ Log raw details per vehicle
         if (auditMode && rawDetailsPath) {
             fs.appendFileSync(rawDetailsPath, `Page ${pageNumber} — ${vehicleData.title || 'Untitled'}\n`);
             fs.appendFileSync(rawDetailsPath, JSON.stringify(vehicleData, null, 2) + '\n\n');
         }
 
-
         await new Promise(res => setTimeout(res, 1500));
         if (results.length % 25 === 0) {
             await detailPage.close();
             detailPage = await context.newPage();
+            await detailPage.setViewportSize({ width: 1280, height: 800 });
             console.log(`🔄 Detail page reset after ${results.length} vehicles`);
         }
     }
@@ -268,9 +311,14 @@ async function scrapePage(page, detailPage, context, {
         console.log(`📸 Audit screenshot saved: page-${pageNumber}.png`);
     }
 
-    const nextButton = page.locator('li.page-next a.page-link[aria-label="Next page"]');
+    const html = await page.content();
+    fs.writeFileSync(`audit/page_${pageNumber}_dom.html`, html);
+
+    const nextButton = page.locator('a.uvl-c-pagination__direction--next[aria-label="Next page"]');
     let hasNextPage = await nextButton.isVisible();
-    console.log(`🔍 Next button visible: ${hasNextPage}`);
+    console.log(`🔍 Next button found: ${await nextButton.count()}`);
+    console.log(`🔍 Next button visible: ${await nextButton.isVisible()}`);
+    console.log(`🔍 Current page URL: ${await page.url()}`);
 
     if (hasNextPage) {
         const currentUrl = page.url();
@@ -323,7 +371,7 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
     console.log(`📦 Total vehicles ever seen: ${seen.size}`);
     console.log(`⏩ Skipped as already seen: ${seen.size - results.length}`);
     console.log(`🕒 Run completed at: ${new Date().toLocaleString()}`);
-    console.log(`🧾 Seen vehicle IDs:\n${Array.from(seen).join('\n')}`);
+    //console.log(`🧾 Seen vehicle IDs:\n${Array.from(seen).join('\n')}`);
 
     if (results.length > 0) {
         const sorted = results.sort((a, b) => b.scorePercent - a.scorePercent);
@@ -496,6 +544,8 @@ function restartScript() {
         }
 
         const seen = new Set(loadJSON('seen_vehicles.json')?.map(id => id.split('?')[0].trim()) || []);
+        const seenRegistrations = new Set(loadJSON('seen_registrations.json') || []);
+        console.log(`📘 Loaded ${seenRegistrations.size} seen registrations`);
         const results = [];
         const seenVehicles = new Map();
         const detailPage = await context.newPage();
@@ -536,10 +586,10 @@ function restartScript() {
                     seen,
                     seenVehicles,
                     results,
-                    auditMode,
-                    verboseMode
+                    seenRegistrations
                 });
 
+/* NOT SURE WHERE THIS CAME FROM
                 const score = calculateScore(pageData.extracted, pageData.expected);
 
                 if (score < 30 || pageData.extracted.model !== pageData.expected.model) {
@@ -547,6 +597,7 @@ function restartScript() {
                     fs.appendFileSync(rawDetailsPath, `❌ Aborted due to mismatch at page ${pageNumber}\n`);
                     process.exit(1);
                 }
+*/
 
                 // Defensive: Validate pageData structure
                 if (!pageData || typeof pageData.hasNextPage !== 'boolean') {
@@ -564,11 +615,55 @@ function restartScript() {
             }
         }
 
+        saveJSON('seen_registrations.json', Array.from(seenRegistrations));
+        console.log(`📕 Saved ${seenRegistrations.size} seen registrations`);
+
         // Audit log for loop exit
         if (auditMode) {
             const loopLogPath = path.resolve(auditPath, 'loop_exit_log.txt');
             fs.appendFileSync(loopLogPath,
                 `${new Date().toISOString()} — Exited at page ${pageNumber} — Reason: ${exitReason}\n`);
+        }
+
+        // Reconcile output.json with current results
+        const outputPath = path.resolve('audit', 'output.json');
+        let previousLog = [];
+
+        if (fs.existsSync(outputPath)) {
+            previousLog = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+        }
+
+        const currentIds = results.map(v => v.id);
+        const updatedLog = previousLog.map(vehicle => {
+            if (currentIds.includes(vehicle.id)) {
+                return { ...vehicle, missingCount: 0 };
+            } else {
+                return {
+                    ...vehicle,
+                    missingCount: (vehicle.missingCount || 0) + 1
+                };
+            }
+        });
+
+        const finalLog = updatedLog.filter(v => v.missingCount < 2);
+        fs.writeFileSync(outputPath, JSON.stringify(finalLog, null, 2));
+
+        // Archive removed vehicles
+        const removed = updatedLog.filter(v => v.missingCount >= 2);
+        const removedPath = path.resolve('audit', 'removed_vehicles.json');
+        let archive = [];
+
+        if (fs.existsSync(removedPath)) {
+            archive = JSON.parse(fs.readFileSync(removedPath, 'utf-8'));
+        }
+
+        const now = new Date().toISOString();
+        archive.push(...removed.map(v => ({ ...v, removedAt: now })));
+        fs.writeFileSync(removedPath, JSON.stringify(archive, null, 2));
+
+        if (verboseMode) {
+            console.log(`🧮 Updated missingCount for ${updatedLog.length} vehicles`);
+            console.log(`🗑️ Removed ${removed.length} vehicles from output.json`);
         }
 
         await finaliseRun({ seen, results, seenVehicles, expectedCount, auditMode, verboseMode });
