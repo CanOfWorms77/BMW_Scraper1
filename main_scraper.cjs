@@ -94,7 +94,10 @@ async function navigateAndFilter(page) {
     await page.goto('https://usedcars.bmw.co.uk/');
     await page.click('button:has-text("Reject")');
     console.log('✅ Cookies rejected');
+    await page.waitForTimeout(1000);
 
+    await page.screenshot({ path: 'audit/failure_before_series.png' });
+    await page.waitForSelector('#series', { timeout: 60000 });
     await page.click('#series');
     await page.waitForTimeout(1000);
     for (let i = 0; i < 9; i++) await page.keyboard.press('ArrowDown');
@@ -102,6 +105,7 @@ async function navigateAndFilter(page) {
     await page.keyboard.press('Enter');
     console.log('✅ Selected X Series');
 
+    await page.waitForSelector('#body_style', { timeout: 60000 });
     await page.click('#body_style');
     await page.waitForTimeout(1000);
     for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowDown');
