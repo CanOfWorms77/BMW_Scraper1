@@ -43,18 +43,20 @@ jobs:
 
       - name: 📤 Commit updated JSON if changes exist
         run: |
-           git config --global user.name "github-actions"
-           git config --global user.email "github-actions@github.com"
-           git pull origin main --rebase
-           git add data/
-           if git diff --cached --quiet; then
-               echo "🟡 No changes to commit."
-           else
-               git commit -m "Update vehicle data for model index ${{ matrix.model_index }}"
-               git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
-           fi
+            git config --global user.name "github-actions"
+            git config --global user.email "github-actions@github.com"
+            git stash --include-untracked
+            git pull origin main --rebase
+            git stash pop || true
+            git add data/
+            if git diff --cached --quiet; then
+              echo "🟡 No changes to commit."
+            else
+              git commit -m "Update vehicle data for model index ${{ matrix.model_index }}"
+              git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
+            fi
         env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 📦 Upload audit logs
         if: always()
