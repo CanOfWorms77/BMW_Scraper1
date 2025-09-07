@@ -1,7 +1,7 @@
 ﻿// chunk-1.js
+require('dotenv').config();
 const { chromium } = require('playwright');
 const { evaluateSpecs } = require('./utils/specEvaluator');
-require('dotenv').config();
 const { sendEmail } = require('./utils/emailSender');
 const { extractVehicleDataFromPage } = require('./utils/vehicleExtractor');
 const { loadJSON, saveJSON } = require('./utils/file_manager');
@@ -17,12 +17,20 @@ const path = require('path');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
+const { getModelSelectorConfig } = require('./utils/modelSelectorTable');
+
+
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 const rawDetailsPath = path.resolve('audit', `raw_details_${timestamp}.txt`);
 
 const argv = yargs(hideBin(process.argv)).argv;
 
-const auditPath = path.resolve(process.cwd(), 'audit');
+const models = ['X5', '5 Series'];
+const modelIndex = parseInt(process.env.MODEL_INDEX || '0', 10);
+const currentModel = models[modelIndex];
+const auditPath = path.resolve(process.cwd(), 'audit', currentModel);
+
+console.log(`🔍 MODEL_INDEX=${process.env.MODEL_INDEX}, currentModel=${currentModel}`);
 
 if (auditMode && !fs.existsSync(auditPath)) {
     fs.mkdirSync(auditPath, { recursive: true });
@@ -31,7 +39,7 @@ if (auditMode && !fs.existsSync(auditPath)) {
 const retryCount = parseInt(process.env.RETRY_COUNT || '0');
 if (retryCount >= 3) {
     console.error('🛑 Max retries reached. Aborting.');
-    fs.appendFileSync('audit/restart_log.txt',
+    fs.appendFileSync(path.join(auditPath, 'restart_log.txt'),
         `${new Date().toISOString()} — Aborted after ${retryCount} retries\n`);
     process.exit(1);
 }
@@ -51,7 +59,7 @@ async function safeGoto(page, url, vehicleId = 'unknown', retries = 3) {
 
             if (!response || !response.ok()) {
                 console.warn(`⚠️ Navigation failed: ${response?.status()} — ${url}`);
-                fs.appendFileSync('audit/bad_responses.txt', `Vehicle ID: ${vehicleId}, Status: ${response?.status()} — ${url}\n`);
+                fs.appendFileSync(path.join(auditPath, 'bad_responses.txt'), `Vehicle ID: ${vehicleId}, Status: ${response?.status()} — ${url}\n`);
                 continue;
             }
 
@@ -60,8 +68,8 @@ async function safeGoto(page, url, vehicleId = 'unknown', retries = 3) {
             const content = await page.content();
             if (!content || content.length < 1000) {
                 console.warn(`⚠️ Page content too short — possible blank page: ${url}`);
-                fs.writeFileSync(`audit/blank_vehicle_${vehicleId}.html`, content);
-                await page.screenshot({ path: `audit/blank_vehicle_${vehicleId}.png` });
+                fs.writeFileSync(path.join(auditPath, 'blank_vehicle_${vehicleId}.html'), content);
+                await page.screenshot({ path: path.join(auditPath, `blank_vehicle_${vehicleId}.html`) });
                 continue; // retry
             }
 
@@ -89,71 +97,108 @@ async function setupBrowser() {
     return { browser, context, page };
 }
 
-async function navigateAndFilter(page) {
-    console.log('Navigating to BMW Approved Used site...');
-    await page.goto('https://usedcars.bmw.co.uk/');
-    await page.click('button:has-text("Reject")');
-    console.log('✅ Cookies rejected');
-    await page.waitForTimeout(1000);
+async function navigateAndFilter(page, currentModel, auditPath) {
+  console.log(`🌐 Navigating to BMW Approved Used site for ${currentModel}...`);
+  const modelConfig = getModelSelectorConfig(currentModel);
+  if (!modelConfig) throw new Error(`❌ No selector config found for model: ${currentModel}`);
 
-    await page.screenshot({ path: 'audit/failure_before_series.png' });
-    await page.waitForSelector('#series', { timeout: 60000 });
-    await page.click('#series');
-    await page.waitForTimeout(1000);
-    for (let i = 0; i < 9; i++) await page.keyboard.press('ArrowDown');
-    await page.waitForTimeout(500);
-    await page.keyboard.press('Enter');
-    console.log('✅ Selected X Series');
+  await page.goto('https://usedcars.bmw.co.uk/');
+  await page.click('button:has-text("Reject")');
+  console.log('✅ Cookies rejected');
+  await page.waitForTimeout(1000);
 
+  await page.screenshot({ path: path.join(auditPath, 'failure_before_series.png') });
+
+  // Select Series
+  await page.waitForSelector('#series', { timeout: 60000 });
+  await page.click('#series');
+  await page.waitForTimeout(1000);
+  for (let i = 0; i < modelConfig.seriesIndex; i++) await page.keyboard.press('ArrowDown');
+  await page.waitForTimeout(500);
+  await page.keyboard.press('Enter');
+  console.log(`✅ Selected series for ${currentModel}`);
+
+  // Select Body Style (if applicable)
+  if (!modelConfig.skipBodyStyle) {
     await page.waitForSelector('#body_style', { timeout: 60000 });
     await page.click('#body_style');
     await page.waitForTimeout(1000);
-    for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowDown');
+    for (let i = 0; i < modelConfig.bodyStyleIndex; i++) await page.keyboard.press('ArrowDown');
     await page.waitForTimeout(500);
     await page.keyboard.press('Enter');
-    await page.waitForTimeout(1000);
+    console.log(`✅ Selected body style`);
+  } else {
+    console.log(`⏭️ Skipping body style for ${currentModel}`);
+    fs.appendFileSync(path.join(auditPath, 'skipped_body_style.txt'),
+      `${new Date().toISOString()} — Skipped body style for ${currentModel}\n`);
+  }
 
-    await page.click('button.uvl-c-expected-results-btn');
-    console.log('✅ Search button clicked');
+  // Trigger initial search to load filters
+  await page.click('button.uvl-c-expected-results-btn');
+  console.log('✅ Search button clicked');
 
-    await page.click('button[data-tracking-effect="Additional filters"]');
-    await page.locator('a.rc-collapse-header:has-text("Model variant")').click();
-    await page.locator('span.uvl-c-select__placeholder', { hasText: 'Engine derivatives' }).click();
-    await page.evaluate(() => {
-        const menu = document.querySelector('#react-select-7-listbox');
-        if (menu) menu.scrollTop = menu.scrollHeight;
-    });
+  // Open variant filter section
+  await page.click('button[data-tracking-effect="Additional filters"]');
+  await page.locator('a.rc-collapse-header:has-text("Model variant")').click();
 
+  // Open engine derivatives dropdown
+  const engineDropdown = page.locator('span.uvl-c-select__placeholder', {
+    hasText: 'Engine derivatives'
+  });
+  await engineDropdown.waitFor({ state: 'visible', timeout: 10000 });
+  await engineDropdown.click();
+  console.log('✅ Engine derivatives dropdown clicked');
+
+  // Scroll dropdown to bottom
+  await page.waitForSelector('#react-select-7-listbox', { timeout: 10000 });
+  await page.evaluate(() => {
+    const menu = document.querySelector('#react-select-7-listbox');
+    if (menu) menu.scrollTop = menu.scrollHeight;
+  });
+  await page.waitForTimeout(2000);
+
+  // Locate variant option by text
+  const variantOption = page.locator('#variant .react-select-option:has-text("' + modelConfig.variant + '")');
+
+  try {
+    await variantOption.waitFor({ state: 'visible', timeout: 10000 });
+    await variantOption.click();
+    console.log(`✅ Variant "${modelConfig.variant}" selected`);
+  } catch (err) {
+    console.warn(`⚠️ First attempt to select "${modelConfig.variant}" failed — retrying...`);
     await page.waitForTimeout(2000);
-    const variantOption = page.locator('#variant .react-select-option:has-text("50e")');
-
     try {
-        await variantOption.waitFor({ state: 'visible', timeout: 10000 });
-        await variantOption.click();
-        console.log('✅ Variant "50e" selected');
-    } catch (err) {
-        console.warn('⚠️ First attempt failed — retrying...');
-        await page.waitForTimeout(2000);
-
-        try {
-            await variantOption.click();
-            console.log('✅ Variant "50e" selected on retry');
-        } catch (finalErr) {
-            const msg = `Variant "50e" failed twice — aborting model`;
-            console.warn(`❌ ${msg}`);
-            fs.appendFileSync('audit/variant_failure.txt',
-                `${new Date().toISOString()} — ${msg}\n`);
-            throw new Error(msg); // ✅ force model-level failure
-        }
+      await variantOption.click();
+      console.log(`✅ Variant "${modelConfig.variant}" selected on retry`);
+    } catch (finalErr) {
+      const msg = `❌ Variant "${modelConfig.variant}" failed twice — aborting model`;
+      console.warn(msg);
+      fs.appendFileSync(path.join(auditPath, 'variant_failure.txt'),
+        `${new Date().toISOString()} — ${msg}\n`);
+      throw new Error(msg);
     }
+  }
 
-    await page.waitForTimeout(1500);
-    await page.click('button.uvl-c-expected-results-btn');
-    console.log('✅ Final search triggered with engine derivative');
+  // Confirm hidden input was updated
+  await page.waitForTimeout(1000);
+  const selectedVariant = await page.getAttribute('input[name="variant"]', 'value');
+  if (!selectedVariant || selectedVariant.trim() === '') {
+    const msg = `❌ Variant "${modelConfig.variant}" click registered but not committed`;
+    console.warn(msg);
+    fs.appendFileSync(path.join(auditPath, 'variant_commit_failure.txt'),
+      `${new Date().toISOString()} — ${msg}\n`);
+    throw new Error(msg);
+  }
+  console.log(`🔍 Variant input value confirmed: ${selectedVariant}`);
 
-    await page.waitForTimeout(3000);
-    await page.waitForSelector('a.uvl-c-advert__media-link[href*="/vehicle/"]');
-    console.log('✅ Listings loaded');
+  // Final search and listing wait
+  await page.waitForTimeout(1500);
+  await page.click('button.uvl-c-expected-results-btn');
+  console.log('✅ Final search triggered with engine derivative');
+
+  await page.waitForTimeout(3000);
+  await page.waitForSelector('a.uvl-c-advert__media-link[href*="/vehicle/"]', { timeout: 15000 });
+  console.log('✅ Listings loaded');
 }
 
 async function parseExpectedCount(page) {
@@ -176,7 +221,10 @@ async function scrapePage(page, detailPage, context, {
     seen,
     seenVehicles,
     results,
-    seenRegistrations
+    seenRegistrations,
+    currentModel, 
+    auditPath
+
 }) {
     console.log(`📄 Scraping page ${pageNumber}`);
 
@@ -196,7 +244,7 @@ async function scrapePage(page, detailPage, context, {
         if (!registration || !href) {
             if (auditMode) {
                 const html = await container.evaluate(el => el.outerHTML);
-                fs.appendFileSync('audit/missing_data.txt', `Page ${pageNumber}, Container ${i}:\n${html}\n\n`);
+                fs.appendFileSync(path.join(auditPath, 'missing_data.txt'), `Page ${pageNumber}, Container ${i}:\n${html}\n\n`);
             }
             continue;
         }
@@ -204,7 +252,7 @@ async function scrapePage(page, detailPage, context, {
         if (seenRegistrations.has(registration)) {
             console.log(`⏭️ Skipping already-seen registration: ${registration}`);
             if (auditMode) {
-                fs.appendFileSync('audit/skipped_registrations.txt', `Page ${pageNumber}, Index ${i}: ${registration}\n`);
+                fs.appendFileSync(path.join(auditPath, 'skipped_registrations.txt'), `Page ${pageNumber}, Index ${i}: ${registration}\n`);
             }
             continue;
         }
@@ -216,7 +264,7 @@ async function scrapePage(page, detailPage, context, {
         const containerHTML = await page.locator('.uvl-c-advert').evaluateAll(elements =>
             elements.map(el => el.outerHTML)
         );
-        fs.writeFileSync(`audit/page_${pageNumber}_containers.html`, containerHTML.join('\n\n'));
+        fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_containers.html`), containerHTML.join('\n\n'));
     }
 
     console.log(`✅ Vehicles to process: ${vehiclesToProcess.length}`);
@@ -224,7 +272,7 @@ async function scrapePage(page, detailPage, context, {
     const expectedOnPage = (pageNumber < expectedPages) ? 23 : (expectedCount % 23 || 23);
     if (vehiclesToProcess.length < expectedOnPage) {
         console.warn(`⚠️ Page ${pageNumber} has only ${vehiclesToProcess.length} listings — expected ${expectedOnPage}`);
-        fs.appendFileSync('audit/short_pages.txt', `Page ${pageNumber}: ${vehiclesToProcess.length} listings (expected ${expectedOnPage})\n`);
+        fs.appendFileSync(path.join(auditPath, 'short_pages.txt'), `Page ${pageNumber}: ${vehiclesToProcess.length} listings (expected ${expectedOnPage})\n`);
     }
 
     for (let i = 0; i < vehiclesToProcess.length; i++) {
@@ -250,13 +298,13 @@ async function scrapePage(page, detailPage, context, {
             console.log(`⏱️ Page load took ${loadTime}ms`);
         } catch (err) {
             console.error(`❌ safeGoto threw an error for ${fullUrl}:`, err.message);
-            fs.appendFileSync('audit/safeGoto_errors.txt', `Vehicle ID: ${vehicleId}, Error: ${err.message} — ${fullUrl}\n`);
+            fs.appendFileSync(  path.join(auditPath, 'safeGoto_errors.txt'),  `Vehicle ID: ${vehicleId}, Error: ${err.message} — ${fullUrl}\n`);
             continue;
         }
 
         if (i === 0 && auditMode) {
             const html = await detailPage.content();
-            fs.writeFileSync(`audit/first_vehicle_debug.html`, html);
+            fs.writeFileSync(path.join(auditPath, `first_vehicle_debug.html`), html);
         }
 
         let vehicleData;
@@ -277,7 +325,7 @@ async function scrapePage(page, detailPage, context, {
         } catch (err) {
             console.warn(`⚠️ Extraction failed for ${fullUrl}: ${err.message}`);
             fs.appendFileSync('data/reprocess_queue.txt', `${vehicleId} — ${fullUrl}\n`);
-            fs.appendFileSync('audit/extractor_errors.txt',
+            fs.appendFileSync(path.join(auditPath, 'extractor_errors.txt'),
                 `URL: ${fullUrl}\nError: ${err.message}\n\n`);
             continue;
         }
@@ -288,11 +336,11 @@ async function scrapePage(page, detailPage, context, {
         seenRegistrations.add(registration);
 
         if (auditMode) {
-            fs.appendFileSync('audit/raw_vehicle_data.txt',
+            fs.appendFileSync(path.join(auditPath, 'raw_vehicle_data.txt'),
                 JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
         }
 
-        const enriched = evaluateSpecs(vehicleData);
+        const enriched = evaluateSpecs(vehicleData, currentModel);
         enriched.timestamp = new Date().toISOString();
         results.push(enriched);
 
@@ -311,12 +359,12 @@ async function scrapePage(page, detailPage, context, {
     }
 
     if (auditMode) {
-        await page.screenshot({ path: `audit/page-${pageNumber}.png` });
+        await page.screenshot({ path: path.join(auditPath, `page-${pageNumber}.png`) });
         console.log(`📸 Audit screenshot saved: page-${pageNumber}.png`);
     }
 
     const html = await page.content();
-    fs.writeFileSync(`audit/page_${pageNumber}_dom.html`, html);
+    fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_dom.html`), html);
 
     const nextButton = page.locator('a.uvl-c-pagination__direction--next[aria-label="Next page"]');
     let hasNextPage = await nextButton.isVisible();
@@ -364,7 +412,7 @@ async function scrapePage(page, detailPage, context, {
     return { hasNextPage };
 }
 
-async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
+async function finaliseRun({ seen, results, seenVehicles, expectedCount, currentModel, auditPath }) {
     saveJSON('seen_vehicles.json', Array.from(seen).map(id => id.split('?')[0].trim()));
 
     fs.writeFileSync('data/skipped_ids.txt', Array.from(seen)
@@ -400,7 +448,7 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
         console.log(`🧠 Run complete: ${results.length} new, ${seen.size - results.length} skipped`);
 
         if (auditMode && expectedCount) {
-            fs.appendFileSync('audit/summary.txt', `Total vehicles listed on site: ${expectedCount}\n`);
+            fs.appendFileSync(path.join(auditPath, 'summary.txt'), `Total vehicles listed on site: ${expectedCount}\n`);
         }
 
         const missingIds = Array.from(seenVehicles.keys()).filter(id => !results.find(v => v.id === id));
@@ -420,9 +468,9 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
         }
 
         for (const [page, entries] of Object.entries(missingByPage)) {
-            fs.appendFileSync('audit/missing_by_page.txt', `Page ${page} — ${entries.length} missing\n`);
+            fs.appendFileSync(path.join(auditPath, 'missing_by_page.txt'), `Page ${page} — ${entries.length} missing\n`);
             entries.forEach(entry => {
-                fs.appendFileSync('audit/missing_by_page.txt',
+                fs.appendFileSync(path.join(auditPath, 'missing_by_page.txt'),
                     `  • Index ${entry.index}, ID: ${entry.id}, URL: ${entry.url}\n`);
             });
         }
@@ -430,7 +478,7 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
         if (expectedCount && seenVehicles.size < expectedCount) {
             const missing = expectedCount - seenVehicles.size;
             console.warn(`❌ Expected ${expectedCount} vehicles, but only saw ${seenVehicles.size} — ${missing} missing`);
-            fs.appendFileSync('audit/missing_summary.txt',
+            fs.appendFileSync(path.join(auditPath, 'missing_summary.txt'),
                 `${new Date().toISOString()} — Expected: ${expectedCount}, Seen: ${seenVehicles.size}, Missing: ${missing}\n`);
         }
 
@@ -441,12 +489,12 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
 
         if (auditMode) {
             for (const v of results) {
-                fs.appendFileSync('audit/spec_matches.txt',
+                fs.appendFileSync(path.join(auditPath, 'spec_matches.txt'),
                     `ID: ${v.id}, Score: ${v.scorePercent}%\n` +
                     v.matchedSpecs.map(m => `• ${m.spec} (${m.weight})`).join('\n') + '\n\n');
 
                 if (v.unmatchedSpecs?.length > 0) {
-                    fs.appendFileSync('audit/unmatched_specs.txt',
+                    fs.appendFileSync(path.join(auditPath, 'unmatched_specs.txt'),
                         `ID: ${v.id}\nUnmatched:\n${v.unmatchedSpecs.join('\n')}\n\n`);
                 }
             }
@@ -454,7 +502,7 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount }) {
     }
 }
 
-async function retryFailedExtractions(context) {
+async function retryFailedExtractions(context, currentModel, auditPath) {
     if (!fs.existsSync('data/reprocess_queue.txt')) return;
 
     const retryLines = fs.readFileSync('data/reprocess_queue.txt', 'utf-8')
@@ -473,7 +521,7 @@ async function retryFailedExtractions(context) {
             const vehicleData = await extractVehicleDataFromPage(retryPage);
 
             if (auditMode) {
-                fs.appendFileSync('audit/raw_vehicle_data.txt',
+                fs.appendFileSync(path.join(auditPath, 'raw_vehicle_data.txt'),
                     JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
             }
 
@@ -481,21 +529,34 @@ async function retryFailedExtractions(context) {
             const enriched = evaluateSpecs(vehicleData);
             enriched.timestamp = new Date().toISOString();
 
-            const output = loadJSON('output.json') || [];
+            const output = loadJSON(`output_${currentModel.replace(/\s+/g, '_')}.json`) || [];
             output.push(enriched);
-            saveJSON('output.json', output);
+            saveJSON(`output_${currentModel.replace(/\s+/g, '_')}.json`, output);
 
             console.log(`✅ Retry successful for ${vehicleId}`);
         } catch (err) {
             console.warn(`❌ Retry failed for ${vehicleId}: ${err.message}`);
             fs.appendFileSync('data/permanent_failures.txt', `${vehicleId} — ${fullUrl}\n`);
-            fs.appendFileSync('audit/extractor_errors.txt',
+            fs.appendFileSync(path.join(auditPath, 'extractor_errors.txt'),
                 `URL: ${fullUrl}\nError: ${err.message}\n\n`);
         }
     }
 
     await retryPage.close();
     fs.unlinkSync('data/reprocess_queue.txt');
+
+    // ✅ Restart logic goes here
+    const models = ['X5', 'X3', '3 Series', '5 Series'];
+    const modelIndex = parseInt(process.env.MODEL_INDEX || '0', 10);
+
+    if (modelIndex + 1 < models.length) {
+      const nextIndex = modelIndex + 1;
+      fs.writeFileSync('.env', `MODEL_INDEX=${nextIndex}\nRETRY_COUNT=0`);
+      console.log(`🔁 Restarting for model: ${models[nextIndex]}`);
+      process.exit(0);
+    } else {
+      console.log('✅ All models processed');
+    }
 }
 
 function restartScript() {
@@ -505,7 +566,7 @@ function restartScript() {
 
     if (retryCount >= 3) {
         console.error('🛑 Max retries reached. Aborting.');
-        fs.appendFileSync('audit/restart_log.txt',
+        fs.appendFileSync(path.join(auditPath, 'restart_log.txt'),
             `${new Date().toISOString()} — Aborted after ${retryCount} retries\n`);
         process.exit(1);
     }
@@ -528,7 +589,6 @@ function restartScript() {
 
     try {
         if (auditMode) {
-            const auditPath = path.resolve(process.cwd(), 'audit');
             if (!fs.existsSync(auditPath)) {
                 fs.mkdirSync(auditPath, { recursive: true });
                 if (verboseMode) console.log(`✅ Created audit directory at: ${auditPath}`);
@@ -537,7 +597,7 @@ function restartScript() {
             }
         }
 
-        await navigateAndFilter(page);
+        await navigateAndFilter(page, currentModel, auditPath);
 
         const expectedCount = await parseExpectedCount(page);
         const expectedPages = expectedCount ? Math.ceil(expectedCount / 23) : null;
@@ -590,7 +650,10 @@ function restartScript() {
                     seen,
                     seenVehicles,
                     results,
-                    seenRegistrations
+                    seenRegistrations,
+                    currentModel, 
+                    auditPath
+
                 });
 
 /* NOT SURE WHERE THIS CAME FROM
@@ -630,7 +693,7 @@ function restartScript() {
         }
 
         // Reconcile output.json with current results
-        const outputPath = path.resolve('audit', 'output.json');
+        const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
         let previousLog = [];
 
         if (fs.existsSync(outputPath)) {
@@ -670,8 +733,8 @@ function restartScript() {
             console.log(`🗑️ Removed ${removed.length} vehicles from output.json`);
         }
 
-        await finaliseRun({ seen, results, seenVehicles, expectedCount, auditMode, verboseMode });
-        await retryFailedExtractions(context, auditMode, verboseMode);
+        await finaliseRun({ seen, results, seenVehicles, expectedCount, currentModel, auditPath, auditMode, verboseMode });
+        await retryFailedExtractions(context, currentModel, auditPath);
 
         if (verboseMode) console.log('✅ Scraper run completed successfully.');
     } catch (err) {
@@ -686,7 +749,7 @@ function restartScript() {
         }
 
         if (auditMode) {
-            const restartLogPath = path.resolve(process.cwd(), 'audit/restart_log.txt');
+            const restartLogPath = path.resolve(process.cwd(), path.join(auditPath, 'restart_log.txt'));
             fs.appendFileSync(
                 restartLogPath,
                 `${new Date().toISOString()} — Restarting due to: ${err.message}\n`

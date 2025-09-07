@@ -2,7 +2,6 @@
 
 on:
   schedule:
-    # Every 2 hours from 7am to 7pm UTC+1 (BST)
     - cron: '0 6 * * *'   # 7am BST
     - cron: '0 8 * * *'   # 9am BST
     - cron: '0 10 * * *'  # 11am BST
@@ -17,6 +16,12 @@ on:
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        model_index: [0, 1] # corresponds to ['X5', '5 Series']
+
+    env:
+      MODEL_INDEX: ${{ matrix.model_index }}
 
     steps:
       - name: 🧾 Checkout repo
@@ -33,9 +38,6 @@ jobs:
       - name: 🎭 Install Playwright browsers
         run: npx playwright install
 
-      - name: 📁 Ensure audit directory exists
-        run: mkdir -p audit
-
       - name: 🚀 Run scraper with audit + verbose
         run: node main_scraper.cjs --audit --verbose
 
@@ -43,13 +45,12 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add data/seen_vehicles.json data/output.json data/seen_registrations.json
+          git add data/
           if git diff --cached --quiet; then
             echo "🟡 No changes to commit."
           else
-            git commit -m "Update vehicle data"
+            git commit -m "Update vehicle data for model index ${{ matrix.model_index }}"
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
-          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -57,12 +58,12 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: audit-logs
+          name: audit-logs-${{ matrix.model_index }}
           path: audit/
 
       - name: 📄 Upload raw details
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: raw-details
+          name: raw-details-${{ matrix.model_index }}
           path: audit/raw_details_*.txt
