@@ -155,7 +155,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     const menu = document.querySelector('#react-select-7-listbox');
     if (menu) menu.scrollTop = menu.scrollHeight;
   });
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(2200);
 
   // Locate variant option by text
   const variantOption = page.locator('#variant .react-select-option:has-text("' + modelConfig.variant + '")');
