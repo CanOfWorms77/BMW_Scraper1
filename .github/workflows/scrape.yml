@@ -37,7 +37,7 @@ jobs:
           rm -rf node_modules package-lock.json
 
       - name: 📦 Install dependencies (locked)
-        run: npm ci
+        run: npm install
 
       - name: 🎭 Install Playwright browsers
         run: npx playwright install
