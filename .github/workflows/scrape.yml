@@ -62,6 +62,7 @@ jobs:
             run: git status
             git commit -m "Update vehicle data for model index ${{ matrix.model_index }}"
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
