@@ -56,6 +56,10 @@ jobs:
           if git diff --cached --quiet; then
             echo "🟡 No changes to commit."
           else
+            - name: 🧪 Debug model index
+            run: echo "Running model index: ${{ matrix.model_index }}"
+            - name: 🧪 Git status
+            run: git status
             git commit -m "Update vehicle data for model index ${{ matrix.model_index }}"
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CanOfWorms77/BMW_Scraper1.git HEAD:main
         env:
