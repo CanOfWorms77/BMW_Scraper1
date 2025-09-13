@@ -214,6 +214,38 @@ async function parseExpectedCount(page) {
     return expectedCount;
 }
 
+async function attemptPaginationAdvance(page, nextButton, auditPath, pageNumber) {
+    const currentUrl = await page.url();
+    try {
+        await nextButton.click({ force: true });
+        await page.waitForLoadState('networkidle');
+        await page.waitForTimeout(2000);
+    } catch (err) {
+        console.warn(`⚠️ Initial pagination click failed: ${err.message}`);
+        return false;
+    }
+
+    const newUrl = await page.url();
+    if (newUrl === currentUrl) {
+        console.warn('⚠️ Pagination did not advance — retrying...');
+        try {
+            await nextButton.click({ force: true });
+            await page.waitForLoadState('networkidle');
+            await page.waitForTimeout(2000);
+        } catch (err) {
+            console.warn(`❌ Retry click failed: ${err.message}`);
+            return false;
+        }
+
+        if ((await page.url()) === currentUrl) {
+            console.warn('❌ Still stuck — breaking pagination');
+            return false;
+        }
+    }
+
+    return true;
+}
+
 async function scrapePage(page, detailPage, context, {
     pageNumber,
     expectedPages,
@@ -367,41 +399,32 @@ async function scrapePage(page, detailPage, context, {
     fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_dom.html`), html);
 
     const nextButton = page.locator('a.uvl-c-pagination__direction--next[aria-label="Next page"]');
-    let hasNextPage = await nextButton.isVisible();
+    const nextVisible = await nextButton.isVisible();
+    const ariaDisabled = await nextButton.getAttribute('aria-disabled');
+    const hiddenLabel = await nextButton.locator('.visually-hidden').textContent();
+    const trackingAction = await nextButton.getAttribute('data-tracking-action');
+
     console.log(`🔍 Next button found: ${await nextButton.count()}`);
-    console.log(`🔍 Next button visible: ${await nextButton.isVisible()}`);
+    console.log(`🔍 Next button visible: ${nextVisible}`);
+    console.log(`🔍 aria-disabled: ${ariaDisabled}`);
+    console.log(`🔍 Hidden label: ${hiddenLabel?.trim()}`);
+    console.log(`🔍 Tracking action: ${trackingAction}`);
     console.log(`🔍 Current page URL: ${await page.url()}`);
 
+    const paginationAudit = {
+        pageNumber,
+        url: await page.url(),
+        nextButtonVisible: nextVisible,
+        ariaDisabled,
+        hiddenLabel: hiddenLabel?.trim(),
+        trackingAction
+    };
+    fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_pagination.json`), JSON.stringify(paginationAudit, null, 2));
+
+    let hasNextPage = nextVisible && ariaDisabled === 'false';
+
     if (hasNextPage) {
-        const currentUrl = page.url();
-        try {
-            await nextButton.click({ force: true });
-            await page.waitForTimeout(1500);
-        } catch (err) {
-            console.warn(`⚠️ Failed to click next: ${err.message}`);
-            hasNextPage = false;
-        }
-
-        await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(2000);
-
-        const newUrl = page.url();
-        if (newUrl === currentUrl) {
-            console.warn('⚠️ Pagination click did not advance — retrying once...');
-            try {
-                await page.waitForTimeout(2000);
-                await nextButton.click({ force: true });
-                await page.waitForLoadState('networkidle');
-                await page.waitForTimeout(2000);
-            } catch (err) {
-                console.warn(`❌ Retry click failed: ${err.message}`);
-            }
-
-            if (page.url() === currentUrl) {
-                console.warn('❌ Still stuck — breaking loop');
-                hasNextPage = false;
-            }
-        }
+        hasNextPage = await attemptPaginationAdvance(page, nextButton, auditPath, pageNumber);
     }
 
     if (!hasNextPage || (expectedPages && pageNumber >= expectedPages)) {
