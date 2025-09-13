@@ -3,7 +3,7 @@ require('dotenv').config();
 const { chromium } = require('playwright');
 const { evaluateSpecs } = require('./utils/specEvaluator');
 const { sendEmail } = require('./utils/emailSender');
-const { extractVehicleDataFromPage } = require('./utils/vehicleExtractor');
+const { extractVehiclesFromPage, extractVehicleDataFromPage } = require('./utils/vehicleExtractor');
 const { loadJSON, saveJSON } = require('./utils/file_manager');
 const fs = require('fs');
 

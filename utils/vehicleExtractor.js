@@ -88,5 +88,8 @@ async function extractVehiclesFromPage(page, pageNumber, seenRegistrations, audi
     return vehiclesToProcess;
 }
 
-module.exports = { extractVehiclesFromPage };
-module.exports = { extractVehicleDataFromPage };
+module.exports =
+{
+    extractVehiclesFromPage,
+    extractVehicleDataFromPage
+};
