@@ -1,0 +1,32 @@
+# Environment and IDE artifacts
+.env
+.vs/
+*.vsidx
+
+# Node modules and logs
+node_modules/
+npm-debug.log*
+
+# Audit artifacts (volatile)
+audit/page_*.html
+audit/page_*.png
+audit/page_*.json
+audit/missing_data.txt
+audit/skipped_registrations.txt
+audit/short_pages.txt
+audit/extractor_errors.txt
+audit/safeGoto_errors.txt
+audit/raw_vehicle_data.txt
+audit/first_vehicle_debug.html
+
+# Seen data (runtime only)
+seen_vehicles.json
+seen_registrations.json
+
+# Reprocessing queue
+data/reprocess_queue.txt
+
+# Allow committed reference files
+!baseline_vehicles.json
+!expected_registrations.json
+!reference/*.json
