@@ -30,4 +30,63 @@
     };
 }
 
+const fs = require('fs');
+const path = require('path');
+
+async function extractVehiclesFromPage(page, pageNumber, seenRegistrations, auditPath, auditMode, expectedPages, expectedCount, selectors) {
+    const containers = await page.locator(selectors.container).elementHandles();
+    const vehiclesToProcess = [];
+
+    console.log(`🔍 Raw container count: ${containers.length}`);
+
+    for (let i = 0; i < containers.length; i++) {
+        const container = containers[i];
+
+        const regHandle = await container.$(selectors.registration);
+        const regText = regHandle ? await regHandle.innerText() : null;
+        const registration = regText?.trim();
+
+        const linkHandle = await container.$(selectors.link);
+        const href = linkHandle ? await linkHandle.getAttribute('href') : null;
+
+        if (!registration || !href) {
+            if (auditMode) {
+                const html = await container.evaluate(el => el.outerHTML);
+                fs.appendFileSync(path.join(auditPath, 'missing_data.txt'), `Page ${pageNumber}, Container ${i}:\n${html}\n\n`);
+            }
+            continue;
+        }
+
+        if (seenRegistrations.has(registration)) {
+            console.log(`⏭️ Skipping already-seen registration: ${registration}`);
+            if (auditMode) {
+                fs.appendFileSync(path.join(auditPath, 'skipped_registrations.txt'), `Page ${pageNumber}, Index ${i}: ${registration}\n`);
+            }
+            continue;
+        }
+
+        vehiclesToProcess.push({ registration, href, index: i });
+    }
+
+    if (auditMode) {
+        const containerHTML = await page.locator(selectors.container).evaluateAll(elements =>
+            elements.map(el => el.outerHTML)
+        );
+        fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_containers.html`), containerHTML.join('\n\n'));
+    }
+
+    console.log(`✅ Vehicles to process: ${vehiclesToProcess.length}`);
+
+    if (vehiclesToProcess.length > 0) {
+        const expectedOnPage = (pageNumber < expectedPages) ? 23 : (expectedCount % 23 || 23);
+        if (vehiclesToProcess.length < expectedOnPage) {
+            console.warn(`⚠️ Page ${pageNumber} has only ${vehiclesToProcess.length} listings — expected ${expectedOnPage}`);
+            fs.appendFileSync(path.join(auditPath, 'short_pages.txt'), `Page ${pageNumber}: ${vehiclesToProcess.length} listings (expected ${expectedOnPage})\n`);
+        }
+    }
+
+    return vehiclesToProcess;
+}
+
+module.exports = { extractVehiclesFromPage };
 module.exports = { extractVehicleDataFromPage };
