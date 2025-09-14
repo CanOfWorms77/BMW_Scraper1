@@ -708,7 +708,7 @@ function restartScript() {
             fs.appendFileSync(loopLogPath,
                 `${new Date().toISOString()} — Exited at page ${pageNumber} — Reason: ${exitReason}\n`);
         }
-
+/*
         // Reconcile output.json with current results
         const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
         let previousLog = [];
@@ -716,7 +716,7 @@ function restartScript() {
         if (fs.existsSync(outputPath)) {
             previousLog = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
         }
-
+*/
         const currentIds = results.map(v => v.id);
         const updatedLog = previousLog.map(vehicle => {
             if (currentIds.includes(vehicle.id)) {
