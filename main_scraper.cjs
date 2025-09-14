@@ -36,6 +36,10 @@ if (!selectors) {
     throw new Error(`❌ No selectors defined for model: ${currentModel}`);
 }
 
+const seenPath = path.join('data', `seen_vehicles_${currentModel.replace(/\s+/g, '_')}.json`);
+const seenRegPath = path.join('data', `seen_registrations_${currentModel.replace(/\s+/g, '_')}.json`);
+
+
 console.log(`🔍 MODEL_INDEX=${process.env.MODEL_INDEX}, currentModel=${currentModel}`);
 
 if (auditMode && !fs.existsSync(auditPath)) {
@@ -600,9 +604,29 @@ function restartScript() {
             console.log(`📄 Estimated pages: ${expectedPages}`);
         }
 
-        const seen = new Set(loadJSON('seen_vehicles.json')?.map(id => id.split('?')[0].trim()) || []);
-        const seenRegistrations = new Set(loadJSON('seen_registrations.json') || []);
+        const seen = new Set(loadJSON(seenPath)?.map(id => id.split('?')[0].trim()) || []);
+        const seenRegistrations = new Set(loadJSON(seenRegPath) || []);
+
+        console.log(`📗 Loaded ${seen.size} seen vehicle IDs`);
         console.log(`📘 Loaded ${seenRegistrations.size} seen registrations`);
+
+
+        const { reconcileOutputLog, archiveRemovedVehicles } = require('./utils/logManager');
+
+        const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
+        const removedPath = path.resolve('audit', 'removed_vehicles.json');
+
+        const { finalLog, removed } = reconcileOutputLog(results, outputPath);
+        archiveRemovedVehicles(removed, removedPath);
+
+        fs.writeFileSync(outputPath, JSON.stringify(finalLog, null, 2));
+
+        if (verboseMode) {
+            console.log(`🧮 Updated missingCount for ${finalLog.length + removed.length} vehicles`);
+            console.log(`🗑️ Removed ${removed.length} vehicles from output.json`);
+        }
+
+
         const results = [];
         const seenVehicles = new Map();
         const detailPage = await context.newPage();
@@ -728,6 +752,12 @@ function restartScript() {
 
         await finaliseRun({ seen, results, seenVehicles, expectedCount, currentModel, auditPath, auditMode, verboseMode });
         await retryFailedExtractions(context, currentModel, auditPath);
+
+        saveJSON(seenPath, Array.from(seen));
+        saveJSON(seenRegPath, Array.from(seenRegistrations));
+
+        console.log(`📕 Saved ${seen.size} seen vehicle IDs`);
+        console.log(`📙 Saved ${seenRegistrations.size} seen registrations`);
 
         if (verboseMode) console.log('✅ Scraper run completed successfully.');
     } catch (err) {
