@@ -664,8 +664,8 @@ function restartScript() {
             seenHashes.add(hash);
 
             try {
-                pageData = await withTimeout(() =>
-                    scrapePage(page, detailPage, context, {
+                pageData = await withTimeout(async () => {
+                    const scrapeResult = await scrapePage(page, detailPage, context, {
                         pageNumber,
                         expectedPages,
                         expectedCount,
@@ -675,8 +675,18 @@ function restartScript() {
                         seenRegistrations,
                         currentModel,
                         auditPath
-                    }), 15000
-                );
+                    });
+
+                    // Defensive check for vehicle details
+                    const details = await detailPage.$('.vehicle-details');
+                    if (!details) {
+                        const failUrl = detailPage.url();
+                        fs.appendFileSync(path.join(auditPath, 'failed_urls.txt'), `${failUrl}\n`);
+                        throw new Error('Vehicle details not found');
+                    }
+
+                    return scrapeResult;
+                }, 15000);
             } catch (err) {
                 console.error(`❌ Error scraping page ${pageNumber}:`, err);
 
@@ -736,12 +746,14 @@ function restartScript() {
         // Archive removed vehicles
         const removed = updatedLog.filter(v => v.missingCount >= 2);
         const removedPath = path.resolve('audit', 'removed_vehicles.json');
+*/
+
         let archive = [];
 
         if (fs.existsSync(removedPath)) {
             archive = JSON.parse(fs.readFileSync(removedPath, 'utf-8'));
         }
-*/
+
         const now = new Date().toISOString();
         archive.push(...removed.map(v => ({ ...v, removedAt: now })));
         fs.writeFileSync(removedPath, JSON.stringify(archive, null, 2));
