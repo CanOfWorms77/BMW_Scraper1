@@ -610,23 +610,8 @@ function restartScript() {
         console.log(`📗 Loaded ${seen.size} seen vehicle IDs`);
         console.log(`📘 Loaded ${seenRegistrations.size} seen registrations`);
 
-
-        const { reconcileOutputLog, archiveRemovedVehicles } = require('./utils/logManager');
-
         const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
-        const removedPath = path.resolve('audit', 'removed_vehicles.json');
         const results = [];
-
-        const { finalLog, removed } = reconcileOutputLog(results, outputPath);
-        archiveRemovedVehicles(removed, removedPath);
-
-        fs.writeFileSync(outputPath, JSON.stringify(finalLog, null, 2));
-
-        if (verboseMode) {
-            console.log(`🧮 Updated missingCount for ${finalLog.length + removed.length} vehicles`);
-            console.log(`🗑️ Removed ${removed.length} vehicles from output.json`);
-        }
-
         const seenVehicles = new Map();
         const detailPage = await context.newPage();
 
@@ -644,14 +629,12 @@ function restartScript() {
         };
 
         while (hasNextPage) {
-            // Defensive: Cap page count
             if (expectedPages && pageNumber > expectedPages) {
                 console.warn(`⚠️ Page limit exceeded (${pageNumber}/${expectedPages}). Breaking loop.`);
                 exitReason = `Page limit exceeded (${pageNumber}/${expectedPages})`;
                 break;
             }
 
-            // Defensive: Detect duplicate page loads
             const html = await page.content();
             const hash = crypto.createHash('md5').update(html).digest('hex');
 
@@ -677,7 +660,6 @@ function restartScript() {
                         auditPath
                     });
 
-                    // Defensive check for vehicle details
                     const details = await detailPage.$('.vehicle-details');
                     if (!details) {
                         const failUrl = detailPage.url();
@@ -711,20 +693,15 @@ function restartScript() {
         saveJSON('seen_registrations.json', Array.from(seenRegistrations));
         console.log(`📕 Saved ${seenRegistrations.size} seen registrations`);
 
-        // Audit log for loop exit
         if (auditMode) {
             const loopLogPath = path.resolve(auditPath, 'loop_exit_log.txt');
             fs.appendFileSync(loopLogPath,
                 `${new Date().toISOString()} — Exited at page ${pageNumber} — Reason: ${exitReason}\n`);
         }
-/*
-        // Reconcile output.json with current results
-        const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
-        let previousLog = [];
 
-        if (fs.existsSync(outputPath)) {
-            previousLog = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
-        }
+        const previousLog = fs.existsSync(outputPath)
+            ? JSON.parse(fs.readFileSync(outputPath, 'utf-8'))
+            : [];
 
         const currentIds = results.map(v => v.id);
         const updatedLog = previousLog.map(vehicle => {
@@ -737,26 +714,22 @@ function restartScript() {
                 };
             }
         });
-        */
 
-        /*
         const finalLog = updatedLog.filter(v => v.missingCount < 2);
+        const removed = updatedLog.filter(v => v.missingCount >= 2);
+
         fs.writeFileSync(outputPath, JSON.stringify(finalLog, null, 2));
 
-        // Archive removed vehicles
-        const removed = updatedLog.filter(v => v.missingCount >= 2);
-        const removedPath = path.resolve('audit', 'removed_vehicles.json');
-*/
-
+        const scopedRemovedPath = path.resolve(auditPath, `removed_vehicles_${currentModel.replace(/\s+/g, '_')}.json`);
         let archive = [];
 
-        if (fs.existsSync(removedPath)) {
-            archive = JSON.parse(fs.readFileSync(removedPath, 'utf-8'));
+        if (fs.existsSync(scopedRemovedPath)) {
+            archive = JSON.parse(fs.readFileSync(scopedRemovedPath, 'utf-8'));
         }
 
         const now = new Date().toISOString();
         archive.push(...removed.map(v => ({ ...v, removedAt: now })));
-        fs.writeFileSync(removedPath, JSON.stringify(archive, null, 2));
+        fs.writeFileSync(scopedRemovedPath, JSON.stringify(archive, null, 2));
 
         if (verboseMode) {
             console.log(`🧮 Updated missingCount for ${updatedLog.length} vehicles`);
