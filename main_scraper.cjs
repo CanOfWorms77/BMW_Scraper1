@@ -636,6 +636,13 @@ function restartScript() {
         let hasNextPage = true;
         let exitReason = 'Completed normally';
 
+        const withTimeout = async (fn, ms = 15000) => {
+            return Promise.race([
+                fn(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Extractor timeout')), ms))
+            ]);
+        };
+
         while (hasNextPage) {
             // Defensive: Cap page count
             if (expectedPages && pageNumber > expectedPages) {
@@ -708,7 +715,7 @@ function restartScript() {
         if (fs.existsSync(outputPath)) {
             previousLog = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
         }
-*/
+
         const currentIds = results.map(v => v.id);
         const updatedLog = previousLog.map(vehicle => {
             if (currentIds.includes(vehicle.id)) {
@@ -720,6 +727,7 @@ function restartScript() {
                 };
             }
         });
+        */
 
         /*
         const finalLog = updatedLog.filter(v => v.missingCount < 2);
