@@ -656,43 +656,36 @@ function restartScript() {
 
             seenHashes.add(hash);
 
-            // Scrape current page
-            let pageData;
             try {
-                pageData = await scrapePage(page, detailPage, context, {
-                    pageNumber,
-                    expectedPages,
-                    expectedCount,
-                    seen,
-                    seenVehicles,
-                    results,
-                    seenRegistrations,
-                    currentModel, 
-                    auditPath
-
-                });
-
-/* NOT SURE WHERE THIS CAME FROM
-                const score = calculateScore(pageData.extracted, pageData.expected);
-
-                if (score < 30 || pageData.extracted.model !== pageData.expected.model) {
-                    console.warn(`❌ Model mismatch or low score (${score}%). Aborting run.`);
-                    fs.appendFileSync(rawDetailsPath, `❌ Aborted due to mismatch at page ${pageNumber}\n`);
-                    process.exit(1);
-                }
-*/
-
-                // Defensive: Validate pageData structure
-                if (!pageData || typeof pageData.hasNextPage !== 'boolean') {
-                    console.warn('⚠️ Invalid pageData returned. Breaking loop.');
-                    exitReason = `Invalid pageData structure at page ${pageNumber}`;
-                    break;
-                }
-
-                hasNextPage = pageData.hasNextPage;
-                pageNumber++;
+                pageData = await withTimeout(() =>
+                    scrapePage(page, detailPage, context, {
+                        pageNumber,
+                        expectedPages,
+                        expectedCount,
+                        seen,
+                        seenVehicles,
+                        results,
+                        seenRegistrations,
+                        currentModel,
+                        auditPath
+                    }), 15000
+                );
             } catch (err) {
                 console.error(`❌ Error scraping page ${pageNumber}:`, err);
+
+                if (auditMode) {
+                    const failPath = path.resolve(auditPath, `fail_page_${pageNumber}.txt`);
+                    fs.writeFileSync(failPath, `Failed at ${new Date().toISOString()}\n${err.stack}`);
+                }
+
+                try {
+                    if (!detailPage.isClosed?.()) {
+                        await detailPage.screenshot({ path: `fail_page_${pageNumber}.png` });
+                    }
+                } catch (screenshotErr) {
+                    console.warn(`⚠️ Screenshot failed: ${screenshotErr.message}`);
+                }
+
                 exitReason = `Error during scrapePage at page ${pageNumber}: ${err.message}`;
                 break;
             }
