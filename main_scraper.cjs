@@ -615,6 +615,7 @@ function restartScript() {
 
         const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
         const removedPath = path.resolve('audit', 'removed_vehicles.json');
+        const results = [];
 
         const { finalLog, removed } = reconcileOutputLog(results, outputPath);
         archiveRemovedVehicles(removed, removedPath);
@@ -626,8 +627,6 @@ function restartScript() {
             console.log(`🗑️ Removed ${removed.length} vehicles from output.json`);
         }
 
-
-        const results = [];
         const seenVehicles = new Map();
         const detailPage = await context.newPage();
 
