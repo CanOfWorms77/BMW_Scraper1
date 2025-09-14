@@ -729,6 +729,7 @@ function restartScript() {
             }
         });
 
+        /*
         const finalLog = updatedLog.filter(v => v.missingCount < 2);
         fs.writeFileSync(outputPath, JSON.stringify(finalLog, null, 2));
 
@@ -740,7 +741,7 @@ function restartScript() {
         if (fs.existsSync(removedPath)) {
             archive = JSON.parse(fs.readFileSync(removedPath, 'utf-8'));
         }
-
+*/
         const now = new Date().toISOString();
         archive.push(...removed.map(v => ({ ...v, removedAt: now })));
         fs.writeFileSync(removedPath, JSON.stringify(archive, null, 2));
