@@ -54,13 +54,15 @@ if (retryCount >= 3) {
     process.exit(1);
 }
 
-async function safeGoto(page, url, vehicleId = 'unknown', retries = 3) {
-
+async function safeGoto(context, page, url, vehicleId = 'unknown', retries = 3) {
     console.log('✅ safeGoto module loaded');
 
     for (let i = 0; i < retries; i++) {
         try {
-            if (page.isClosed?.()) throw new Error('Target page is closed');
+            if (page.isClosed?.()) {
+                console.warn(`🔄 Page was closed — recreating for retry ${i + 1}`);
+                page = await context.newPage();
+            }
 
             const response = await Promise.race([
                 page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 }),
@@ -69,7 +71,8 @@ async function safeGoto(page, url, vehicleId = 'unknown', retries = 3) {
 
             if (!response || !response.ok()) {
                 console.warn(`⚠️ Navigation failed: ${response?.status()} — ${url}`);
-                fs.appendFileSync(path.join(auditPath, 'bad_responses.txt'), `Vehicle ID: ${vehicleId}, Status: ${response?.status()} — ${url}\n`);
+                fs.appendFileSync(path.join(auditPath, 'bad_responses.txt'),
+                    `Vehicle ID: ${vehicleId}, Status: ${response?.status()} — ${url}\n`);
                 continue;
             }
 
@@ -78,12 +81,17 @@ async function safeGoto(page, url, vehicleId = 'unknown', retries = 3) {
             const content = await page.content();
             if (!content || content.length < 1000) {
                 console.warn(`⚠️ Page content too short — possible blank page: ${url}`);
-                fs.writeFileSync(path.join(auditPath, 'blank_vehicle_${vehicleId}.html'), content);
-                await page.screenshot({ path: path.join(auditPath, `blank_vehicle_${vehicleId}.html`) });
-                continue; // retry
+
+                const htmlPath = path.join(auditPath, `blank_vehicle_${vehicleId}.html`);
+                const screenshotPath = path.join(auditPath, `blank_vehicle_${vehicleId}.png`);
+
+                fs.writeFileSync(htmlPath, content);
+                await page.screenshot({ path: screenshotPath });
+
+                continue;
             }
 
-            return; // success
+            return page; // success
         } catch (err) {
             console.warn(`⚠️ Retry ${i + 1} failed for ${url}: ${err.message}`);
             await new Promise(res => setTimeout(res, 1500));
@@ -513,59 +521,68 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
 }
 
 async function retryFailedExtractions(context, currentModel, auditPath) {
-    if (!fs.existsSync('data/reprocess_queue.txt')) return;
+    const queuePath = path.join('data', 'reprocess_queue.txt');
+    if (!fs.existsSync(queuePath)) return;
 
-    const retryLines = fs.readFileSync('data/reprocess_queue.txt', 'utf-8')
+    const retryLines = fs.readFileSync(queuePath, 'utf-8')
         .split('\n')
         .filter(Boolean);
 
     if (retryLines.length === 0) return;
 
     console.log(`🔁 Retrying ${retryLines.length} failed extractions...`);
-    const retryPage = await context.newPage();
+
+    const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
+    const output = loadJSON(outputPath) || [];
 
     for (const line of retryLines) {
         const [vehicleId, fullUrl] = line.split(' — ');
+        let retryPage;
+
         try {
-            await safeGoto(retryPage, fullUrl);
+            retryPage = await context.newPage();
+            await safeGoto(context, retryPage, fullUrl, vehicleId);
+
             const vehicleData = await extractVehicleDataFromPage(retryPage);
+            vehicleData.id = vehicleId;
+
+            const enriched = evaluateSpecs(vehicleData);
+            enriched.timestamp = new Date().toISOString();
+
+            output.push(enriched);
 
             if (auditMode) {
                 fs.appendFileSync(path.join(auditPath, 'raw_vehicle_data.txt'),
                     JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
             }
 
-            vehicleData.id = vehicleId;
-            const enriched = evaluateSpecs(vehicleData);
-            enriched.timestamp = new Date().toISOString();
-
-            const output = loadJSON(`output_${currentModel.replace(/\s+/g, '_')}.json`) || [];
-            output.push(enriched);
-            saveJSON(`output_${currentModel.replace(/\s+/g, '_')}.json`, output);
-
             console.log(`✅ Retry successful for ${vehicleId}`);
         } catch (err) {
             console.warn(`❌ Retry failed for ${vehicleId}: ${err.message}`);
-            fs.appendFileSync('data/permanent_failures.txt', `${vehicleId} — ${fullUrl}\n`);
+            fs.appendFileSync(path.join('data', 'permanent_failures.txt'), `${vehicleId} — ${fullUrl}\n`);
             fs.appendFileSync(path.join(auditPath, 'extractor_errors.txt'),
                 `URL: ${fullUrl}\nError: ${err.message}\n\n`);
+        } finally {
+            if (retryPage && !retryPage.isClosed?.()) {
+                await retryPage.close();
+            }
         }
     }
 
-    await retryPage.close();
-    fs.unlinkSync('data/reprocess_queue.txt');
+    saveJSON(outputPath, output);
+    fs.unlinkSync(queuePath);
 
-    // ✅ Restart logic goes here
+    // ✅ Restart logic
     const models = ['X5', 'X3', '3 Series', '5 Series'];
     const modelIndex = parseInt(process.env.MODEL_INDEX || '0', 10);
 
     if (modelIndex + 1 < models.length) {
-      const nextIndex = modelIndex + 1;
-      fs.writeFileSync('.env', `MODEL_INDEX=${nextIndex}\nRETRY_COUNT=0`);
-      console.log(`🔁 Restarting for model: ${models[nextIndex]}`);
-      process.exit(0);
+        const nextIndex = modelIndex + 1;
+        fs.writeFileSync('.env', `MODEL_INDEX=${nextIndex}\nRETRY_COUNT=0`);
+        console.log(`🔁 Restarting for model: ${models[nextIndex]}`);
+        process.exit(0);
     } else {
-      console.log('✅ All models processed');
+        console.log('✅ All models processed');
     }
 }
 
