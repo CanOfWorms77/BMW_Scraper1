@@ -269,6 +269,8 @@ async function scrapePage(page, detailPage, context, {
 
 }) {
     console.log(`📄 Scraping page ${pageNumber}`);
+    console.log(`[scrapePage] Starting page ${pageNumber} at ${new Date().toISOString()}`);
+
 
     const vehiclesToProcess = await extractVehiclesFromPage(
         page,
@@ -405,6 +407,8 @@ async function scrapePage(page, detailPage, context, {
         console.log(`🛑 Final page reached — no further pagination attempted`);
         hasNextPage = false;
     }
+
+    console.log(`[scrapePage] Finished page ${pageNumber} at ${new Date().toISOString()}`);
 
     return { hasNextPage };
 }
@@ -677,7 +681,7 @@ function restartScript() {
                     }
 
                     return scrapeResult;
-                }, 15000);
+                }, 30000);
             } catch (err) {
                 console.error(`❌ Error scraping page ${pageNumber}:`, err);
 
