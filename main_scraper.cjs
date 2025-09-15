@@ -54,30 +54,42 @@ if (retryCount >= 3) {
     process.exit(1);
 }
 
-async function safeGoto(context, page, url, vehicleId = 'unknown', retries = 3) {
+async function safeGoto(context, page, url, vehicleId = 'unknown', auditPath, retries = 3) {
     console.log('✅ safeGoto module loaded');
 
     for (let i = 0; i < retries; i++) {
         try {
-            if (page.isClosed?.()) {
+            // Recreate page if closed
+            if (page?.isClosed?.()) {
                 console.warn(`🔄 Page was closed — recreating for retry ${i + 1}`);
                 page = await context.newPage();
             }
 
+            // Defensive check for corrupted page object
+            if (!page || typeof page.goto !== 'function') {
+                console.log(`🔍 page type: ${typeof page}, has goto: ${typeof page?.goto}`);
+                throw new Error('Invalid page object passed to safeGoto');
+            }
+
+            // Attempt navigation with timeout guard
             const response = await Promise.race([
                 page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 }),
                 new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ goto timeout')), 20000))
             ]);
 
+            // Log failed responses
             if (!response || !response.ok()) {
-                console.warn(`⚠️ Navigation failed: ${response?.status()} — ${url}`);
+                const status = response?.status?.() ?? 'unknown';
+                console.warn(`⚠️ Navigation failed: ${status} — ${url}`);
                 fs.appendFileSync(path.join(auditPath, 'bad_responses.txt'),
-                    `Vehicle ID: ${vehicleId}, Status: ${response?.status()} — ${url}\n`);
+                    `Vehicle ID: ${vehicleId}, Status: ${status} — ${url}\n`);
                 continue;
             }
 
-            await page.waitForTimeout(2000); // allow rendering
+            // Allow rendering time
+            await page.waitForTimeout(2000);
 
+            // Validate page content
             const content = await page.content();
             if (!content || content.length < 1000) {
                 console.warn(`⚠️ Page content too short — possible blank page: ${url}`);
@@ -91,7 +103,7 @@ async function safeGoto(context, page, url, vehicleId = 'unknown', retries = 3) 
                 continue;
             }
 
-            return page; // success
+            return page; // Success
         } catch (err) {
             console.warn(`⚠️ Retry ${i + 1} failed for ${url}: ${err.message}`);
             await new Promise(res => setTimeout(res, 1500));
@@ -555,6 +567,8 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
                 fs.appendFileSync(path.join(auditPath, 'raw_vehicle_data.txt'),
                     JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
             }
+
+            await retryPage.close();
 
             console.log(`✅ Retry successful for ${vehicleId}`);
         } catch (err) {
