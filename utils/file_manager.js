@@ -1,27 +1,21 @@
 ﻿const fs = require('fs');
 const path = require('path');
 
-function loadJSON(filename)
-{
-    const filePath = path.join(__dirname, '../data', filename);
-    if (!fs.existsSync(filePath)) return null;
+function saveJSON(filePath, data) {
+    const resolvedPath = path.resolve(filePath);
+    const dir = path.dirname(resolvedPath);
 
-    try
-    {
-        const raw = fs.readFileSync(filePath);
-        return JSON.parse(raw);
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
     }
-    catch (err)
-    {
-        console.error(`❌ Failed to parse ${filename}:`, err.message);
-        return null;
-    }
+
+    fs.writeFileSync(resolvedPath, JSON.stringify(data, null, 2));
 }
 
-function saveJSON(filename, data)
-{
-    const filePath = path.join(__dirname, '../data', filename);
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+function loadJSON(filePath) {
+    const resolvedPath = path.resolve(filePath);
+    if (!fs.existsSync(resolvedPath)) return null;
+    return JSON.parse(fs.readFileSync(resolvedPath, 'utf-8'));
 }
 
-module.exports = { loadJSON, saveJSON };
+module.exports = { saveJSON, loadJSON };

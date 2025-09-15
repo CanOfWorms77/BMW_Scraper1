@@ -410,9 +410,19 @@ async function scrapePage(page, detailPage, context, {
 }
 
 async function finaliseRun({ seen, results, seenVehicles, expectedCount, currentModel, auditPath }) {
-    saveJSON('seen_vehicles.json', Array.from(seen).map(id => id.split('?')[0].trim()));
+    const modelSafe = currentModel.replace(/\s+/g, '_');
+    const dataDir = path.resolve('data');
 
-    fs.writeFileSync('data/skipped_ids.txt', Array.from(seen)
+    const seenPath = path.join(dataDir, `seen_vehicles_${modelSafe}.json`);
+    const skippedPath = path.join(dataDir, `skipped_ids_${modelSafe}.txt`);
+    const alertsPath = path.join(dataDir, `alerts_${modelSafe}.txt`);
+    const outputPath = path.join(dataDir, `output_${modelSafe}.json`);
+    const missingPath = path.join(dataDir, `missing_vehicles_${modelSafe}.txt`);
+    const duplicatesPath = path.join(dataDir, `duplicates_${modelSafe}.txt`);
+
+    saveJSON(seenPath, Array.from(seen).map(id => id.split('?')[0].trim()));
+
+    fs.writeFileSync(skippedPath, Array.from(seen)
         .filter(id => !results.find(v => v.id === id))
         .join('\n'));
 
@@ -420,7 +430,6 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
     console.log(`📦 Total vehicles ever seen: ${seen.size}`);
     console.log(`⏩ Skipped as already seen: ${seen.size - results.length}`);
     console.log(`🕒 Run completed at: ${new Date().toLocaleString()}`);
-    //console.log(`🧾 Seen vehicle IDs:\n${Array.from(seen).join('\n')}`);
 
     if (results.length > 0) {
         const sorted = results.sort((a, b) => b.scorePercent - a.scorePercent);
@@ -436,11 +445,11 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
             console.log(`🛑 Dry run mode — email not sent`);
         }
 
-        fs.appendFileSync('data/alerts.txt', `Run on ${new Date().toISOString()}\n${subject}\n${body}\n\n`);
+        fs.appendFileSync(alertsPath, `Run on ${new Date().toISOString()}\n${subject}\n${body}\n\n`);
 
-        const output = loadJSON('output.json') || [];
+        const output = loadJSON(outputPath) || [];
         output.push(...sorted);
-        saveJSON('output.json', output);
+        saveJSON(outputPath, output);
 
         console.log(`🧠 Run complete: ${results.length} new, ${seen.size - results.length} skipped`);
 
@@ -449,7 +458,7 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
         }
 
         const missingIds = Array.from(seenVehicles.keys()).filter(id => !results.find(v => v.id === id));
-        fs.writeFileSync('data/missing_vehicles.txt', missingIds.map(id => {
+        fs.writeFileSync(missingPath, missingIds.map(id => {
             const meta = seenVehicles.get(id);
             return `ID: ${id}, Page: ${meta.page}, Index: ${meta.index}, URL: ${meta.link}`;
         }).join('\n'));
@@ -479,7 +488,7 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
                 `${new Date().toISOString()} — Expected: ${expectedCount}, Seen: ${seenVehicles.size}, Missing: ${missing}\n`);
         }
 
-        fs.writeFileSync('data/duplicates.txt', Array.from(seenVehicles.entries())
+        fs.writeFileSync(duplicatesPath, Array.from(seenVehicles.entries())
             .filter(([id]) => !results.find(v => v.id === id))
             .map(([id, meta]) => `ID: ${id}, Page: ${meta.page}, Index: ${meta.index}, URL: ${meta.link}`)
             .join('\n'));
@@ -689,9 +698,6 @@ function restartScript() {
                 break;
             }
         }
-
-        saveJSON('seen_registrations.json', Array.from(seenRegistrations));
-        console.log(`📕 Saved ${seenRegistrations.size} seen registrations`);
 
         if (auditMode) {
             const loopLogPath = path.resolve(auditPath, 'loop_exit_log.txt');
