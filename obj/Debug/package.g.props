@@ -24,6 +24,7 @@
     <PackageJsonDependenciesCrossSpawn Condition="$(PackageJsonDependenciesCrossSpawn) == ''">^7.0.6</PackageJsonDependenciesCrossSpawn>
     <PackageJsonDependenciesDebug Condition="$(PackageJsonDependenciesDebug) == ''">^4.4.1</PackageJsonDependenciesDebug>
     <PackageJsonDependenciesDeepIs Condition="$(PackageJsonDependenciesDeepIs) == ''">^0.1.4</PackageJsonDependenciesDeepIs>
+    <PackageJsonDependenciesDotenv Condition="$(PackageJsonDependenciesDotenv) == ''">^17.2.1</PackageJsonDependenciesDotenv>
     <PackageJsonDependenciesEscapeStringRegexp Condition="$(PackageJsonDependenciesEscapeStringRegexp) == ''">^4.0.0</PackageJsonDependenciesEscapeStringRegexp>
     <PackageJsonDependenciesEslintScope Condition="$(PackageJsonDependenciesEslintScope) == ''">^8.4.0</PackageJsonDependenciesEslintScope>
     <PackageJsonDependenciesEslintVisitorKeys Condition="$(PackageJsonDependenciesEslintVisitorKeys) == ''">^4.2.1</PackageJsonDependenciesEslintVisitorKeys>
@@ -59,13 +60,14 @@
     <PackageJsonDependenciesMinimatch Condition="$(PackageJsonDependenciesMinimatch) == ''">^3.1.2</PackageJsonDependenciesMinimatch>
     <PackageJsonDependenciesMs Condition="$(PackageJsonDependenciesMs) == ''">^2.1.3</PackageJsonDependenciesMs>
     <PackageJsonDependenciesNaturalCompare Condition="$(PackageJsonDependenciesNaturalCompare) == ''">^1.4.0</PackageJsonDependenciesNaturalCompare>
+    <PackageJsonDependenciesNodemailer Condition="$(PackageJsonDependenciesNodemailer) == ''">^7.0.5</PackageJsonDependenciesNodemailer>
     <PackageJsonDependenciesOptionator Condition="$(PackageJsonDependenciesOptionator) == ''">^0.9.4</PackageJsonDependenciesOptionator>
     <PackageJsonDependenciesPLimit Condition="$(PackageJsonDependenciesPLimit) == ''">^3.1.0</PackageJsonDependenciesPLimit>
     <PackageJsonDependenciesPLocate Condition="$(PackageJsonDependenciesPLocate) == ''">^5.0.0</PackageJsonDependenciesPLocate>
     <PackageJsonDependenciesParentModule Condition="$(PackageJsonDependenciesParentModule) == ''">^1.0.1</PackageJsonDependenciesParentModule>
     <PackageJsonDependenciesPathExists Condition="$(PackageJsonDependenciesPathExists) == ''">^4.0.0</PackageJsonDependenciesPathExists>
     <PackageJsonDependenciesPathKey Condition="$(PackageJsonDependenciesPathKey) == ''">^3.1.1</PackageJsonDependenciesPathKey>
-    <PackageJsonDependenciesPlaywright Condition="$(PackageJsonDependenciesPlaywright) == ''">^1.54.2</PackageJsonDependenciesPlaywright>
+    <PackageJsonDependenciesPlaywright Condition="$(PackageJsonDependenciesPlaywright) == ''">^1.44.1</PackageJsonDependenciesPlaywright>
     <PackageJsonDependenciesPreludeLs Condition="$(PackageJsonDependenciesPreludeLs) == ''">^1.2.1</PackageJsonDependenciesPreludeLs>
     <PackageJsonDependenciesPunycode Condition="$(PackageJsonDependenciesPunycode) == ''">^2.3.1</PackageJsonDependenciesPunycode>
     <PackageJsonDependenciesResolveFrom Condition="$(PackageJsonDependenciesResolveFrom) == ''">^4.0.0</PackageJsonDependenciesResolveFrom>
@@ -77,6 +79,7 @@
     <PackageJsonDependenciesUriJs Condition="$(PackageJsonDependenciesUriJs) == ''">^4.4.1</PackageJsonDependenciesUriJs>
     <PackageJsonDependenciesWhich Condition="$(PackageJsonDependenciesWhich) == ''">^2.0.2</PackageJsonDependenciesWhich>
     <PackageJsonDependenciesWordWrap Condition="$(PackageJsonDependenciesWordWrap) == ''">^1.2.5</PackageJsonDependenciesWordWrap>
+    <PackageJsonDependenciesYargs Condition="$(PackageJsonDependenciesYargs) == ''">^18.0.0</PackageJsonDependenciesYargs>
     <PackageJsonDependenciesYoctoQueue Condition="$(PackageJsonDependenciesYoctoQueue) == ''">^0.1.0</PackageJsonDependenciesYoctoQueue>
     <PackageJsonDescription Condition="$(PackageJsonDescription) == ''"></PackageJsonDescription>
   </PropertyGroup>
