@@ -1,6 +1,8 @@
 ﻿const fs = require('fs');
 const path = require('path');
 
+const { captureAuditArtifacts } = require('./utils/audit');
+
 async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath) {
     const start = Date.now();
 
@@ -46,18 +48,7 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
     } catch (err) {
         console.warn(`❌ Extraction failed for ${vehicleId}: ${err.message}`);
 
-        // Log page content and screenshot for forensic review
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const htmlPath = path.join(auditPath, `extractor_fail_${vehicleId}_${timestamp}.html`);
-        const screenshotPath = path.join(auditPath, `extractor_fail_${vehicleId}_${timestamp}.png`);
-
-        try {
-            const content = await page.content();
-            fs.writeFileSync(htmlPath, content);
-            await page.screenshot({ path: screenshotPath });
-        } catch (captureErr) {
-            console.warn(`⚠️ Failed to capture audit artifacts for ${vehicleId}: ${captureErr.message}`);
-        }
+        await captureAuditArtifacts(page, vehicleId, auditPath, err);
 
         throw err;
     }
