@@ -623,8 +623,6 @@ function restartScript() {
     process.exit(1);
 }
 
-
-
 (async () => {
     const { browser, context, page } = await setupBrowser();
 
@@ -657,7 +655,7 @@ function restartScript() {
         const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
         const results = [];
         const seenVehicles = new Map();
-        const detailPage = await context.newPage();
+        let detailPage;
 
         const crypto = require('crypto');
         const seenHashes = new Set();
@@ -690,6 +688,11 @@ function restartScript() {
 
             seenHashes.add(hash);
 
+            if (!detailPage || detailPage.isClosed?.()) {
+                detailPage = await context.newPage();
+                await detailPage.setViewportSize({ width: 1280, height: 800 });
+            }
+
             try {
                 pageData = await withTimeout(async () => {
                     const scrapeResult = await scrapePage(page, detailPage, context, {
@@ -706,7 +709,103 @@ function restartScript() {
 
                     const details = await detailPage.$('.vehicle-details');
                     if (!details) {
-                        const failUrl = detailPage.url();
+                        (async () => {
+    const { browser, context, page } = await setupBrowser();
+
+    try {
+        if (auditMode) {
+            if (!fs.existsSync(auditPath)) {
+                fs.mkdirSync(auditPath, { recursive: true });
+                if (verboseMode) console.log(`✅ Created audit directory at: ${auditPath}`);
+            } else {
+                if (verboseMode) console.log(`📁 Audit directory already exists: ${auditPath}`);
+            }
+        }
+
+        await navigateAndFilter(page, currentModel, auditPath);
+
+        const expectedCount = await parseExpectedCount(page);
+        const expectedPages = expectedCount ? Math.ceil(expectedCount / 23) : null;
+
+        if (verboseMode) {
+            console.log(`🔍 Expected vehicle count: ${expectedCount}`);
+            console.log(`📄 Estimated pages: ${expectedPages}`);
+        }
+
+        const seen = new Set(loadJSON(seenPath)?.map(id => id.split('?')[0].trim()) || []);
+        const seenRegistrations = new Set(loadJSON(seenRegPath) || []);
+
+        console.log(`📗 Loaded ${seen.size} seen vehicle IDs`);
+        console.log(`📘 Loaded ${seenRegistrations.size} seen registrations`);
+
+        const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
+        const results = [];
+        const seenVehicles = new Map();
+        let detailPage;
+
+        const crypto = require('crypto');
+        const seenHashes = new Set();
+        let pageNumber = 1;
+        let hasNextPage = true;
+        let exitReason = 'Completed normally';
+        let pageData;
+
+        const withTimeout = async (fn, ms = 15000) => {
+            return Promise.race([
+                fn(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Extractor timeout')), ms))
+            ]);
+        };
+
+        while (hasNextPage) {
+            if (expectedPages && pageNumber > expectedPages) {
+                console.warn(`⚠️ Page limit exceeded (${pageNumber}/${expectedPages}). Breaking loop.`);
+                exitReason = `Page limit exceeded (${pageNumber}/${expectedPages})`;
+                break;
+            }
+
+            const html = await page.content();
+            const hash = crypto.createHash('md5').update(html).digest('hex');
+
+            if (seenHashes.has(hash)) {
+                console.warn('⚠️ Duplicate page detected. Breaking loop.');
+                exitReason = `Duplicate page hash detected at page ${pageNumber}`;
+                break;
+            }
+
+            seenHashes.add(hash);
+
+            if (!detailPage || detailPage.isClosed?.()) {
+                detailPage = await context.newPage();
+                await detailPage.setViewportSize({ width: 1280, height: 800 });
+            }
+
+            try {
+                pageData = await withTimeout(async () => {
+                    const scrapeResult = await scrapePage(page, detailPage, context, {
+                        pageNumber,
+                        expectedPages,
+                        expectedCount,
+                        seen,
+                        seenVehicles,
+                        results,
+                        seenRegistrations,
+                        currentModel,
+                        auditPath
+                    });
+
+                    let details;
+                    try {
+                        details = await detailPage.$('.vehicle-details');
+                    } catch (e) {
+                        console.warn(`⚠️ Failed to query vehicle-details: ${e.message}`);
+                    }
+
+                    if (!details) {
+                        let failUrl = 'unknown';
+                        try {
+                            failUrl = await detailPage.url();
+                        } catch (_) { }
                         fs.appendFileSync(path.join(auditPath, 'failed_urls.txt'), `${failUrl}\n`);
                         throw new Error('Vehicle details not found');
                     }
@@ -732,6 +831,122 @@ function restartScript() {
                 exitReason = `Error during scrapePage at page ${pageNumber}: ${err.message}`;
                 break;
             }
+
+            if (detailPage && !detailPage.isClosed?.()) {
+                await detailPage.close();
+            }
+            detailPage = null;
+        }
+
+        if (auditMode) {
+            const loopLogPath = path.resolve(auditPath, 'loop_exit_log.txt');
+            fs.appendFileSync(loopLogPath,
+                `${new Date().toISOString()} — Exited at page ${pageNumber} — Reason: ${exitReason}\n`);
+        }
+
+        const previousLog = fs.existsSync(outputPath)
+            ? JSON.parse(fs.readFileSync(outputPath, 'utf-8'))
+            : [];
+
+        const currentIds = results.map(v => v.id);
+        const updatedLog = previousLog.map(vehicle => {
+            if (currentIds.includes(vehicle.id)) {
+                return { ...vehicle, missingCount: 0 };
+            } else {
+                return {
+                    ...vehicle,
+                    missingCount: (vehicle.missingCount || 0) + 1
+                };
+            }
+        });
+
+        const finalLog = updatedLog.filter(v => v.missingCount < 2);
+        const removed = updatedLog.filter(v => v.missingCount >= 2);
+
+        fs.writeFileSync(outputPath, JSON.stringify(finalLog, null, 2));
+
+        const scopedRemovedPath = path.resolve(auditPath, `removed_vehicles_${currentModel.replace(/\s+/g, '_')}.json`);
+        let archive = [];
+
+        if (fs.existsSync(scopedRemovedPath)) {
+            archive = JSON.parse(fs.readFileSync(scopedRemovedPath, 'utf-8'));
+        }
+
+        const now = new Date().toISOString();
+        archive.push(...removed.map(v => ({ ...v, removedAt: now })));
+        fs.writeFileSync(scopedRemovedPath, JSON.stringify(archive, null, 2));
+
+        if (verboseMode) {
+            console.log(`🧮 Updated missingCount for ${updatedLog.length} vehicles`);
+            console.log(`🗑️ Removed ${removed.length} vehicles from output.json`);
+        }
+
+        await finaliseRun({ seen, results, seenVehicles, expectedCount, currentModel, auditPath, auditMode, verboseMode });
+        await retryFailedExtractions(context, currentModel, auditPath);
+
+        saveJSON(seenPath, Array.from(seen));
+        saveJSON(seenRegPath, Array.from(seenRegistrations));
+
+        console.log(`📕 Saved ${seen.size} seen vehicle IDs`);
+        console.log(`📙 Saved ${seenRegistrations.size} seen registrations`);
+
+        if (verboseMode) console.log('✅ Scraper run completed successfully.');
+    } catch (err) {
+        console.error('❌ Error:', err);
+
+        try {
+            if (page && !page.isClosed?.()) {
+                await page.screenshot({ path: 'error-screenshot.png' });
+            }
+        } catch (screenshotErr) {
+            console.warn(`⚠️ Failed to capture error screenshot: ${screenshotErr.message}`);
+        }
+
+        if (auditMode) {
+            const restartLogPath = path.resolve(process.cwd(), path.join(auditPath, 'restart_log.txt'));
+            fs.appendFileSync(
+                restartLogPath,
+                `${new Date().toISOString()} — Restarting due to: ${err.message}\n`
+            );
+        }
+
+        if (typeof restartScript === 'function') {
+            restartScript();
+        }
+    } finally {
+        await browser.close();
+    }
+})();
+                        fs.appendFileSync(path.join(auditPath, 'failed_urls.txt'), `${failUrl}\n`);
+                        throw new Error('Vehicle details not found');
+                    }
+
+                    return scrapeResult;
+                }, 30000);
+            } catch (err) {
+                console.error(`❌ Error scraping page ${pageNumber}:`, err);
+
+                if (auditMode) {
+                    const failPath = path.resolve(auditPath, `fail_page_${pageNumber}.txt`);
+                    fs.writeFileSync(failPath, `Failed at ${new Date().toISOString()}\n${err.stack}`);
+                }
+
+                try {
+                    if (!detailPage.isClosed?.()) {
+                        await detailPage.screenshot({ path: `fail_page_${pageNumber}.png` });
+                    }
+                } catch (screenshotErr) {
+                    console.warn(`⚠️ Screenshot failed: ${screenshotErr.message}`);
+                }
+
+                exitReason = `Error during scrapePage at page ${pageNumber}: ${err.message}`;
+                break;
+            }
+
+            if (detailPage && !detailPage.isClosed?.()) {
+                await detailPage.close();
+            }
+            detailPage = null;
         }
 
         if (auditMode) {
