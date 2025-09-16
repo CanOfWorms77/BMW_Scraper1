@@ -305,91 +305,96 @@ async function scrapePage(page, detailPage, context, {
         console.log(`⏩ No vehicles to process on page ${pageNumber}. Skipping detail extraction.`);
         return { hasNextPage: false };
     }
+    else {
+        for (let i = 0; i < vehiclesToProcess.length; i++) {
+            const { registration, href } = vehiclesToProcess[i];
+            const fullUrl = new URL(href, 'https://usedcars.bmw.co.uk').toString();
+            const vehicleIdMatch = fullUrl.match(/vehicle\/([^?]+)/);
+            const vehicleId = vehicleIdMatch ? vehicleIdMatch[1].trim() : `unknown-${Date.now()}`;
 
-    for (let i = 0; i < vehiclesToProcess.length; i++) {
-        const { registration, href } = vehiclesToProcess[i];
-        const fullUrl = new URL(href, 'https://usedcars.bmw.co.uk').toString();
-        const vehicleIdMatch = fullUrl.match(/vehicle\/([^?]+)/);
-        const vehicleId = vehicleIdMatch ? vehicleIdMatch[1].trim() : `unknown-${Date.now()}`;
+            seenVehicles.set(vehicleId, { page: pageNumber, index: i, link: fullUrl });
+            console.log(`🔍 Extracting data from: ${fullUrl}`);
 
-        seenVehicles.set(vehicleId, { page: pageNumber, index: i, link: fullUrl });
-        console.log(`🔍 Extracting data from: ${fullUrl}`);
-
-        let start = Date.now();
-        if (!detailPage || detailPage.isClosed?.()) {
-            detailPage = await context.newPage();
-            await detailPage.setViewportSize({ width: 1280, height: 800 });
-        }
-
-        try {
-            detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
-            const loadTime = Date.now() - start;
-            console.log(`⏱️ Page load took ${loadTime}ms`);
-        } catch (err) {
-            console.error(`❌ safeGoto threw an error for ${fullUrl}:`, err.message);
-            fs.appendFileSync(path.join(auditPath, 'safeGoto_errors.txt'),
-                `Vehicle ID: ${vehicleId}, Error: ${err.message} — ${fullUrl}\n`);
-            continue;
-        }
-
-        if (i === 0 && auditMode) {
-            const html = await detailPage.content();
-            fs.writeFileSync(path.join(auditPath, `first_vehicle_debug.html`), html);
-        }
-
-        let vehicleData;
-        try {
-            vehicleData = await Promise.race([
-                extractVehicleDataFromPage(detailPage, vehicleId, auditPath),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ Extraction timeout')), 10000))
-            ]);
-
-            if (!vehicleData || Object.keys(vehicleData).length === 0) {
-                console.warn(`⚠️ Empty vehicle data — retrying with fresh tab`);
+            let start = Date.now();
+            if (!detailPage || detailPage.isClosed?.()) {
                 detailPage = await context.newPage();
                 await detailPage.setViewportSize({ width: 1280, height: 800 });
-                detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
-                vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
             }
-        } catch (err) {
-            console.warn(`⚠️ Extraction failed for ${fullUrl}: ${err.message}`);
-            fs.appendFileSync('data/reprocess_queue.txt', `${vehicleId} — ${fullUrl}\n`);
-            fs.appendFileSync(path.join(auditPath, 'extractor_errors.txt'),
-                `URL: ${fullUrl}\nError: ${err.message}\n\n`);
-            continue;
-        }
 
-        vehicleData.id = vehicleId;
-        vehicleData.registration = registration;
-        seen.add(vehicleId);
-        seenRegistrations.add(registration);
+            try {
+                detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
+                const loadTime = Date.now() - start;
+                console.log(`⏱️ Page load took ${loadTime}ms`);
+            } catch (err) {
+                console.error(`❌ safeGoto threw an error for ${fullUrl}:`, err.message);
+                fs.appendFileSync(path.join(auditPath, 'safeGoto_errors.txt'),
+                    `Vehicle ID: ${vehicleId}, Error: ${err.message} — ${fullUrl}\n`);
+                continue;
+            }
 
-        if (auditMode) {
-            fs.appendFileSync(path.join(auditPath, 'raw_vehicle_data.txt'),
-                JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
-        }
+            if (i === 0 && auditMode) {
+                const html = await detailPage.content();
+                fs.writeFileSync(path.join(auditPath, `first_vehicle_debug.html`), html);
+            }
 
-        const enriched = evaluateSpecs(vehicleData, currentModel);
-        enriched.timestamp = new Date().toISOString();
-        results.push(enriched);
+            let vehicleData;
+            try {
+                vehicleData = await Promise.race([
+                    extractVehicleDataFromPage(detailPage, vehicleId, auditPath),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ Extraction timeout')), 10000))
+                ]);
 
-        if (auditMode && rawDetailsPath) {
-            fs.appendFileSync(rawDetailsPath, `Page ${pageNumber} — ${vehicleData.title || 'Untitled'}\n`);
-            fs.appendFileSync(rawDetailsPath, JSON.stringify(vehicleData, null, 2) + '\n\n');
-        }
+                if (!vehicleData || Object.keys(vehicleData).length === 0) {
+                    console.warn(`⚠️ Empty vehicle data — retrying with fresh tab`);
+                    detailPage = await context.newPage();
+                    await detailPage.setViewportSize({ width: 1280, height: 800 });
+                    detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
+                    vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
+                }
+            } catch (err) {
+                console.warn(`⚠️ Extraction failed for ${fullUrl}: ${err.message}`);
+                fs.appendFileSync('data/reprocess_queue.txt', `${vehicleId} — ${fullUrl}\n`);
+                fs.appendFileSync(path.join(auditPath, 'extractor_errors.txt'),
+                    `URL: ${fullUrl}\nError: ${err.message}\n\n`);
+                continue;
+            }
 
-        await new Promise(res => setTimeout(res, 1500));
-        if (results.length % 25 === 0) {
-            await detailPage.close();
-            detailPage = await context.newPage();
-            await detailPage.setViewportSize({ width: 1280, height: 800 });
-            console.log(`🔄 Detail page reset after ${results.length} vehicles`);
+            vehicleData.id = vehicleId;
+            vehicleData.registration = registration;
+            seen.add(vehicleId);
+            seenRegistrations.add(registration);
+
+            if (auditMode) {
+                fs.appendFileSync(path.join(auditPath, 'raw_vehicle_data.txt'),
+                    JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
+            }
+
+            const enriched = evaluateSpecs(vehicleData, currentModel);
+            enriched.timestamp = new Date().toISOString();
+            results.push(enriched);
+
+            if (auditMode && rawDetailsPath) {
+                fs.appendFileSync(rawDetailsPath, `Page ${pageNumber} — ${vehicleData.title || 'Untitled'}\n`);
+                fs.appendFileSync(rawDetailsPath, JSON.stringify(vehicleData, null, 2) + '\n\n');
+            }
+
+            await new Promise(res => setTimeout(res, 1500));
+            if (results.length % 25 === 0) {
+                await detailPage.close();
+                detailPage = await context.newPage();
+                await detailPage.setViewportSize({ width: 1280, height: 800 });
+                console.log(`🔄 Detail page reset after ${results.length} vehicles`);
+            }
         }
     }
+
+    
 
     if (auditMode) {
         await page.screenshot({ path: path.join(auditPath, `page-${pageNumber}.png`) });
         console.log(`📸 Audit screenshot saved: page-${pageNumber}.png`);
+        const html = await detailPage.content();
+        fs.writeFileSync(path.join(auditPath, `fail_page_${pageNumber}_dom.html`), html);
     }
 
     const html = await page.content();
