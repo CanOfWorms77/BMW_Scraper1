@@ -321,7 +321,7 @@ async function scrapePage(page, detailPage, context, {
         }
 
         try {
-            await safeGoto(detailPage, fullUrl, vehicleId);
+            detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
             const loadTime = Date.now() - start;
             console.log(`⏱️ Page load took ${loadTime}ms`);
         } catch (err) {
@@ -346,7 +346,7 @@ async function scrapePage(page, detailPage, context, {
                 console.warn(`⚠️ Empty vehicle data — retrying with fresh tab`);
                 detailPage = await context.newPage();
                 await detailPage.setViewportSize({ width: 1280, height: 800 });
-                await safeGoto(detailPage, fullUrl);
+                detailPage = await safeGoto({ context, page: detailPage, url: fullUrl, vehicleId, auditPath });
                 vehicleData = await extractVehicleDataFromPage(detailPage);
             }
 
