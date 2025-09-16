@@ -284,13 +284,11 @@ async function scrapePage(page, detailPage, context, {
     seenVehicles,
     results,
     seenRegistrations,
-    currentModel, 
+    currentModel,
     auditPath
-
 }) {
     console.log(`📄 Scraping page ${pageNumber}`);
     console.log(`[scrapePage] Starting page ${pageNumber} at ${new Date().toISOString()}`);
-
 
     const vehiclesToProcess = await extractVehiclesFromPage(
         page,
@@ -305,7 +303,7 @@ async function scrapePage(page, detailPage, context, {
 
     if (vehiclesToProcess.length === 0) {
         console.log(`⏩ No vehicles to process on page ${pageNumber}. Skipping detail extraction.`);
-        return []; // or whatever empty result structure is expected
+        return { hasNextPage: false };
     }
 
     for (let i = 0; i < vehiclesToProcess.length; i++) {
@@ -313,8 +311,6 @@ async function scrapePage(page, detailPage, context, {
         const fullUrl = new URL(href, 'https://usedcars.bmw.co.uk').toString();
         const vehicleIdMatch = fullUrl.match(/vehicle\/([^?]+)/);
         const vehicleId = vehicleIdMatch ? vehicleIdMatch[1].trim() : `unknown-${Date.now()}`;
-
-        const gracePass = pageNumber === 1 && i < 3;
 
         seenVehicles.set(vehicleId, { page: pageNumber, index: i, link: fullUrl });
         console.log(`🔍 Extracting data from: ${fullUrl}`);
@@ -331,7 +327,8 @@ async function scrapePage(page, detailPage, context, {
             console.log(`⏱️ Page load took ${loadTime}ms`);
         } catch (err) {
             console.error(`❌ safeGoto threw an error for ${fullUrl}:`, err.message);
-            fs.appendFileSync(  path.join(auditPath, 'safeGoto_errors.txt'),  `Vehicle ID: ${vehicleId}, Error: ${err.message} — ${fullUrl}\n`);
+            fs.appendFileSync(path.join(auditPath, 'safeGoto_errors.txt'),
+                `Vehicle ID: ${vehicleId}, Error: ${err.message} — ${fullUrl}\n`);
             continue;
         }
 
@@ -343,7 +340,7 @@ async function scrapePage(page, detailPage, context, {
         let vehicleData;
         try {
             vehicleData = await Promise.race([
-                extractVehicleDataFromPage(detailPage),
+                extractVehicleDataFromPage(detailPage, vehicleId, auditPath),
                 new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ Extraction timeout')), 10000))
             ]);
 
@@ -351,10 +348,9 @@ async function scrapePage(page, detailPage, context, {
                 console.warn(`⚠️ Empty vehicle data — retrying with fresh tab`);
                 detailPage = await context.newPage();
                 await detailPage.setViewportSize({ width: 1280, height: 800 });
-                detailPage = await safeGoto({ context, page: detailPage, url: fullUrl, vehicleId, auditPath });
+                detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
                 vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
             }
-
         } catch (err) {
             console.warn(`⚠️ Extraction failed for ${fullUrl}: ${err.message}`);
             fs.appendFileSync('data/reprocess_queue.txt', `${vehicleId} — ${fullUrl}\n`);
