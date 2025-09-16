@@ -695,94 +695,7 @@ function restartScript() {
             }
 
             try {
-                pageData = await withTimeout(async () => {
-                    const scrapeResult = await scrapePage(page, detailPage, context, {
-                        pageNumber,
-                        expectedPages,
-                        expectedCount,
-                        seen,
-                        seenVehicles,
-                        results,
-                        seenRegistrations,
-                        currentModel,
-                        auditPath
-                    });
-
-                    const details = await detailPage.$('.vehicle-details');
-                    if (!details) {
-                        (async () => {
-    const { browser, context, page } = await setupBrowser();
-
-    try {
-        if (auditMode) {
-            if (!fs.existsSync(auditPath)) {
-                fs.mkdirSync(auditPath, { recursive: true });
-                if (verboseMode) console.log(`✅ Created audit directory at: ${auditPath}`);
-            } else {
-                if (verboseMode) console.log(`📁 Audit directory already exists: ${auditPath}`);
-            }
-        }
-
-        await navigateAndFilter(page, currentModel, auditPath);
-
-        const expectedCount = await parseExpectedCount(page);
-        const expectedPages = expectedCount ? Math.ceil(expectedCount / 23) : null;
-
-        if (verboseMode) {
-            console.log(`🔍 Expected vehicle count: ${expectedCount}`);
-            console.log(`📄 Estimated pages: ${expectedPages}`);
-        }
-
-        const seen = new Set(loadJSON(seenPath)?.map(id => id.split('?')[0].trim()) || []);
-        const seenRegistrations = new Set(loadJSON(seenRegPath) || []);
-
-        console.log(`📗 Loaded ${seen.size} seen vehicle IDs`);
-        console.log(`📘 Loaded ${seenRegistrations.size} seen registrations`);
-
-        const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
-        const results = [];
-        const seenVehicles = new Map();
-        let detailPage;
-
-        const crypto = require('crypto');
-        const seenHashes = new Set();
-        let pageNumber = 1;
-        let hasNextPage = true;
-        let exitReason = 'Completed normally';
-        let pageData;
-
-        const withTimeout = async (fn, ms = 15000) => {
-            return Promise.race([
-                fn(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Extractor timeout')), ms))
-            ]);
-        };
-
-        while (hasNextPage) {
-            if (expectedPages && pageNumber > expectedPages) {
-                console.warn(`⚠️ Page limit exceeded (${pageNumber}/${expectedPages}). Breaking loop.`);
-                exitReason = `Page limit exceeded (${pageNumber}/${expectedPages})`;
-                break;
-            }
-
-            const html = await page.content();
-            const hash = crypto.createHash('md5').update(html).digest('hex');
-
-            if (seenHashes.has(hash)) {
-                console.warn('⚠️ Duplicate page detected. Breaking loop.');
-                exitReason = `Duplicate page hash detected at page ${pageNumber}`;
-                break;
-            }
-
-            seenHashes.add(hash);
-
-            if (!detailPage || detailPage.isClosed?.()) {
-                detailPage = await context.newPage();
-                await detailPage.setViewportSize({ width: 1280, height: 800 });
-            }
-
-            try {
-                pageData = await withTimeout(async () => {
+                await withTimeout(async () => {
                     const scrapeResult = await scrapePage(page, detailPage, context, {
                         pageNumber,
                         expectedPages,
@@ -796,15 +709,15 @@ function restartScript() {
                     });
 
                     let details;
-                    let failUrl = 'unknown'; // ✅ Declare failUrl early to ensure scope
+                    let failUrl = 'unknown';
 
                     try {
                         details = await detailPage.$('.vehicle-details');
-                        failUrl = await detailPage.url(); // ✅ Assign here if page is valid
+                        failUrl = await detailPage.url();
                     } catch (e) {
                         console.warn(`⚠️ Failed to query vehicle-details: ${e.message}`);
                         try {
-                            failUrl = await detailPage.url(); // ✅ Fallback if first attempt fails
+                            failUrl = await detailPage.url();
                         } catch (_) {
                             console.warn('⚠️ Could not retrieve failUrl — page may be closed');
                         }
@@ -841,6 +754,7 @@ function restartScript() {
                 await detailPage.close();
             }
             detailPage = null;
+            pageNumber++;
         }
 
         if (auditMode) {
