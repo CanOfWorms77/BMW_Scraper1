@@ -126,11 +126,16 @@ https://usedcars.bmw.co.uk/vehicle/202411076032683?quoteref=ba94432d-040b-4e92-a
 • BMW X5 xDrive40d M Sport 3.0 5dr — 0% match
 https://usedcars.bmw.co.uk/vehicle/202411256709178?quoteref=d7a895fb-fb73-4538-ad6a-ea3262d2f4d8
 
+<<<<<<< Updated upstream
 Run on 2025-09-16T21:13:36.487Z
+=======
+Run on 2025-09-16T21:13:40.640Z
+>>>>>>> Stashed changes
 🚗 BMW Digest: 7 vehicles assessed
 Here are the top matches:
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 87% match
+<<<<<<< Updated upstream
 https://usedcars.bmw.co.uk/vehicle/202501208217411?quoteref=635c3d4e-ff27-49fe-bf4c-5a7940da521b
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 64% match
@@ -150,4 +155,25 @@ https://usedcars.bmw.co.uk/vehicle/202411186413420?quoteref=39eaa8e4-16b4-46ed-b
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 7% match
 https://usedcars.bmw.co.uk/vehicle/202501178134681?quoteref=351fec51-c233-406b-a761-8f1c0dac8fc0
+=======
+https://usedcars.bmw.co.uk/vehicle/202501208217411?quoteref=2d34d957-2f7c-4304-a98b-b166aa390d0d
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 64% match
+https://usedcars.bmw.co.uk/vehicle/202405219935759?quoteref=36c10fc8-7900-4932-9be5-f23e836c939c
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 47% match
+https://usedcars.bmw.co.uk/vehicle/202501168104093?quoteref=a2c29646-a04f-4713-bc41-b055b76cd00b
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 29% match
+https://usedcars.bmw.co.uk/vehicle/202501137970884?quoteref=05b39835-1055-43b9-bd22-56237ebc7ef3
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 24% match
+https://usedcars.bmw.co.uk/vehicle/202501288500309?quoteref=8574c0b7-090e-4c4a-b66b-71c3a4ad6797
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 16% match
+https://usedcars.bmw.co.uk/vehicle/202411186413420?quoteref=9cd7f61e-f2aa-4409-b835-528a0bd087be
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 7% match
+https://usedcars.bmw.co.uk/vehicle/202501178134681?quoteref=0928f3e4-e08a-4cf4-a99d-960952cd956f
+>>>>>>> Stashed changes
 
