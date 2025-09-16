@@ -303,6 +303,11 @@ async function scrapePage(page, detailPage, context, {
         selectors
     );
 
+    if (vehiclesToProcess.length === 0) {
+        console.log(`⏩ No vehicles to process on page ${pageNumber}. Skipping detail extraction.`);
+        return []; // or whatever empty result structure is expected
+    }
+
     for (let i = 0; i < vehiclesToProcess.length; i++) {
         const { registration, href } = vehiclesToProcess[i];
         const fullUrl = new URL(href, 'https://usedcars.bmw.co.uk').toString();
