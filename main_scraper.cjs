@@ -713,6 +713,7 @@ function restartScript() {
                         auditPath
                     });
 
+                    /*
                     let details;
                     let failUrl = 'unknown';
 
@@ -731,7 +732,7 @@ function restartScript() {
                     if (!details) {
                         fs.appendFileSync(path.join(auditPath, 'failed_urls.txt'), `${failUrl}\n`);
                         throw new Error('Vehicle details not found');
-                    }
+                    }*/
 
                     return scrapeResult;
                 }, 30000);
@@ -768,9 +769,15 @@ function restartScript() {
                 `${new Date().toISOString()} — Exited at page ${pageNumber} — Reason: ${exitReason}\n`);
         }
 
-        const previousLog = fs.existsSync(outputPath)
-            ? JSON.parse(fs.readFileSync(outputPath, 'utf-8'))
-            : [];
+        let previousLog = [];
+        try {
+            if (fs.existsSync(outputPath)) {
+                previousLog = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+            }
+        } catch (err) {
+            console.error(`❌ Failed to parse output.json: ${err.message}`);
+            previousLog = [];
+        }
 
         const currentIds = results.map(v => v.id);
         const updatedLog = previousLog.map(vehicle => {
