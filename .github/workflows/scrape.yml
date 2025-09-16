@@ -42,12 +42,6 @@ jobs:
       - name: 🎭 Install Playwright browsers
         run: npx playwright install
 
-      - name: 🧹 One-time clean audit
-        run: rm -rf audit/*
-
-      - name: 🧹 One-time clean data
-        run: rm -rf data/*
-
       - name: 🚀 Run scraper with audit + verbose
         run: node main_scraper.cjs --audit --verbose
 
