@@ -1,37 +1,67 @@
-﻿async function extractVehicleDataFromPage(page) {
-    const adData = await page.evaluate(() => window.UVL?.AD || null);
-    if (!adData) throw new Error('Missing UVL.AD payload');
-
-    const pageTitle = await page.title();
-
-    const featureDescriptions = [
-        ...(adData.features?.additional || []).map(f => f.description),
-        ...(adData.features?.standard || []).map(f => f.description),
-        ...(adData.features?.interior?.additional || []),
-        ...(adData.features?.interior?.standard || []),
-        ...(adData.features?.exterior?.additional || []),
-        ...(adData.features?.exterior?.standard || [])
-    ];
-
-    return {
-        id: adData.advert_id,
-        title: pageTitle || 'BMW',
-        url: await page.url(),
-        engineFuel: adData.engine?.fuel || null,
-        enginePower: adData.engine?.power?.value || null,
-        engineSize: adData.engine?.size?.litres || null,
-        mileage: adData.condition_and_state?.mileage || null,
-        registration: adData.dates?.registration || null,
-        manufacturedYear: adData.condition_and_state?.manufactured_year || null,
-        batteryRange: adData.battery?.range?.value || null,
-        co2: adData.consumption?.co2?.value || null,
-        fuelType: adData.fuel_category || null,
-        features: featureDescriptions
-    };
-}
-
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
+
+async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath) {
+    const start = Date.now();
+
+    try {
+        // Wait for UVL.AD payload to be available
+        await page.waitForFunction(() => window.UVL?.AD, { timeout: 5000 });
+
+        // Extract payload
+        const adData = await page.evaluate(() => window.UVL?.AD || null);
+        const loadTime = Date.now() - start;
+        console.log(`⏱️ UVL.AD extraction took ${loadTime}ms`);
+
+        if (!adData) {
+            throw new Error('Missing UVL.AD payload');
+        }
+
+        const pageTitle = await page.title();
+
+        const featureDescriptions = [
+            ...(adData.features?.additional || []).map(f => f.description),
+            ...(adData.features?.standard || []).map(f => f.description),
+            ...(adData.features?.interior?.additional || []),
+            ...(adData.features?.interior?.standard || []),
+            ...(adData.features?.exterior?.additional || []),
+            ...(adData.features?.exterior?.standard || [])
+        ];
+
+        return {
+            id: adData.advert_id,
+            title: pageTitle || 'BMW',
+            url: await page.url(),
+            engineFuel: adData.engine?.fuel || null,
+            enginePower: adData.engine?.power?.value || null,
+            engineSize: adData.engine?.size?.litres || null,
+            mileage: adData.condition_and_state?.mileage || null,
+            registration: adData.dates?.registration || null,
+            manufacturedYear: adData.condition_and_state?.manufactured_year || null,
+            batteryRange: adData.battery?.range?.value || null,
+            co2: adData.consumption?.co2?.value || null,
+            fuelType: adData.fuel_category || null,
+            features: featureDescriptions
+        };
+    } catch (err) {
+        console.warn(`❌ Extraction failed for ${vehicleId}: ${err.message}`);
+
+        // Log page content and screenshot for forensic review
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const htmlPath = path.join(auditPath, `extractor_fail_${vehicleId}_${timestamp}.html`);
+        const screenshotPath = path.join(auditPath, `extractor_fail_${vehicleId}_${timestamp}.png`);
+
+        try {
+            const content = await page.content();
+            fs.writeFileSync(htmlPath, content);
+            await page.screenshot({ path: screenshotPath });
+        } catch (captureErr) {
+            console.warn(`⚠️ Failed to capture audit artifacts for ${vehicleId}: ${captureErr.message}`);
+        }
+
+        throw err;
+    }
+}
 
 async function extractVehiclesFromPage(page, pageNumber, seenRegistrations, auditPath, auditMode, expectedPages, expectedCount, selectors) {
     const containers = await page.locator(selectors.container).elementHandles();

@@ -347,7 +347,7 @@ async function scrapePage(page, detailPage, context, {
                 detailPage = await context.newPage();
                 await detailPage.setViewportSize({ width: 1280, height: 800 });
                 detailPage = await safeGoto({ context, page: detailPage, url: fullUrl, vehicleId, auditPath });
-                vehicleData = await extractVehicleDataFromPage(detailPage);
+                vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
             }
 
         } catch (err) {
@@ -555,7 +555,7 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
             retryPage = await context.newPage();
             await safeGoto(context, retryPage, fullUrl, vehicleId);
 
-            const vehicleData = await extractVehicleDataFromPage(retryPage);
+            const vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
             vehicleData.id = vehicleId;
 
             const enriched = evaluateSpecs(vehicleData);
