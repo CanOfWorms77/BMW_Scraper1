@@ -800,17 +800,21 @@ function restartScript() {
                     });
 
                     let details;
+                    let failUrl = 'unknown'; // ✅ Declare failUrl early to ensure scope
+
                     try {
                         details = await detailPage.$('.vehicle-details');
+                        failUrl = await detailPage.url(); // ✅ Assign here if page is valid
                     } catch (e) {
                         console.warn(`⚠️ Failed to query vehicle-details: ${e.message}`);
+                        try {
+                            failUrl = await detailPage.url(); // ✅ Fallback if first attempt fails
+                        } catch (_) {
+                            console.warn('⚠️ Could not retrieve failUrl — page may be closed');
+                        }
                     }
 
                     if (!details) {
-                        let failUrl = 'unknown';
-                        try {
-                            failUrl = await detailPage.url();
-                        } catch (_) { }
                         fs.appendFileSync(path.join(auditPath, 'failed_urls.txt'), `${failUrl}\n`);
                         throw new Error('Vehicle details not found');
                     }
