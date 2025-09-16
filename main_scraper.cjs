@@ -42,7 +42,11 @@ const seenRegPath = path.join('data', `seen_registrations_${currentModel.replace
 
 console.log(`🔍 MODEL_INDEX=${process.env.MODEL_INDEX}, currentModel=${currentModel}`);
 
-if (auditMode && !fs.existsSync(auditPath)) {
+if (!auditPath || typeof auditPath !== 'string') {
+    throw new Error(`Invalid auditPath: ${auditPath}`);
+}
+
+if (!fs.existsSync(auditPath)) {
     fs.mkdirSync(auditPath, { recursive: true });
 }
 
@@ -134,6 +138,17 @@ async function setupBrowser() {
 }
 
 async function navigateAndFilter(page, currentModel, auditPath) {
+
+
+  if (!auditPath || typeof auditPath !== 'string') {
+    throw new Error(`Invalid auditPath: ${auditPath}`);
+  }
+
+  if (!fs.existsSync(auditPath)) {
+    fs.mkdirSync(auditPath, { recursive: true });
+  }
+
+
   console.log(`🌐 Navigating to BMW Approved Used site for ${currentModel}...`);
   const modelConfig = getModelSelectorConfig(currentModel);
   if (!modelConfig) throw new Error(`❌ No selector config found for model: ${currentModel}`);
@@ -252,6 +267,14 @@ async function parseExpectedCount(page) {
 
 async function attemptPaginationAdvance(page, nextButton, auditPath, pageNumber) {
     const currentUrl = await page.url();
+
+    if (!auditPath || typeof auditPath !== 'string') {
+        throw new Error(`Invalid auditPath: ${auditPath}`);
+    }
+
+    if (!fs.existsSync(auditPath)) {
+        fs.mkdirSync(auditPath, { recursive: true });
+    }
     try {
         await nextButton.click({ force: true });
         await page.waitForLoadState('networkidle');
