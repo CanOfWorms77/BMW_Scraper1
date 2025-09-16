@@ -550,6 +550,10 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
     const queuePath = path.join('data', 'reprocess_queue.txt');
     if (!fs.existsSync(queuePath)) return;
 
+    if (!fs.existsSync(auditPath)) {
+        fs.mkdirSync(auditPath, { recursive: true });
+    }
+
     const retryLines = fs.readFileSync(queuePath, 'utf-8')
         .split('\n')
         .filter(Boolean);
@@ -576,7 +580,7 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
             }
             await safeGoto(context, retryPage, fullUrl, vehicleId);
 
-            const vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
+            const vehicleData = await extractVehicleDataFromPage(retryPage, vehicleId, auditPath);
             vehicleData.id = vehicleId;
 
             const enriched = evaluateSpecs(vehicleData);
@@ -597,6 +601,7 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
             fs.appendFileSync(path.join('data', 'permanent_failures.txt'), `${vehicleId} — ${fullUrl}\n`);
             fs.appendFileSync(path.join(auditPath, 'extractor_errors.txt'),
                 `URL: ${fullUrl}\nError: ${err.message}\n\n`);
+            await captureAuditArtifacts(retryPage, vehicleId, auditPath, err);
         } finally {
             if (retryPage && !retryPage.isClosed?.()) {
                 await retryPage.close();
@@ -761,7 +766,7 @@ function restartScript() {
 
                 try {
                     if (!detailPage.isClosed?.()) {
-                        await detailPage.screenshot({ path: `fail_page_${pageNumber}.png` });
+                        await page.screenshot({ path: path.join(auditPath, `fail_page_${pageNumber}.png`) });
                     }
                 } catch (screenshotErr) {
                     console.warn(`⚠️ Screenshot failed: ${screenshotErr.message}`);
@@ -842,7 +847,7 @@ function restartScript() {
 
         try {
             if (page && !page.isClosed?.()) {
-                await page.screenshot({ path: 'error-screenshot.png' });
+                await page.screenshot({ path: path.join(auditPath, `error-screenshot.png`) });
             }
         } catch (screenshotErr) {
             console.warn(`⚠️ Failed to capture error screenshot: ${screenshotErr.message}`);

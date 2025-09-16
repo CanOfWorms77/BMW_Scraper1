@@ -2,6 +2,11 @@
 const path = require('path');
 
 async function captureAuditArtifacts(page, vehicleId, auditPath, error) {
+
+    if (!fs.existsSync(auditPath)) {
+        fs.mkdirSync(auditPath, { recursive: true });
+    }
+
     try {
         const html = await page.content();
         fs.writeFileSync(path.join(auditPath, `fail_dom_${vehicleId}.html`), html);

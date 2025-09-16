@@ -6,6 +6,11 @@ const { captureAuditArtifacts } = require('./audit');
 async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath) {
     const start = Date.now();
 
+    if (!fs.existsSync(auditPath)) {
+        fs.mkdirSync(auditPath, { recursive: true });
+    }
+
+
     try {
         // Wait for UVL.AD payload to be available
         await page.waitForFunction(() => window.UVL?.AD, { timeout: 5000 });
@@ -57,6 +62,10 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
 async function extractVehiclesFromPage(page, pageNumber, seenRegistrations, auditPath, auditMode, expectedPages, expectedCount, selectors) {
     const containers = await page.locator(selectors.container).elementHandles();
     const vehiclesToProcess = [];
+
+    if (!fs.existsSync(auditPath)) {
+        fs.mkdirSync(auditPath, { recursive: true });
+    }
 
     console.log(`🔍 Raw container count: ${containers.length}`);
 

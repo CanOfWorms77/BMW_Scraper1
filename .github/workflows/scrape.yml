@@ -69,7 +69,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: audit-logs-${{ matrix.model_index }}
-          path: audit/**
+          path: |
+              audit/
+              audit/**/*.txt
+              audit/**/*.html
+              audit/**/*.png
+              audit/**/*.json
 
       - name: 📄 Upload raw details
         if: always()
