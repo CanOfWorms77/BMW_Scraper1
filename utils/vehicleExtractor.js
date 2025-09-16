@@ -1,7 +1,7 @@
 ﻿const fs = require('fs');
 const path = require('path');
 
-const { captureAuditArtifacts } = require('./utils/audit');
+const { captureAuditArtifacts } = require('./audit');
 
 async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath) {
     const start = Date.now();
