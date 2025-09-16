@@ -62,6 +62,12 @@ async function safeGoto(context, page, url, vehicleId = 'unknown', auditPath, re
             // Recreate page if closed
             if (page?.isClosed?.()) {
                 console.warn(`🔄 Page was closed — recreating for retry ${i + 1}`);
+
+                if (context?.isClosed?.()) {
+                    console.warn('⚠️ Browser context is closed — aborting retries');
+                    break;
+                }
+
                 page = await context.newPage();
             }
 
@@ -339,9 +345,11 @@ async function scrapePage(page, detailPage, context, {
 
             let vehicleData;
             try {
-                vehicleData = await Promise.race([
-                    extractVehicleDataFromPage(detailPage, vehicleId, auditPath),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ Extraction timeout')), 10000))
+                    const timeoutMs = pageNumber === 1 ? 20000 : 12000;
+
+                    vehicleData = await Promise.race([
+                        extractVehicleDataFromPage(detailPage),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ Extraction timeout')), timeoutMs))
                 ]);
 
                 if (!vehicleData || Object.keys(vehicleData).length === 0) {
@@ -558,7 +566,14 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
         let retryPage;
 
         try {
-            retryPage = await context.newPage();
+
+            try {
+                retryPage = await context.newPage();
+                await retryPage.setViewportSize({ width: 1280, height: 800 });
+            } catch (err) {
+                console.warn(`⚠️ Failed to create new page during retry: ${err.message}`);
+                break;
+            }
             await safeGoto(context, retryPage, fullUrl, vehicleId);
 
             const vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
