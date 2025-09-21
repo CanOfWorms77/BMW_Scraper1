@@ -5,7 +5,7 @@ function normalize(text) {
 }
 
 function evaluateSpecs(vehicle, currentModel = 'default') {
-  const specWeights = getSpecWeights(currentModel);
+  const specWeights = getSpecWeights(currentModel) || {};
   const maxScore = Object.values(specWeights).reduce((sum, val) => sum + val, 0) || 1;
 
   const foundSpecs = vehicle.features || [];

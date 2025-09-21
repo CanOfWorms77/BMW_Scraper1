@@ -3,6 +3,10 @@ const path = require('path');
 
 async function captureAuditArtifacts(page, vehicleId, auditPath, error) {
 
+    if (!auditPath || typeof auditPath !== 'string') {
+        throw new Error(`Invalid auditPath: ${auditPath}`);
+    }
+
     if (!fs.existsSync(auditPath)) {
         fs.mkdirSync(auditPath, { recursive: true });
     }

@@ -1,9 +1,10 @@
-﻿// chunk-1.js
+﻿
+// chunk-1.js
 require('dotenv').config();
 const { chromium } = require('playwright');
 const { evaluateSpecs } = require('./utils/specEvaluator');
 const { sendEmail } = require('./utils/emailSender');
-const { extractVehiclesFromPage, extractVehicleDataFromPage } = require('./utils/vehicleExtractor');
+const { extractVehiclesFromPage, extractVehicleDataFromPage, logAuditEntry } = require('./utils/vehicleExtractor');
 const { loadJSON, saveJSON } = require('./utils/file_manager');
 const fs = require('fs');
 
@@ -18,6 +19,7 @@ const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
 const { getModelSelectorConfig } = require('./utils/modelSelectorTable');
+const { captureAuditArtifacts } = require('./utils/audit');
 
 
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -27,8 +29,10 @@ const argv = yargs(hideBin(process.argv)).argv;
 
 const models = ['X5', '5 Series'];
 const modelIndex = parseInt(process.env.MODEL_INDEX || '0', 10);
-const currentModel = models[modelIndex];
-const auditPath = path.resolve(process.cwd(), 'audit', currentModel);
+const currentModel = models[modelIndex] || 'X5'; // fallback if index is out of bounds
+
+const safeModelFolder = currentModel.replace(/\s+/g, '_'); // e.g. "5 Series" → "5_Series"
+const auditPath = path.resolve(process.cwd(), 'audit', safeModelFolder);
 
 const selectorMap = require('./utils/selectors');
 const selectors = selectorMap[currentModel] || selectorMap['X5'];
@@ -59,67 +63,120 @@ if (retryCount >= 3) {
 }
 
 async function safeGoto(context, page, url, vehicleId = 'unknown', auditPath, retries = 3) {
-    console.log('✅ safeGoto module loaded');
+    console.log(`[${vehicleId}] Entering safeGoto`);
+    console.log(`[${vehicleId}] Received URL: ${url}`);
+
+    const cleanUrl = url.split('?')[0];
 
     for (let i = 0; i < retries; i++) {
         try {
-            // Recreate page if closed
-            if (page?.isClosed?.()) {
-                console.warn(`🔄 Page was closed — recreating for retry ${i + 1}`);
 
-                if (context?.isClosed?.()) {
-                    console.warn('⚠️ Browser context is closed — aborting retries');
-                    break;
+            if (!page || typeof page.goto !== 'function') {
+                throw new Error(`[${vehicleId}] Invalid page object passed to safeGoto`);
+            }
+            
+            if (!cleanUrl || cleanUrl === 'about:blank') {
+                console.warn(`[${vehicleId}] Skipping navigation — URL is blank or invalid: ${cleanUrl}`);
+                await page.screenshot({ path: path.join(auditPath, `invalid_url_${vehicleId}.png`) });
+                await page.close(); // 🔒 Clean up the tab
+                continue; // ⏭️ Skip to next retry or vehicle
+            } else {
+
+                await page.screenshot({ path: path.join(auditPath, `pre_goto_${vehicleId}.png`) });
+
+                const navStart = Date.now();
+                const response = await page.goto(cleanUrl, {
+                    waitUntil: 'networkidle',
+                    timeout: 30000
+                });
+                const navEnd = Date.now();
+
+                console.log(`[${vehicleId}] Navigation took ${navEnd - navStart}ms`);
+                console.log(`[${vehicleId}] Tab isClosed: ${page.isClosed?.()}`);
+
+                await page.screenshot({ path: path.join(auditPath, `post_goto_${vehicleId}.png`) });
+
+                const landedUrl = await page.url();
+                console.log(`[${vehicleId}] Landed on URL: ${landedUrl}`);
+
+                if (landedUrl === 'about:blank') {
+                    console.warn(`[${vehicleId}] Navigation failed — tab remained blank`);
+                    await page.screenshot({ path: path.join(auditPath, `blank_tab_${vehicleId}.png`) });
+                    await page.close();
+                    continue; // skip to next retry
                 }
 
-                page = await context.newPage();
+                console.log(`[${vehicleId}] Navigation response status: ${response?.status?.()}`);
             }
 
-            // Defensive check for corrupted page object
-            if (!page || typeof page.goto !== 'function') {
-                console.log(`🔍 page type: ${typeof page}, has goto: ${typeof page?.goto}`);
-                throw new Error('Invalid page object passed to safeGoto');
+            if (!auditPath || typeof auditPath !== 'string') {
+                throw new Error(`Invalid auditPath for ${vehicleId}`);
             }
 
-            // Attempt navigation with timeout guard
-            const response = await Promise.race([
-                page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ goto timeout')), 20000))
-            ]);
+            await page.waitForTimeout(3000); // Let scripts initialize
 
-            // Log failed responses
-            if (!response || !response.ok()) {
+            try {
+                await page.click('button:has-text("Reject")', { timeout: 3000 });
+                console.log(`✅ Cookies rejected for ${vehicleId}`);
+                await page.waitForTimeout(1000);
+            } catch {
+                console.log(`⚠️ No cookie modal found for ${vehicleId} — continuing`);
+            }
+
+            await page.screenshot({ path: path.join(auditPath, `post_cookie_${vehicleId}.png`) });
+
+
+            /*if (!response || !response.ok()) {
                 const status = response?.status?.() ?? 'unknown';
                 console.warn(`⚠️ Navigation failed: ${status} — ${url}`);
                 fs.appendFileSync(path.join(auditPath, 'bad_responses.txt'),
                     `Vehicle ID: ${vehicleId}, Status: ${status} — ${url}\n`);
                 continue;
+            }*/
+
+            await page.addStyleTag({
+                content: `
+                *, *::before, *::after {
+                    transition: none !important;
+                    animation: none !important;
+                }
+            `
+            });
+
+            await page.evaluate(() => window.scrollTo(0, 0));
+
+            try {
+                const listeners = await page.evaluate(() =>
+                    (window.getEventListeners?.(window)?.scroll || []).map(l => l.listener?.toString())
+                );
+                if (listeners?.length) {
+                    console.log(`[${vehicleId}] Scroll listeners detected:`, listeners.length);
+                }
+            } catch (err) {
+                console.warn(`[${vehicleId}] Could not inspect scroll listeners: ${err.message}`);
             }
 
-            // Allow rendering time
-            await page.waitForTimeout(2000);
+            await page.screenshot({ path: path.join(auditPath, `vehicle_load_${vehicleId}.png`) });
 
-            // Validate page content
             const content = await page.content();
             if (!content || content.length < 1000) {
                 console.warn(`⚠️ Page content too short — possible blank page: ${url}`);
-
-                const htmlPath = path.join(auditPath, `blank_vehicle_${vehicleId}.html`);
-                const screenshotPath = path.join(auditPath, `blank_vehicle_${vehicleId}.png`);
-
-                fs.writeFileSync(htmlPath, content);
-                await page.screenshot({ path: screenshotPath });
-
+                fs.writeFileSync(path.join(auditPath, `blank_vehicle_${vehicleId}.html`), content);
+                await page.screenshot({ path: path.join(auditPath, `blank_vehicle_${vehicleId}.png`) });
                 continue;
             }
 
-            return page; // Success
+            const adCheck = await page.evaluate(() => window.UVL?.AD || null);
+            fs.writeFileSync(path.join(auditPath, `ad_check_${vehicleId}.json`), JSON.stringify(adCheck, null, 2));
+
+            return page; // ✅ Always return the final tab
         } catch (err) {
             console.warn(`⚠️ Retry ${i + 1} failed for ${url}: ${err.message}`);
             await new Promise(res => setTimeout(res, 1500));
         }
     }
 
+    console.log(`[${vehicleId}] Exiting safeGoto`);
     throw new Error(`❌ Failed to load ${url} after ${retries} attempts`);
 }
 
@@ -163,19 +220,23 @@ async function navigateAndFilter(page, currentModel, auditPath) {
   // Select Series
   await page.waitForSelector('#series', { timeout: 60000 });
   await page.click('#series');
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(1200);
   for (let i = 0; i < modelConfig.seriesIndex; i++) await page.keyboard.press('ArrowDown');
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(700);
   await page.keyboard.press('Enter');
   console.log(`✅ Selected series for ${currentModel}`);
+
+  if (!auditPath || typeof auditPath !== 'string') {
+      throw new Error(`Invalid auditPath: ${auditPath}`);
+  }
 
   // Select Body Style (if applicable)
   if (!modelConfig.skipBodyStyle) {
     await page.waitForSelector('#body_style', { timeout: 60000 });
     await page.click('#body_style');
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1200);
     for (let i = 0; i < modelConfig.bodyStyleIndex; i++) await page.keyboard.press('ArrowDown');
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(700);
     await page.keyboard.press('Enter');
     console.log(`✅ Selected body style`);
   } else {
@@ -192,6 +253,8 @@ async function navigateAndFilter(page, currentModel, auditPath) {
   await page.click('button[data-tracking-effect="Additional filters"]');
   await page.locator('a.rc-collapse-header:has-text("Model variant")').click();
 
+  await page.waitForTimeout(1200);
+
   // Open engine derivatives dropdown
   const engineDropdown = page.locator('span.uvl-c-select__placeholder', {
     hasText: 'Engine derivatives'
@@ -199,6 +262,8 @@ async function navigateAndFilter(page, currentModel, auditPath) {
   await engineDropdown.waitFor({ state: 'visible', timeout: 10000 });
   await engineDropdown.click();
   console.log('✅ Engine derivatives dropdown clicked');
+
+  await page.waitForTimeout(1200);
 
   // Scroll dropdown to bottom
   await page.waitForSelector('#react-select-7-listbox', { timeout: 10000 });
@@ -223,11 +288,20 @@ async function navigateAndFilter(page, currentModel, auditPath) {
       console.log(`✅ Variant "${modelConfig.variant}" selected on retry`);
     } catch (finalErr) {
       const msg = `❌ Variant "${modelConfig.variant}" failed twice — aborting model`;
-      console.warn(msg);
-      fs.appendFileSync(path.join(auditPath, 'variant_failure.txt'),
+        console.warn(msg);
+
+        if (!auditPath || typeof auditPath !== 'string') {
+            throw new Error(`Invalid auditPath: ${auditPath}`);
+        }
+
+       fs.appendFileSync(path.join(auditPath, 'variant_failure.txt'),
         `${new Date().toISOString()} — ${msg}\n`);
-      throw new Error(msg);
+       throw new Error(msg);
     }
+  }
+
+  if (!auditPath || typeof auditPath !== 'string') {
+      throw new Error(`Invalid auditPath: ${auditPath}`);
   }
 
   // Confirm hidden input was updated
@@ -275,6 +349,7 @@ async function attemptPaginationAdvance(page, nextButton, auditPath, pageNumber)
     if (!fs.existsSync(auditPath)) {
         fs.mkdirSync(auditPath, { recursive: true });
     }
+
     try {
         await nextButton.click({ force: true });
         await page.waitForLoadState('networkidle');
@@ -286,6 +361,9 @@ async function attemptPaginationAdvance(page, nextButton, auditPath, pageNumber)
 
     const newUrl = await page.url();
     if (newUrl === currentUrl) {
+        await page.screenshot({
+            path: path.join(auditPath, `pagination_failure_page_${pageNumber}.png`)
+        });
         console.warn('⚠️ Pagination did not advance — retrying...');
         try {
             await nextButton.click({ force: true });
@@ -305,7 +383,7 @@ async function attemptPaginationAdvance(page, nextButton, auditPath, pageNumber)
     return true;
 }
 
-async function scrapePage(page, detailPage, context, {
+async function scrapePage(page, detailPage, context, browser,{
     pageNumber,
     expectedPages,
     expectedCount,
@@ -316,8 +394,8 @@ async function scrapePage(page, detailPage, context, {
     currentModel,
     auditPath
 }) {
-    console.log(`📄 Scraping page ${pageNumber}`);
-    console.log(`[scrapePage] Starting page ${pageNumber} at ${new Date().toISOString()}`);
+    console.log(`[scrapePage] ENTER page ${pageNumber}`);
+    const scrapeStart = Date.now();
 
     const vehiclesToProcess = await extractVehiclesFromPage(
         page,
@@ -330,11 +408,13 @@ async function scrapePage(page, detailPage, context, {
         selectors
     );
 
+    console.log(`✅ Extracted ${vehiclesToProcess.length} vehicles`);
+
+
     if (vehiclesToProcess.length === 0) {
-        console.log(`⏩ No vehicles to process on page ${pageNumber}. Skipping detail extraction.`);
-        return { hasNextPage: false };
-    }
-    else {
+        console.log(`⏩ No vehicles to process on page ${pageNumber}. Closing tab`);
+        await detailPage.close(); // 🔒 Clean up the tab
+    } else {
         for (let i = 0; i < vehiclesToProcess.length; i++) {
             const { registration, href } = vehiclesToProcess[i];
             const fullUrl = new URL(href, 'https://usedcars.bmw.co.uk').toString();
@@ -344,14 +424,34 @@ async function scrapePage(page, detailPage, context, {
             seenVehicles.set(vehicleId, { page: pageNumber, index: i, link: fullUrl });
             console.log(`🔍 Extracting data from: ${fullUrl}`);
 
-            let start = Date.now();
-            if (!detailPage || detailPage.isClosed?.()) {
-                detailPage = await context.newPage();
-                await detailPage.setViewportSize({ width: 1280, height: 800 });
+            if (context.isClosed?.()) {
+                console.warn(`⚠️ Context was closed before vehicle ${vehicleId}. Recreating...`);
+                context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
             }
 
+            let start = Date.now();
             try {
+                /*if (detailPage && !detailPage.isClosed()) {
+                    await detailPage.close();
+                    console.log(`Here`);
+                }*/
+
                 detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
+
+                /*const blankCheckSelector = 'div.vehicle-details, .vehicle-header, .main-content'; // tune as needed
+                const isBlank = await detailPage.evaluate((selector) => {
+                    const el = document.querySelector(selector);
+                    return !el || el.innerText.trim().length === 0;
+                }, blankCheckSelector);
+
+                if (isBlank) {
+                    console.warn(`[${vehicleId}] ❌ Blank page detected — skipping extraction`);
+                    fs.appendFileSync(path.join(auditPath, 'blank_pages.txt'),
+                        `Vehicle ID: ${vehicleId}, URL: ${fullUrl} — blank page detected\n`);
+                    await detailPage.screenshot({ path: path.join(auditPath, `blank_page_${vehicleId}.png`) });
+                    continue;
+                }*/
+
                 const loadTime = Date.now() - start;
                 console.log(`⏱️ Page load took ${loadTime}ms`);
             } catch (err) {
@@ -361,33 +461,111 @@ async function scrapePage(page, detailPage, context, {
                 continue;
             }
 
-            if (i === 0 && auditMode) {
-                const html = await detailPage.content();
-                fs.writeFileSync(path.join(auditPath, `first_vehicle_debug.html`), html);
+            let vehicleData;
+            let extractionFailed = false;
+
+            try {
+                const timeoutMs = 30000;
+                console.log(`⏱️ Timeout for ${vehicleId} set to ${timeoutMs}ms`);
+
+                await detailPage.screenshot({ path: path.join(auditPath, `extractor_main_entry_${vehicleId}.png`) });
+                console.log(`[${vehicleId}] Starting main extraction`);
+
+                try {
+                    vehicleData = await Promise.race([
+                        extractVehicleDataFromPage(detailPage, vehicleId, auditPath, 0, browser),
+                        new Promise((_, reject) =>
+                            setTimeout(() => reject(new Error(`[${vehicleId}] ⏱️ Extraction timeout after ${timeoutMs}ms`)), timeoutMs)
+                        )
+                    ]);
+
+                    const delayMs = 3000 + Math.floor(Math.random() * 2000);
+                    console.log(`⏳ Sleeping for ${delayMs}ms before next vehicle...`);
+                    await detailPage.waitForTimeout(delayMs);
+
+                } catch (innerErr) {
+                    extractionFailed = true;
+                    console.warn(`⚠️ Extraction error for ${vehicleId}: ${innerErr.message}`);
+
+                    fs.appendFileSync(path.join(auditPath, 'extraction_failures.txt'),
+                        `Vehicle ID: ${vehicleId}, Error: ${innerErr.message}\n`);
+
+                    try {
+                        const html = await detailPage.content();
+                        const domPath = path.join(auditPath, `timeout_dom_${vehicleId}.html`);
+                        const shotPath = path.join(auditPath, `timeout_dom_${vehicleId}.png`);
+
+                        fs.writeFileSync(domPath, html);
+                        await detailPage.screenshot({ path: shotPath });
+
+                        console.log(`[${vehicleId}] Timeout DOM snapshot saved: ${path.basename(domPath)}`);
+                    } catch (domErr) {
+                        console.warn(`[${vehicleId}] Failed to capture timeout DOM: ${domErr.message}`);
+                    }
+                }
+            } catch (outerErr) {
+                console.error(`❌ Fatal extraction failure for ${vehicleId}: ${outerErr.message}`);
+                extractionFailed = true;
             }
 
-            let vehicleData;
-            try {
-                    const timeoutMs = pageNumber === 1 ? 20000 : 12000;
+            if (extractionFailed || !vehicleData || Object.keys(vehicleData).length === 0) {
+                console.warn(`🔁 Retrying with fresh context for ${vehicleId}`);
+                const retryStart = Date.now();
 
-                    vehicleData = await Promise.race([
-                        extractVehicleDataFromPage(detailPage),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('⏱️ Extraction timeout')), timeoutMs))
+                if (detailPage && !detailPage.isClosed()) {
+                    await detailPage.close();
+                }
+
+                if (context.isClosed?.()) {
+                    console.warn('⚠️ Context closed — recreating');
+                    context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+                } else {
+                    await context.close();
+                    context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+                    console.log(`🔄 Context recreated after retry for ${vehicleId}`);
+                }
+                if (detailPage && !detailPage.isClosed()) {
+                    await detailPage.close();
+                }
+                console.log(`[audit] New tab created 4`);
+                detailPage = await context.newPage();
+                await detailPage.setViewportSize({ width: 1280, height: 800 });
+
+                detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
+
+                /*const blankCheckSelector = 'div.vehicle-details, .vehicle-header, .main-content'; // tune as needed
+                const isBlank = await detailPage.evaluate((selector) => {
+                    const el = document.querySelector(selector);
+                    return !el || el.innerText.trim().length === 0;
+                }, blankCheckSelector);
+
+                if (isBlank) {
+                    console.warn(`[${vehicleId}] ❌ Blank page detected — skipping extraction`);
+                    fs.appendFileSync(path.join(auditPath, 'blank_pages.txt'),
+                        `Vehicle ID: ${vehicleId}, URL: ${fullUrl} — blank page detected\n`);
+                    await detailPage.screenshot({ path: path.join(auditPath, `blank_page_${vehicleId}.png`) });
+                    continue;
+                }
+                */
+
+                console.log(`[${vehicleId}] Starting data extraction`);
+                await detailPage.screenshot({ path: path.join(auditPath, `extractor_entry_${vehicleId}.png`) });
+
+                vehicleData = await Promise.race([
+                    extractVehicleDataFromPage(detailPage, vehicleId, auditPath, 0, browser),
+                    new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error(`[${vehicleId}] Extractor hard timeout after 20000ms`)), 20000)
+                    )
                 ]);
 
+                const retryDuration = Date.now() - retryStart;
+                console.log(`⏱️ Retry for ${vehicleId} took ${retryDuration}ms`);
+
                 if (!vehicleData || Object.keys(vehicleData).length === 0) {
-                    console.warn(`⚠️ Empty vehicle data — retrying with fresh tab`);
-                    detailPage = await context.newPage();
-                    await detailPage.setViewportSize({ width: 1280, height: 800 });
-                    detailPage = await safeGoto(context, detailPage, fullUrl, vehicleId, auditPath);
-                    vehicleData = await extractVehicleDataFromPage(detailPage, vehicleId, auditPath);
+                    throw new Error(`Retry failed for ${vehicleId}`);
                 }
-            } catch (err) {
-                console.warn(`⚠️ Extraction failed for ${fullUrl}: ${err.message}`);
-                fs.appendFileSync('data/reprocess_queue.txt', `${vehicleId} — ${fullUrl}\n`);
-                fs.appendFileSync(path.join(auditPath, 'extractor_errors.txt'),
-                    `URL: ${fullUrl}\nError: ${err.message}\n\n`);
-                continue;
+
+                extractionFailed = false;
             }
 
             vehicleData.id = vehicleId;
@@ -412,6 +590,7 @@ async function scrapePage(page, detailPage, context, {
             await new Promise(res => setTimeout(res, 1500));
             if (results.length % 25 === 0) {
                 await detailPage.close();
+                console.log(`[audit] New tab created 5`);
                 detailPage = await context.newPage();
                 await detailPage.setViewportSize({ width: 1280, height: 800 });
                 console.log(`🔄 Detail page reset after ${results.length} vehicles`);
@@ -419,18 +598,33 @@ async function scrapePage(page, detailPage, context, {
         }
     }
 
-    
-
-    if (auditMode) {
-        await page.screenshot({ path: path.join(auditPath, `page-${pageNumber}.png`) });
-        console.log(`📸 Audit screenshot saved: page-${pageNumber}.png`);
-        const html = await detailPage.content();
-        fs.writeFileSync(path.join(auditPath, `fail_page_${pageNumber}_dom.html`), html);
+    if (!auditPath || typeof auditPath !== 'string') {
+        throw new Error(`Invalid auditPath for ${pageNumber}`);
     }
 
-    const html = await page.content();
-    fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_dom.html`), html);
+    // 📸 Final audit snapshot
+    if (auditMode && detailPage && !detailPage.isClosed?.()) {
+        try {
+            console.log(`[scrapePage] Capturing fail_page_${pageNumber}_dom.html`);
+            const html = await detailPage.content();
+            fs.writeFileSync(path.join(auditPath, `fail_page_${pageNumber}_dom.html`), html);
+        } catch (err) {
+            console.warn(`[scrapePage] Failed to capture detailPage DOM: ${err.message}`);
+        }
+    } else {
+        console.warn(`[scrapePage] Skipped DOM dump — detailPage was closed`);
+    }
 
+    if (page && !page.isClosed?.()) {
+        try {
+            const html = await page.content();
+            fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_dom.html`), html);
+        } catch (err) {
+            console.warn(`[scrapePage] Failed to capture page DOM: ${err.message}`);
+        }
+    }
+
+    // 🔍 Pagination audit
     const nextButton = page.locator('a.uvl-c-pagination__direction--next[aria-label="Next page"]');
     const nextVisible = await nextButton.isVisible();
     const ariaDisabled = await nextButton.getAttribute('aria-disabled');
@@ -452,12 +646,20 @@ async function scrapePage(page, detailPage, context, {
         hiddenLabel: hiddenLabel?.trim(),
         trackingAction
     };
-    fs.writeFileSync(path.join(auditPath, `page_${pageNumber}_pagination.json`), JSON.stringify(paginationAudit, null, 2));
 
+    fs.writeFileSync(
+        path.join(auditPath, `page_${pageNumber}_pagination.json`),
+        JSON.stringify(paginationAudit, null, 2)
+    );
+
+    // ➡️ Determine if pagination should continue
     let hasNextPage = nextVisible && ariaDisabled === 'false';
 
     if (hasNextPage) {
         hasNextPage = await attemptPaginationAdvance(page, nextButton, auditPath, pageNumber);
+        if (hasNextPage) {
+            console.log(`➡️ Pagination advanced to page ${pageNumber + 1}`);
+        }
     }
 
     if (!hasNextPage || (expectedPages && pageNumber >= expectedPages)) {
@@ -465,12 +667,21 @@ async function scrapePage(page, detailPage, context, {
         hasNextPage = false;
     }
 
-    console.log(`[scrapePage] Finished page ${pageNumber} at ${new Date().toISOString()}`);
+    fs.appendFileSync(path.join(auditPath, 'pagination_log.txt'),
+        `Page ${pageNumber} — URL: ${await page.url()}\n`);
+
+    const scrapeDuration = Date.now() - scrapeStart;
+    console.log(`[scrapePage] Duration: ${scrapeDuration}ms`);
+    console.log(`[scrapePage] Completed page ${pageNumber} with ${results.length} results`);
+    console.log(`[scrapePage] EXIT page ${pageNumber}`);
+
+    const mem = process.memoryUsage();
+    console.log(`[scrapePage] Memory used: RSS ${Math.round(mem.rss / 1024 / 1024)}MB`);
 
     return { hasNextPage };
 }
 
-async function finaliseRun({ seen, results, seenVehicles, expectedCount, currentModel, auditPath }) {
+async function finaliseRun({ seen, results = [], seenVehicles, expectedCount, currentModel, auditPath }) {
     const modelSafe = currentModel.replace(/\s+/g, '_');
     const dataDir = path.resolve('data');
 
@@ -481,11 +692,19 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
     const missingPath = path.join(dataDir, `missing_vehicles_${modelSafe}.txt`);
     const duplicatesPath = path.join(dataDir, `duplicates_${modelSafe}.txt`);
 
-    saveJSON(seenPath, Array.from(seen).map(id => id.split('?')[0].trim()));
+    try {
+        saveJSON(seenPath, Array.from(seen).map(id => id.split('?')[0].trim()));
+    } catch (err) {
+        console.error(`❌ Failed to save seen vehicles: ${err.message}`);
+    }
 
-    fs.writeFileSync(skippedPath, Array.from(seen)
-        .filter(id => !results.find(v => v.id === id))
-        .join('\n'));
+    try {
+        fs.writeFileSync(skippedPath, Array.from(seen)
+            .filter(id => !results.find(v => v.id === id))
+            .join('\n'));
+    } catch (err) {
+        console.error(`❌ Failed to write skipped IDs: ${err.message}`);
+    }
 
     console.log(`✅ Total vehicles assessed this run: ${results.length}`);
     console.log(`📦 Total vehicles ever seen: ${seen.size}`);
@@ -499,30 +718,46 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
         const body = `Here are the top matches:\n\n${lines}`;
 
         if (!dryRun) {
-            if (verboseMode) console.log('📤 Attempting to send email...');
-            await sendEmail({ subject, body });
-            console.log(`📧 Sent digest with ${sorted.length} vehicles`);
+            try {
+                if (verboseMode) console.log('📤 Attempting to send email...');
+                await sendEmail({ subject, body });
+                console.log(`📧 Sent digest with ${sorted.length} vehicles`);
+            } catch (err) {
+                console.warn(`📭 Email failed: ${err.message}`);
+            }
         } else {
             console.log(`🛑 Dry run mode — email not sent`);
         }
 
-        fs.appendFileSync(alertsPath, `Run on ${new Date().toISOString()}\n${subject}\n${body}\n\n`);
+        try {
+            fs.appendFileSync(alertsPath, `Run on ${new Date().toISOString()}\n${subject}\n${body}\n\n`);
+        } catch (err) {
+            console.warn(`⚠️ Failed to append alerts: ${err.message}`);
+        }
 
-        const output = loadJSON(outputPath) || [];
-        output.push(...sorted);
-        saveJSON(outputPath, output);
+        try {
+            const output = loadJSON(outputPath) || [];
+            output.push(...sorted);
+            saveJSON(outputPath, output);
+        } catch (err) {
+            console.error(`❌ Failed to update output file: ${err.message}`);
+        }
 
         console.log(`🧠 Run complete: ${results.length} new, ${seen.size - results.length} skipped`);
 
-        if (auditMode && expectedCount) {
+        if (auditMode && expectedCount && auditPath) {
             fs.appendFileSync(path.join(auditPath, 'summary.txt'), `Total vehicles listed on site: ${expectedCount}\n`);
         }
 
         const missingIds = Array.from(seenVehicles.keys()).filter(id => !results.find(v => v.id === id));
-        fs.writeFileSync(missingPath, missingIds.map(id => {
-            const meta = seenVehicles.get(id);
-            return `ID: ${id}, Page: ${meta.page}, Index: ${meta.index}, URL: ${meta.link}`;
-        }).join('\n'));
+        try {
+            fs.writeFileSync(missingPath, missingIds.map(id => {
+                const meta = seenVehicles.get(id);
+                return `ID: ${id}, Page: ${meta.page}, Index: ${meta.index}, URL: ${meta.link}`;
+            }).join('\n'));
+        } catch (err) {
+            console.warn(`⚠️ Failed to write missing vehicles: ${err.message}`);
+        }
 
         console.log(`❓ Missing vehicles logged: ${missingIds.length}`);
 
@@ -534,27 +769,27 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
             }
         }
 
-        for (const [page, entries] of Object.entries(missingByPage)) {
-            fs.appendFileSync(path.join(auditPath, 'missing_by_page.txt'), `Page ${page} — ${entries.length} missing\n`);
-            entries.forEach(entry => {
-                fs.appendFileSync(path.join(auditPath, 'missing_by_page.txt'),
-                    `  • Index ${entry.index}, ID: ${entry.id}, URL: ${entry.url}\n`);
-            });
-        }
+        if (auditPath) {
+            for (const [page, entries] of Object.entries(missingByPage)) {
+                fs.appendFileSync(path.join(auditPath, 'missing_by_page.txt'), `Page ${page} — ${entries.length} missing\n`);
+                entries.forEach(entry => {
+                    fs.appendFileSync(path.join(auditPath, 'missing_by_page.txt'),
+                        `  • Index ${entry.index}, ID: ${entry.id}, URL: ${entry.url}\n`);
+                });
+            }
 
-        if (expectedCount && seenVehicles.size < expectedCount) {
-            const missing = expectedCount - seenVehicles.size;
-            console.warn(`❌ Expected ${expectedCount} vehicles, but only saw ${seenVehicles.size} — ${missing} missing`);
-            fs.appendFileSync(path.join(auditPath, 'missing_summary.txt'),
-                `${new Date().toISOString()} — Expected: ${expectedCount}, Seen: ${seenVehicles.size}, Missing: ${missing}\n`);
-        }
+            if (expectedCount && seenVehicles.size < expectedCount) {
+                const missing = expectedCount - seenVehicles.size;
+                console.warn(`❌ Expected ${expectedCount} vehicles, but only saw ${seenVehicles.size} — ${missing} missing`);
+                fs.appendFileSync(path.join(auditPath, 'missing_summary.txt'),
+                    `${new Date().toISOString()} — Expected: ${expectedCount}, Seen: ${seenVehicles.size}, Missing: ${missing}\n`);
+            }
 
-        fs.writeFileSync(duplicatesPath, Array.from(seenVehicles.entries())
-            .filter(([id]) => !results.find(v => v.id === id))
-            .map(([id, meta]) => `ID: ${id}, Page: ${meta.page}, Index: ${meta.index}, URL: ${meta.link}`)
-            .join('\n'));
+            fs.writeFileSync(duplicatesPath, Array.from(seenVehicles.entries())
+                .filter(([id]) => !results.find(v => v.id === id))
+                .map(([id, meta]) => `ID: ${id}, Page: ${meta.page}, Index: ${meta.index}, URL: ${meta.link}`)
+                .join('\n'));
 
-        if (auditMode) {
             for (const v of results) {
                 fs.appendFileSync(path.join(auditPath, 'spec_matches.txt'),
                     `ID: ${v.id}, Score: ${v.scorePercent}%\n` +
@@ -565,13 +800,19 @@ async function finaliseRun({ seen, results, seenVehicles, expectedCount, current
                         `ID: ${v.id}\nUnmatched:\n${v.unmatchedSpecs.join('\n')}\n\n`);
                 }
             }
+        } else {
+            console.warn(`⚠️ Audit path not set — skipping audit file writes`);
         }
     }
 }
 
-async function retryFailedExtractions(context, currentModel, auditPath) {
+async function retryFailedExtractions(context, currentModel, auditPath, browser) {
     const queuePath = path.join('data', 'reprocess_queue.txt');
     if (!fs.existsSync(queuePath)) return;
+
+    if (!auditPath || typeof auditPath !== 'string') {
+        throw new Error(`Invalid auditPath: ${auditPath}`);
+    }
 
     if (!fs.existsSync(auditPath)) {
         fs.mkdirSync(auditPath, { recursive: true });
@@ -593,30 +834,109 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
         let retryPage;
 
         try {
-
+            // Create new tab
             try {
                 retryPage = await context.newPage();
+                console.log(`[audit] New tab created 6`);
                 await retryPage.setViewportSize({ width: 1280, height: 800 });
             } catch (err) {
                 console.warn(`⚠️ Failed to create new page during retry: ${err.message}`);
                 break;
             }
+
+            // Navigate to URL
+            if (detailPage && !detailPage.isClosed()) {
+                await detailPage.close();
+            }
+            console.log(`[audit] New tab created 7`);
+            detailPage = await context.newPage();
+            await detailPage.setViewportSize({ width: 1280, height: 800 });
             await safeGoto(context, retryPage, fullUrl, vehicleId);
 
-            const vehicleData = await extractVehicleDataFromPage(retryPage, vehicleId, auditPath);
+            const url1 = await page.url();
+            const title1 = await page.title().catch(() => 'title error');
+            const domVisible1 = await page.evaluate(() => document.visibilityState === 'visible');
+            const viewport1 = await page.viewportSize();
+            const isClosed1 = page.isClosed();
+            const isDetached1 = page.mainFrame().isDetached();
+
+            await logAuditEntry({
+                auditPath,
+                vehicleId,
+                event: 'pre-retry diagnostics',
+                details: {
+                    url1,
+                    isClosed1,
+                    isDetached1,
+                    title1,
+                    domVisible1,
+                    viewport1
+                }
+            });
+
+            // 🛡️ Guard clause: skip retry if tab is viable
+            if (!diagnostics.isClosed && !diagnostics.isDetached) {
+                await logAuditEntry({
+                    auditPath,
+                    vehicleId,
+                    event: 'retry skipped',
+                    reason: 'tab still viable',
+                    status: 'skipped',
+                    details: diagnostics
+                });
+            }
+
+            // 🧠 Resolve all awaited values before constructing the details object
+            const url2 = await page.url();
+            const title2 = await page.title().catch(() => 'title error');
+            const domVisible2 = await page.evaluate(() => document.visibilityState);
+            const contextClosed2 = page.context().isClosed?.();
+            const isClosed2 = page.isClosed();
+            const isDetached2 = page.mainFrame().isDetached();
+
+            await logAuditEntry({
+                auditPath,
+                vehicleId,
+                event: 'Pre-retry diagnostics',
+                status: 'info',
+                details: {
+                    url2,
+                    title2,
+                    domVisible2,
+                    contextClosed2,
+                    isClosed2,
+                    isDetached2
+                }
+            });
+
+            // 🧾 Screenshot before retry extraction
+            await page.screenshot({ path: path.join(auditPath, `extractor_retry_entry_${vehicleId}.png`) });
+            console.log(`[${vehicleId}] Starting retry extraction`);
+
+            // 🕒 Watchdog wrapper to catch extractor stalls
+            const vehicleData = await Promise.race([
+                extractVehicleDataFromPage(page, vehicleId, auditPath, retryCount, browser),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error(`[${vehicleId}] Extractor hard timeout after 20000ms`)), 20000)
+                )
+            ]);
+            await captureAuditArtifacts(retryPage, vehicleId, auditPath); // no err on success
             vehicleData.id = vehicleId;
 
+            // Enrich and timestamp
             const enriched = evaluateSpecs(vehicleData);
             enriched.timestamp = new Date().toISOString();
-
             output.push(enriched);
 
+            // Save raw data if audit mode
             if (auditMode) {
                 fs.appendFileSync(path.join(auditPath, 'raw_vehicle_data.txt'),
                     JSON.stringify({ url: fullUrl, data: vehicleData }, null, 2) + '\n\n');
             }
 
-            await retryPage.close();
+            const delayMs = 3000 + Math.floor(Math.random() * 2000); // 3–5 seconds
+            console.log(`⏳ Sleeping for ${delayMs}ms before next vehicle...`);
+            await detailPage.waitForTimeout(delayMs);
 
             console.log(`✅ Retry successful for ${vehicleId}`);
         } catch (err) {
@@ -636,7 +956,7 @@ async function retryFailedExtractions(context, currentModel, auditPath) {
     fs.unlinkSync(queuePath);
 
     // ✅ Restart logic
-    const models = ['X5', 'X3', '3 Series', '5 Series'];
+    const models = ['X5', '5 Series'];
     const modelIndex = parseInt(process.env.MODEL_INDEX || '0', 10);
 
     if (modelIndex + 1 < models.length) {
@@ -653,6 +973,10 @@ function restartScript() {
     const { spawn } = require('child_process'); // ✅ must be inside the function or accessible globally
     const args = process.argv.slice(1);
     const retryCount = parseInt(process.env.RETRY_COUNT || '0');
+
+    if (!auditPath || typeof auditPath !== 'string') {
+        throw new Error(`Invalid auditPath: ${auditPath}`);
+    }
 
     if (retryCount >= 3) {
         console.error('🛑 Max retries reached. Aborting.');
@@ -673,10 +997,19 @@ function restartScript() {
 }
 
 (async () => {
+    const visitedUrls = new Set();
     const { browser, context, page } = await setupBrowser();
+
+    const results = [];
+    let exitReason = 'Completed normally';
+    let pageNumber = 1;
 
     try {
         if (auditMode) {
+            if (!auditPath || typeof auditPath !== 'string') {
+                throw new Error(`Invalid auditPath: ${auditPath}`);
+            }
+
             if (!fs.existsSync(auditPath)) {
                 fs.mkdirSync(auditPath, { recursive: true });
                 if (verboseMode) console.log(`✅ Created audit directory at: ${auditPath}`);
@@ -697,27 +1030,15 @@ function restartScript() {
 
         const seen = new Set(loadJSON(seenPath)?.map(id => id.split('?')[0].trim()) || []);
         const seenRegistrations = new Set(loadJSON(seenRegPath) || []);
+        const seenVehicles = new Map();
 
         console.log(`📗 Loaded ${seen.size} seen vehicle IDs`);
         console.log(`📘 Loaded ${seenRegistrations.size} seen registrations`);
 
         const outputPath = path.join('data', `output_${currentModel.replace(/\s+/g, '_')}.json`);
-        const results = [];
-        const seenVehicles = new Map();
-        let detailPage;
-
         const crypto = require('crypto');
         const seenHashes = new Set();
-        let pageNumber = 1;
         let hasNextPage = true;
-        let exitReason = 'Completed normally';
-
-        const withTimeout = async (fn, ms = 15000) => {
-            return Promise.race([
-                fn(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Extractor timeout')), ms))
-            ]);
-        };
 
         while (hasNextPage) {
             if (expectedPages && pageNumber > expectedPages) {
@@ -725,6 +1046,14 @@ function restartScript() {
                 exitReason = `Page limit exceeded (${pageNumber}/${expectedPages})`;
                 break;
             }
+
+            const currentUrl = await page.url();
+            if (visitedUrls.has(currentUrl)) {
+                console.warn(`⚠️ Duplicate URL detected: ${currentUrl}`);
+                exitReason = `Duplicate URL at page ${pageNumber}`;
+                break;
+            }
+            visitedUrls.add(currentUrl);
 
             const html = await page.content();
             const hash = crypto.createHash('md5').update(html).digest('hex');
@@ -737,14 +1066,18 @@ function restartScript() {
 
             seenHashes.add(hash);
 
-            if (!detailPage || detailPage.isClosed?.()) {
-                detailPage = await context.newPage();
-                await detailPage.setViewportSize({ width: 1280, height: 800 });
-            }
-
             try {
-                await withTimeout(async () => {
-                    const scrapeResult = await scrapePage(page, detailPage, context, {
+                console.log(`[audit] New tab created — 8`);
+                const detailPage = await context.newPage();
+                await detailPage.setViewportSize({ width: 1280, height: 800 });
+
+                const vehicleCountEstimate = await page.locator('.uvl-c-vehicle-card').count();
+                const timeoutMs = Math.max(30000, 10000 + vehicleCountEstimate * 3000);
+                console.log(`timeout ${timeoutMs}ms & ${vehicleCountEstimate} vehicles`);
+
+                await scrapePage(
+                    page, detailPage, context, browser,
+                    {
                         pageNumber,
                         expectedPages,
                         expectedCount,
@@ -754,31 +1087,9 @@ function restartScript() {
                         seenRegistrations,
                         currentModel,
                         auditPath
-                    });
-
-                    /*
-                    let details;
-                    let failUrl = 'unknown';
-
-                    try {
-                        details = await detailPage.$('.vehicle-details');
-                        failUrl = await detailPage.url();
-                    } catch (e) {
-                        console.warn(`⚠️ Failed to query vehicle-details: ${e.message}`);
-                        try {
-                            failUrl = await detailPage.url();
-                        } catch (_) {
-                            console.warn('⚠️ Could not retrieve failUrl — page may be closed');
-                        }
                     }
+                );
 
-                    if (!details) {
-                        fs.appendFileSync(path.join(auditPath, 'failed_urls.txt'), `${failUrl}\n`);
-                        throw new Error('Vehicle details not found');
-                    }*/
-
-                    return scrapeResult;
-                }, 30000);
             } catch (err) {
                 console.error(`❌ Error scraping page ${pageNumber}:`, err);
 
@@ -787,22 +1098,10 @@ function restartScript() {
                     fs.writeFileSync(failPath, `Failed at ${new Date().toISOString()}\n${err.stack}`);
                 }
 
-                try {
-                    if (!detailPage.isClosed?.()) {
-                        await page.screenshot({ path: path.join(auditPath, `fail_page_${pageNumber}.png`) });
-                    }
-                } catch (screenshotErr) {
-                    console.warn(`⚠️ Screenshot failed: ${screenshotErr.message}`);
-                }
-
                 exitReason = `Error during scrapePage at page ${pageNumber}: ${err.message}`;
                 break;
             }
 
-            if (detailPage && !detailPage.isClosed?.()) {
-                await detailPage.close();
-            }
-            detailPage = null;
             pageNumber++;
         }
 
@@ -837,7 +1136,7 @@ function restartScript() {
         const finalLog = updatedLog.filter(v => v.missingCount < 2);
         const removed = updatedLog.filter(v => v.missingCount >= 2);
 
-        fs.writeFileSync(outputPath, JSON.stringify(finalLog, null, 2));
+        saveJSON(outputPath, finalLog);
 
         const scopedRemovedPath = path.resolve(auditPath, `removed_vehicles_${currentModel.replace(/\s+/g, '_')}.json`);
         let archive = [];
@@ -848,15 +1147,25 @@ function restartScript() {
 
         const now = new Date().toISOString();
         archive.push(...removed.map(v => ({ ...v, removedAt: now })));
-        fs.writeFileSync(scopedRemovedPath, JSON.stringify(archive, null, 2));
+        saveJSON(scopedRemovedPath, archive);
 
         if (verboseMode) {
             console.log(`🧮 Updated missingCount for ${updatedLog.length} vehicles`);
             console.log(`🗑️ Removed ${removed.length} vehicles from output.json`);
         }
 
-        await finaliseRun({ seen, results, seenVehicles, expectedCount, currentModel, auditPath, auditMode, verboseMode });
-        await retryFailedExtractions(context, currentModel, auditPath);
+        await retryFailedExtractions(context, currentModel, auditPath, browser);
+
+        await finaliseRun({
+            seen,
+            results,
+            seenVehicles,
+            expectedCount,
+            currentModel,
+            auditPath,
+            auditMode,
+            verboseMode
+        });
 
         saveJSON(seenPath, Array.from(seen));
         saveJSON(seenRegPath, Array.from(seenRegistrations));
@@ -882,6 +1191,17 @@ function restartScript() {
                 restartLogPath,
                 `${new Date().toISOString()} — Restarting due to: ${err.message}\n`
             );
+        }
+
+        try {
+            fs.appendFileSync(path.join(auditPath, 'run_summary.txt'),
+                `Run completed at ${new Date().toISOString()}\n` +
+                `Total vehicles processed: ${results?.length || 0}\n` +
+                `Pages scraped: ${pageNumber ?? 'unknown'}\n` +
+                `Exit reason: ${exitReason ?? 'Unknown error'}\n\n`
+            );
+        } catch (logErr) {
+            console.warn(`⚠️ Failed to write run summary: ${logErr.message}`);
         }
 
         if (typeof restartScript === 'function') {
