@@ -122,7 +122,11 @@ https://usedcars.bmw.co.uk/vehicle/202509096177535
 • BMW 5 Series 550e xDrive M Sport Pro Saloon 3.0 4dr — 20% match
 https://usedcars.bmw.co.uk/vehicle/202509166364710
 
+<<<<<<< Updated upstream
 Run on 2025-09-24T22:52:07.607Z
+=======
+Run on 2025-09-24T22:52:22.692Z
+>>>>>>> Stashed changes
 🚗 BMW Digest: 4 vehicles assessed
 Here are the top matches:
 
