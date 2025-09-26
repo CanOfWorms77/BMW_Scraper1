@@ -1078,8 +1078,13 @@ https://usedcars.bmw.co.uk/vehicle/202509266663799
 • BMW X5 xDrive50e M Sport 3.0 5dr — 0% match
 https://usedcars.bmw.co.uk/vehicle/202509266666724
 
+<<<<<<< Updated upstream
 Run on 2025-09-26T22:19:41.778Z
 🚗 BMW Digest: 178 vehicles assessed
+=======
+Run on 2025-09-26T22:32:21.480Z
+🚗 BMW Digest: 201 vehicles assessed
+>>>>>>> Stashed changes
 Here are the top matches:
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 93% match
@@ -1116,6 +1121,12 @@ https://usedcars.bmw.co.uk/vehicle/202508275799263
 https://usedcars.bmw.co.uk/vehicle/202509226523300
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 69% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507234741159
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 69% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202509166364692
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 69% match
@@ -1131,6 +1142,12 @@ https://usedcars.bmw.co.uk/vehicle/202405219935759
 https://usedcars.bmw.co.uk/vehicle/202506023052521
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 64% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507244792818
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 64% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202509126270363
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 62% match
@@ -1173,6 +1190,12 @@ https://usedcars.bmw.co.uk/vehicle/202505152419120
 https://usedcars.bmw.co.uk/vehicle/202506113394064
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 51% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507034133276
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 51% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508075242387
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 49% match
@@ -1182,6 +1205,15 @@ https://usedcars.bmw.co.uk/vehicle/202504151359809
 https://usedcars.bmw.co.uk/vehicle/202505212641792
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 49% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202506243817174
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 49% match
+https://usedcars.bmw.co.uk/vehicle/202506263886730
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 49% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508225676904
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 49% match
@@ -1206,6 +1238,12 @@ https://usedcars.bmw.co.uk/vehicle/202502129025975
 https://usedcars.bmw.co.uk/vehicle/202506183630084
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 42% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507074233733
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 42% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202509015935724
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 40% match
@@ -1224,6 +1262,12 @@ https://usedcars.bmw.co.uk/vehicle/202509186444562
 https://usedcars.bmw.co.uk/vehicle/202509226518938
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 36% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507074228611
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 36% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202509036013595
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 36% match
@@ -1236,6 +1280,12 @@ https://usedcars.bmw.co.uk/vehicle/202509196472011
 https://usedcars.bmw.co.uk/vehicle/202505021967028
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 33% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507254828103
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 33% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508115329447
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 33% match
@@ -1254,6 +1304,12 @@ https://usedcars.bmw.co.uk/vehicle/202503150169007
 https://usedcars.bmw.co.uk/vehicle/202504121249617
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 31% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507134433735
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 31% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202509096167940
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 31% match
@@ -1278,6 +1334,12 @@ https://usedcars.bmw.co.uk/vehicle/202501318613200
 https://usedcars.bmw.co.uk/vehicle/202506123434324
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 29% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202508015054786
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 29% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508215638183
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 29% match
@@ -1296,6 +1358,12 @@ https://usedcars.bmw.co.uk/vehicle/202503210407630
 https://usedcars.bmw.co.uk/vehicle/202506063223321
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 27% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202508015031775
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 27% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202509236554351
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 27% match
@@ -1326,6 +1394,18 @@ https://usedcars.bmw.co.uk/vehicle/202508085260206
 https://usedcars.bmw.co.uk/vehicle/202508205609654
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 20% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507194636994
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 20% match
+https://usedcars.bmw.co.uk/vehicle/202507254806724
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 20% match
+https://usedcars.bmw.co.uk/vehicle/202507315011131
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 20% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508075211095
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 20% match
@@ -1440,6 +1520,12 @@ https://usedcars.bmw.co.uk/vehicle/202509266663799
 https://usedcars.bmw.co.uk/vehicle/202505232738082
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 18% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507224721031
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 18% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508065201149
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 18% match
@@ -1461,6 +1547,18 @@ https://usedcars.bmw.co.uk/vehicle/202411186413420
 https://usedcars.bmw.co.uk/vehicle/202504040954107
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 16% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202506203703259
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 16% match
+https://usedcars.bmw.co.uk/vehicle/202507034108341
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 16% match
+https://usedcars.bmw.co.uk/vehicle/202507114389614
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 16% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508155479825
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 16% match
@@ -1533,6 +1631,18 @@ https://usedcars.bmw.co.uk/vehicle/202509126260173
 https://usedcars.bmw.co.uk/vehicle/202502068826952
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 11% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202507224713475
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 11% match
+https://usedcars.bmw.co.uk/vehicle/202507284906617
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 11% match
+https://usedcars.bmw.co.uk/vehicle/202507315005292
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 11% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508115339923
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 11% match
@@ -1587,6 +1697,12 @@ https://usedcars.bmw.co.uk/vehicle/202505092215356
 https://usedcars.bmw.co.uk/vehicle/202506173607732
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 7% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202508045107800
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 7% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202508115335169
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 7% match
@@ -1599,6 +1715,12 @@ https://usedcars.bmw.co.uk/vehicle/202509086136604
 https://usedcars.bmw.co.uk/vehicle/202509156344970
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 4% match
+<<<<<<< Updated upstream
+=======
+https://usedcars.bmw.co.uk/vehicle/202506273939280
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 4% match
+>>>>>>> Stashed changes
 https://usedcars.bmw.co.uk/vehicle/202509015924453
 
 • BMW X5 xDrive50e M Sport 3.0 5dr — 4% match
