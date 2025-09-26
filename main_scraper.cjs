@@ -323,7 +323,8 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.waitForSelector('a.uvl-c-advert__media-link[href*="/vehicle/"]', { timeout: 15000 });
     console.log('✅ Listings loaded');
 
-    const modelNameText = await page.locator('img.uvl-c-advert__media-image').allAttributeValues('alt');
+    const modelNameText = await page.locator('img.uvl-c-advert__media-image').evaluateAll(nodes =>
+        nodes.map(n => n.getAttribute('alt') || ''));
     const expectedText = modelConfig.modeltext.toLowerCase();
     const matchedModelText = modelNameText.find(alt => alt.toLowerCase().includes(expectedText));
 
