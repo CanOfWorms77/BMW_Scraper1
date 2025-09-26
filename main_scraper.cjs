@@ -196,42 +196,40 @@ async function setupBrowser() {
 
 async function navigateAndFilter(page, currentModel, auditPath) {
 
-
-  if (!auditPath || typeof auditPath !== 'string') {
+    if (!auditPath || typeof auditPath !== 'string') {
     throw new Error(`Invalid auditPath: ${auditPath}`);
-  }
+    }
 
-  if (!fs.existsSync(auditPath)) {
+    if (!fs.existsSync(auditPath)) {
     fs.mkdirSync(auditPath, { recursive: true });
-  }
+    }
 
+    console.log(`🌐 Navigating to BMW Approved Used site for ${currentModel}...`);
+    const modelConfig = getModelSelectorConfig(currentModel);
+    if (!modelConfig) throw new Error(`❌ No selector config found for model: ${currentModel}`);
 
-  console.log(`🌐 Navigating to BMW Approved Used site for ${currentModel}...`);
-  const modelConfig = getModelSelectorConfig(currentModel);
-  if (!modelConfig) throw new Error(`❌ No selector config found for model: ${currentModel}`);
+    await page.goto('https://usedcars.bmw.co.uk/');
+    await page.click('button:has-text("Reject")');
+    console.log('✅ Cookies rejected');
+    await page.waitForTimeout(1000);
 
-  await page.goto('https://usedcars.bmw.co.uk/');
-  await page.click('button:has-text("Reject")');
-  console.log('✅ Cookies rejected');
-  await page.waitForTimeout(1000);
+    await page.screenshot({ path: path.join(auditPath, 'failure_before_series.png') });
 
-  await page.screenshot({ path: path.join(auditPath, 'failure_before_series.png') });
+    // Select Series
+    await page.waitForSelector('#series', { timeout: 60000 });
+    await page.click('#series');
+    await page.waitForTimeout(1200);
+    for (let i = 0; i < modelConfig.seriesIndex; i++) await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(700);
+    await page.keyboard.press('Enter');
+    console.log(`✅ Selected series for ${currentModel}`);
 
-  // Select Series
-  await page.waitForSelector('#series', { timeout: 60000 });
-  await page.click('#series');
-  await page.waitForTimeout(1200);
-  for (let i = 0; i < modelConfig.seriesIndex; i++) await page.keyboard.press('ArrowDown');
-  await page.waitForTimeout(700);
-  await page.keyboard.press('Enter');
-  console.log(`✅ Selected series for ${currentModel}`);
+    if (!auditPath || typeof auditPath !== 'string') {
+        throw new Error(`Invalid auditPath: ${auditPath}`);
+    }
 
-  if (!auditPath || typeof auditPath !== 'string') {
-      throw new Error(`Invalid auditPath: ${auditPath}`);
-  }
-
-  // Select Body Style (if applicable)
-  if (!modelConfig.skipBodyStyle) {
+    // Select Body Style (if applicable)
+    if (!modelConfig.skipBodyStyle) {
     await page.waitForSelector('#body_style', { timeout: 60000 });
     await page.click('#body_style');
     await page.waitForTimeout(1200);
@@ -239,91 +237,106 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.waitForTimeout(700);
     await page.keyboard.press('Enter');
     console.log(`✅ Selected body style`);
-  } else {
+    } else {
     console.log(`⏭️ Skipping body style for ${currentModel}`);
     fs.appendFileSync(path.join(auditPath, 'skipped_body_style.txt'),
-      `${new Date().toISOString()} — Skipped body style for ${currentModel}\n`);
-  }
+        `${new Date().toISOString()} — Skipped body style for ${currentModel}\n`);
+    }
 
-  // Trigger initial search to load filters
-  await page.click('button.uvl-c-expected-results-btn');
-  console.log('✅ Search button clicked');
+    // Trigger initial search to load filters
+    await page.click('button.uvl-c-expected-results-btn');
+    console.log('✅ Search button clicked');
 
-  // Open variant filter section
-  await page.click('button[data-tracking-effect="Additional filters"]');
-  await page.locator('a.rc-collapse-header:has-text("Model variant")').click();
+    // Open variant filter section
+    await page.click('button[data-tracking-effect="Additional filters"]');
+    await page.locator('a.rc-collapse-header:has-text("Model variant")').click();
 
-  await page.waitForTimeout(1200);
+    await page.waitForTimeout(1200);
 
-  // Open engine derivatives dropdown
-  const engineDropdown = page.locator('span.uvl-c-select__placeholder', {
+    // Open engine derivatives dropdown
+    const engineDropdown = page.locator('span.uvl-c-select__placeholder', {
     hasText: 'Engine derivatives'
-  });
-  await engineDropdown.waitFor({ state: 'visible', timeout: 10000 });
-  await engineDropdown.click();
-  console.log('✅ Engine derivatives dropdown clicked');
+    });
+    await engineDropdown.waitFor({ state: 'visible', timeout: 10000 });
+    await engineDropdown.click();
+    console.log('✅ Engine derivatives dropdown clicked');
 
-  await page.waitForTimeout(1200);
+    await page.waitForTimeout(1200);
 
-  // Scroll dropdown to bottom
-  await page.waitForSelector('#react-select-7-listbox', { timeout: 10000 });
-  await page.evaluate(() => {
+    // Scroll dropdown to bottom
+    await page.waitForSelector('#react-select-7-listbox', { timeout: 10000 });
+    await page.evaluate(() => {
     const menu = document.querySelector('#react-select-7-listbox');
     if (menu) menu.scrollTop = menu.scrollHeight;
-  });
-  await page.waitForTimeout(2200);
+    });
+    await page.waitForTimeout(2200);
 
-  // Locate variant option by text
-  const variantOption = page.locator('#variant .react-select-option:has-text("' + modelConfig.variant + '")');
+    // Locate variant option by text
+    const variantOption = page.locator('#variant .react-select-option:has-text("' + modelConfig.variant + '")');
 
-  try {
+    try {
     await variantOption.waitFor({ state: 'visible', timeout: 10000 });
     await variantOption.click();
     console.log(`✅ Variant "${modelConfig.variant}" selected`);
-  } catch (err) {
+    } catch (err) {
     console.warn(`⚠️ First attempt to select "${modelConfig.variant}" failed — retrying...`);
     await page.waitForTimeout(2000);
     try {
-      await variantOption.click();
-      console.log(`✅ Variant "${modelConfig.variant}" selected on retry`);
+        await variantOption.click();
+        console.log(`✅ Variant "${modelConfig.variant}" selected on retry`);
     } catch (finalErr) {
-      const msg = `❌ Variant "${modelConfig.variant}" failed twice — aborting model`;
+        const msg = `❌ Variant "${modelConfig.variant}" failed twice — aborting model`;
         console.warn(msg);
 
         if (!auditPath || typeof auditPath !== 'string') {
             throw new Error(`Invalid auditPath: ${auditPath}`);
         }
 
-       fs.appendFileSync(path.join(auditPath, 'variant_failure.txt'),
+        fs.appendFileSync(path.join(auditPath, 'variant_failure.txt'),
         `${new Date().toISOString()} — ${msg}\n`);
-       throw new Error(msg);
+        throw new Error(msg);
     }
-  }
+    }
 
-  if (!auditPath || typeof auditPath !== 'string') {
-      throw new Error(`Invalid auditPath: ${auditPath}`);
-  }
+    if (!auditPath || typeof auditPath !== 'string') {
+        throw new Error(`Invalid auditPath: ${auditPath}`);
+    }
 
-  // Confirm hidden input was updated
-  await page.waitForTimeout(1000);
-  const selectedVariant = await page.getAttribute('input[name="variant"]', 'value');
-  if (!selectedVariant || selectedVariant.trim() === '') {
+    // Confirm hidden input was updated
+    await page.waitForTimeout(1000);
+    const selectedVariant = await page.getAttribute('input[name="variant"]', 'value');
+    if (!selectedVariant || selectedVariant.trim() === '') {
     const msg = `❌ Variant "${modelConfig.variant}" click registered but not committed`;
     console.warn(msg);
     fs.appendFileSync(path.join(auditPath, 'variant_commit_failure.txt'),
-      `${new Date().toISOString()} — ${msg}\n`);
+        `${new Date().toISOString()} — ${msg}\n`);
     throw new Error(msg);
-  }
-  console.log(`🔍 Variant input value confirmed: ${selectedVariant}`);
+    }
+    console.log(`🔍 Variant input value confirmed: ${selectedVariant}`);
 
-  // Final search and listing wait
-  await page.waitForTimeout(1500);
-  await page.click('button.uvl-c-expected-results-btn');
-  console.log('✅ Final search triggered with engine derivative');
+    // Final search and listing wait
+    await page.waitForTimeout(1500);
+    await page.click('button.uvl-c-expected-results-btn');
+    console.log('✅ Final search triggered with engine derivative');
 
-  await page.waitForTimeout(3000);
-  await page.waitForSelector('a.uvl-c-advert__media-link[href*="/vehicle/"]', { timeout: 15000 });
-  console.log('✅ Listings loaded');
+    await page.waitForTimeout(3000);
+    await page.waitForSelector('a.uvl-c-advert__media-link[href*="/vehicle/"]', { timeout: 15000 });
+    console.log('✅ Listings loaded');
+
+    const modelNameText = await page.locator('img.uvl-c-advert__media-image').allAttributeValues('alt');
+    const expectedText = modelConfig.modeltext.toLowerCase();
+    const matchedModelText = modelNameText.find(alt => alt.toLowerCase().includes(expectedText));
+
+    if (!matchedModelText) {
+        const msg = `❌ No image alt text contains "${matchedModelText}"`;
+        console.warn(msg);
+        fs.appendFileSync(path.join(auditPath, 'model_text_mismatch.txt'),
+            `${new Date().toISOString()} — ${msg}\n`);
+        throw new Error(msg);
+    }
+    else {
+        console.log(`✅ Found matching model text: "${matchedModelText}"`);
+    }
 }
 
 async function parseExpectedCount(page) {
