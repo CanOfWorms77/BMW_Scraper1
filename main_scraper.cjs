@@ -119,6 +119,17 @@ async function safeGoto(context, page, url, vehicleId = 'unknown', auditPath, re
                 await page.click('button:has-text("Reject")', { timeout: 3000 });
                 console.log(`✅ Cookies rejected for ${vehicleId}`);
                 await page.waitForTimeout(1000);
+
+                // Forensic snapshot before selector wait
+                await page.screenshot({ path: path.join(auditPath, 'pre_series_wait.png') });
+
+                // Dump raw HTML for inspection
+                fs.writeFileSync(path.join(auditPath, 'pre_series_dom.html'), await page.content());
+
+                // Log timestamped marker
+                fs.appendFileSync(path.join(auditPath, 'pre_series_marker.txt'),
+                    `${new Date().toISOString()} — Reached cookie rejection, preparing to wait for #series\n`);
+
             } catch {
                 console.log(`⚠️ No cookie modal found for ${vehicleId} — continuing`);
             }
