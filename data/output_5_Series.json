@@ -160,7 +160,8 @@
       "21\" 954 Individual aero BiColour Jet bla",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2025-09-30T16:20:23.468Z"
+    "timestamp": "2025-09-30T16:20:23.468Z",
+    "missingCount": 1
   },
   {
     "id": "202509236570338",
@@ -325,7 +326,8 @@
       "High-gloss Shadowline Exterior Trim",
       "Indv. high-gloss shadowline- extended"
     ],
-    "timestamp": "2025-09-30T16:20:44.391Z"
+    "timestamp": "2025-09-30T16:20:44.391Z",
+    "missingCount": 1
   },
   {
     "id": "202509196456747",
@@ -484,6 +486,7 @@
       "High-gloss Shadowline Exterior Trim",
       "Indv. high-gloss shadowline- extended"
     ],
-    "timestamp": "2025-09-30T16:20:01.450Z"
+    "timestamp": "2025-09-30T16:20:01.450Z",
+    "missingCount": 1
   }
 ]
