@@ -231,8 +231,8 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.click('#series');
     await page.waitForTimeout(1200);*/
 
-    await page.waitForSelector('#series > div.uvl-c-react-select__control.css-1fnsmel-control', { timeout: 60000 });
-    await page.click('#series > div.uvl-c-react-select__control.css-1fnsmel-control');
+    await page.waitForSelector('div.uvl-c-react-select__control.css-1fnsmel-control', { timeout: 60000 });
+    await page.click('div.uvl-c-react-select__control.css-1fnsmel-control');
     await page.waitForTimeout(1200);
 
     let matched = false;
