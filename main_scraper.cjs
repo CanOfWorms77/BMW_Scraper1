@@ -234,19 +234,18 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     let matched = false;
 
     for (let i = 0; i < 20; i++) {
-        console.log(`index "${i}"`);
 
         await page.keyboard.press('ArrowDown');
         await page.waitForTimeout(300);
 
-        const highlightedText = await page.evaluate(() => {
-            const el = document.querySelector('.dropdown-item.highlighted'); // Update selector if needed
+        const currentText = await page.evaluate(() => {
+            const el = document.querySelector('.uvl-c-select__value-text');
             return el?.textContent?.trim() || '';
         });
 
-        console.log(`text "${highlightedText}"`);
+        console.log(`text "${currentText}"`);
 
-        if (highlightedText === modelConfig.seriesText) {
+        if (currentText === modelConfig.seriesText) {
             await page.keyboard.press('Enter');
             matched = true;
             break;
