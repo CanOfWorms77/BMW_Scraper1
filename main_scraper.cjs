@@ -242,6 +242,8 @@ async function navigateAndFilter(page, currentModel, auditPath) {
             return el?.textContent?.trim() || '';
         });
 
+        console.log(`text "${highlightedText}"`);
+
         if (highlightedText === modelConfig.seriesText) {
             await page.keyboard.press('Enter');
             matched = true;
