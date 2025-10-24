@@ -232,10 +232,12 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.waitForTimeout(1200);*/
 
     // Click the correct dropdown control inside #series
-    await page.waitForSelector('#series > div.uvl-c-react-select__control.css-1fnsmel-control', { timeout: 60000 });
-    await page.click('#series > div.uvl-c-react-select__control.css-1fnsmel-control');
-    await page.waitForTimeout(1200);
+    await page.waitForSelector('#series .uvl-c-react-select__control', { timeout: 60000 });
+    await page.click('#series .uvl-c-react-select__control');
+    await page.waitForTimeout(500);
 
+    // Focus the actual input that receives keyboard events
+    await page.focus('#react-select-2-input');
 
     let matched = false;
 
