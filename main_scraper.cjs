@@ -230,10 +230,29 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.waitForSelector('#series', { timeout: 60000 });
     await page.click('#series');
     await page.waitForTimeout(1200);
-    for (let i = 0; i < modelConfig.seriesIndex; i++) await page.keyboard.press('ArrowDown');
+    let clickCount = 0;
+    let keyPressCount = 0;
+
+    await page.click('#series');
+    clickCount++;
+
+    await page.waitForTimeout(1200);
+
+    // Track ArrowDown presses
+    for (let i = 0; i < modelConfig.seriesIndex; i++) {
+        await page.keyboard.press('ArrowDown');
+        keyPressCount++;
+    }
+
     await page.waitForTimeout(700);
     await page.keyboard.press('Enter');
+    keyPressCount++;
+
     console.log(`✅ Selected series for ${currentModel}`);
+    console.log(`🖱️ Clicks: ${clickCount}, ⌨️ Key presses: ${keyPressCount}`);
+
+    await page.waitForTimeout(700);
+    await page.keyboard.press('Enter');
 
     if (!auditPath || typeof auditPath !== 'string') {
         throw new Error(`Invalid auditPath: ${auditPath}`);
