@@ -227,9 +227,14 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.screenshot({ path: path.join(auditPath, 'failure_before_series.png') });
 
     // Select Series
-    await page.waitForSelector('#series', { timeout: 60000 });
+ /*   await page.waitForSelector('#series', { timeout: 60000 });
     await page.click('#series');
+    await page.waitForTimeout(1200);*/
+
+    await page.waitForSelector('#react-select-2-input', { timeout: 60000 });
+    await page.click('#react-select-2-input');
     await page.waitForTimeout(1200);
+
 
     let matched = false;
 
