@@ -231,36 +231,23 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.click('#series');
     await page.waitForTimeout(1200);*/
 
-    // Click the correct dropdown control inside #series
     await page.waitForSelector('#series .uvl-c-react-select__control', { timeout: 60000 });
     await page.click('#series .uvl-c-react-select__control');
-    await page.waitForTimeout(500);
+    await page.waitForSelector('.uvl-c-react-select__option', { timeout: 5000 });
 
-    // Focus the actual input that receives keyboard events
-    await page.focus('#react-select-2-input');
-
-
+    const options = await page.$$('.uvl-c-react-select__option');
     let matched = false;
 
-    for (let i = 0; i < 20; i++) {
-
-        await page.keyboard.press('ArrowDown');
-        await page.waitForTimeout(300);
-
-        const currentText = await page.evaluate(() => {
-            const container = document.querySelector('#series');
-            const el = container?.querySelector('.uvl-c-select__value-text');
-            return el?.textContent?.trim() || '';
-        });
-
-        console.log(`text "${currentText}"`);
-
-        if (currentText === modelConfig.seriesText) {
-            await page.keyboard.press('Enter');
+    for (const option of options) {
+        const text = await option.textContent();
+        console.log(`text "${text}"`);
+        if (text?.trim() === modelConfig.seriesText) {
+            await option.click();
             matched = true;
             break;
         }
     }
+
 
     if (!matched) {
         throw new Error(`Series text "${modelConfig.seriesText}" not found in dropdown`);
