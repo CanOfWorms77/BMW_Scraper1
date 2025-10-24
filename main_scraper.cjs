@@ -234,6 +234,8 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     let matched = false;
 
     for (let i = 0; i < 20; i++) {
+        console.log(`index "${i}"`);
+
         await page.keyboard.press('ArrowDown');
         await page.waitForTimeout(300);
 
