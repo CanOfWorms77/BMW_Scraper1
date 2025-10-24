@@ -11,7 +11,7 @@ const modelSelectorTable = {
     skipBodyStyle: true,
     variant: '550e',
     modeltext: '550e xDrive',
-    seriesText: '5'
+    seriesText: '5 Series'
 
   }
 };
