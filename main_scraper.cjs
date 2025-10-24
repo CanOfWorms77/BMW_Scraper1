@@ -230,29 +230,30 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.waitForSelector('#series', { timeout: 60000 });
     await page.click('#series');
     await page.waitForTimeout(1200);
-    let clickCount = 0;
-    let keyPressCount = 0;
 
-    await page.click('#series');
-    clickCount++;
+    let matched = false;
 
-    await page.waitForTimeout(1200);
-
-    // Track ArrowDown presses
-    for (let i = 0; i < modelConfig.seriesIndex; i++) {
+    for (let i = 0; i < 20; i++) {
         await page.keyboard.press('ArrowDown');
-        keyPressCount++;
+        await page.waitForTimeout(300);
+
+        const highlightedText = await page.evaluate(() => {
+            const el = document.querySelector('.dropdown-item.highlighted'); // Update selector if needed
+            return el?.textContent?.trim() || '';
+        });
+
+        if (highlightedText === modelConfig.seriesText) {
+            await page.keyboard.press('Enter');
+            matched = true;
+            break;
+        }
     }
 
-    await page.waitForTimeout(700);
-    await page.keyboard.press('Enter');
-    keyPressCount++;
+    if (!matched) {
+        throw new Error(`Series text "${modelConfig.seriesText}" not found in dropdown`);
+    }
 
-    console.log(`✅ Selected series for ${currentModel}`);
-    console.log(`🖱️ Clicks: ${clickCount}, ⌨️ Key presses: ${keyPressCount}`);
-
-    await page.waitForTimeout(700);
-    await page.keyboard.press('Enter');
+    console.log(`✅ Selected series "${modelConfig.seriesText}" for ${currentModel}`);
 
     if (!auditPath || typeof auditPath !== 'string') {
         throw new Error(`Invalid auditPath: ${auditPath}`);

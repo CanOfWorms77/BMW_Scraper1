@@ -6,12 +6,14 @@ const modelSelectorTable = {
     skipBodyStyle: false,
     variant: '50e',
     modeltext: 'xDrive50e'
+    seriesIndex: 'X'
   },
   '5 Series': {
     seriesIndex: 4,
     skipBodyStyle: true,
     variant: '550e',
-    modeltext: '550e xDrive'
+    modeltext: '550e xDrive',
+    seriesIndex: '5'
 
   }
 };
