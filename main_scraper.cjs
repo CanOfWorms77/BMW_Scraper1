@@ -239,6 +239,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     // Focus the actual input that receives keyboard events
     await page.focus('#react-select-2-input');
 
+
     let matched = false;
 
     for (let i = 0; i < 20; i++) {
@@ -247,7 +248,8 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         await page.waitForTimeout(300);
 
         const currentText = await page.evaluate(() => {
-            const el = document.querySelector('.uvl-c-select__value-text');
+            const container = document.querySelector('#series');
+            const el = container?.querySelector('.uvl-c-select__value-text');
             return el?.textContent?.trim() || '';
         });
 
