@@ -4,7 +4,7 @@ const modelSelectorTable = {
     bodyStyleIndex: 4,
     skipBodyStyle: false,
     variant: '50e',
-    modeltext: 'xDrive50e'
+    modeltext: 'xDrive50e',
     seriesIndex: 'X'
   },
   '5 Series': {
