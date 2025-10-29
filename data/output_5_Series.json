@@ -184,7 +184,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-10-29T08:35:28.605Z"
+    "timestamp": "2025-10-29T08:35:28.605Z",
+    "missingCount": 1
   },
   {
     "id": "202510287486025",
@@ -371,7 +372,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-10-29T08:35:47.633Z"
+    "timestamp": "2025-10-29T08:35:47.633Z",
+    "missingCount": 1
   },
   {
     "id": "202507034115583",
@@ -551,7 +553,8 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2025-10-29T08:35:10.865Z"
+    "timestamp": "2025-10-29T08:35:10.865Z",
+    "missingCount": 1
   },
   {
     "id": "202510287486098",
@@ -718,6 +721,7 @@
       "21\" 954 Individual aero BiColour Jet bla",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2025-10-29T08:36:05.668Z"
+    "timestamp": "2025-10-29T08:36:05.668Z",
+    "missingCount": 1
   }
 ]
