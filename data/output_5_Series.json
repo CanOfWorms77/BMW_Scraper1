@@ -160,7 +160,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-11-10T08:36:28.962Z"
+    "timestamp": "2025-11-10T08:36:28.962Z",
+    "missingCount": 1
   },
   {
     "id": "202503069807348",
@@ -291,7 +292,8 @@
       "20\" 938 M Star Spoke BiColour Jet Black",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2025-11-10T08:36:47.302Z"
+    "timestamp": "2025-11-10T08:36:47.302Z",
+    "missingCount": 1
   },
   {
     "id": "202502199248559",
@@ -406,7 +408,8 @@
       "19\" 936 M Aero BiColour black grey alloy",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2025-11-10T08:36:10.516Z"
+    "timestamp": "2025-11-10T08:36:10.516Z",
+    "missingCount": 1
   },
   {
     "id": "202503099937363",
@@ -525,6 +528,7 @@
       "21\" 954 Individual aero BiColour Jet bla",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2025-11-10T08:37:05.935Z"
+    "timestamp": "2025-11-10T08:37:05.935Z",
+    "missingCount": 1
   }
 ]
