@@ -1,13 +1,13 @@
 [
   {
-    "id": "202511298229474",
+    "id": "202511298233942",
     "title": "BMW 5 Series 550e xDrive M Sport Pro Saloon 3.0 4dr",
-    "url": "https://usedcars.bmw.co.uk/vehicle/202511298229474",
+    "url": "https://usedcars.bmw.co.uk/vehicle/202511298233942",
     "engineFuel": "Hybrid",
     "enginePower": "482",
     "engineSize": "3",
-    "mileage": 8874,
-    "registration": "YJ74JKL",
+    "mileage": 9580,
+    "registration": "YB74WKZ",
     "manufacturedYear": 2025,
     "batteryRange": 55,
     "co2": 19,
@@ -177,7 +177,6 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-11-29T16:19:19.208Z",
-    "missingCount": 1
+    "timestamp": "2025-11-29T22:24:04.117Z"
   }
 ]
