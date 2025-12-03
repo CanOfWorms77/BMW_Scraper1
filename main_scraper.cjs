@@ -27,7 +27,7 @@ const rawDetailsPath = path.resolve('audit', `raw_details_${timestamp}.txt`);
 
 const argv = yargs(hideBin(process.argv)).argv;
 
-const models = ['X5', '5 Series'];
+const models = ['X5', '5 Series', 'i4'];
 const modelIndex = parseInt(process.env.MODEL_INDEX || '0', 10);
 const currentModel = models[modelIndex] || 'X5'; // fallback if index is out of bounds
 

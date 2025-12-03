@@ -8,6 +8,11 @@ module.exports = {
         container: '.uvl-c-advert',
         registration: 'span[itemprop="vehicleRegistration"]',
         link: 'a[href*="/vehicle/"]'
+    },
+    'i4': {
+        container: '.uvl-c-advert',
+        registration: 'span[itemprop="vehicleRegistration"]',
+        link: 'a[href*="/vehicle/"]'
     }
     // Add more models here as needed
 };

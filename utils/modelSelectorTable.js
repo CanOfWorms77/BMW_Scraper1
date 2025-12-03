@@ -12,7 +12,12 @@ const modelSelectorTable = {
     variant: '550e',
     modeltext: '550e xDrive',
     seriesText: '5 Series'
-
+  },
+  'i4': {
+    skipBodyStyle: true,
+    variant: '50',
+    modeltext: 'i4 M50',
+    seriesText: 'BMW i'
   }
 };
 

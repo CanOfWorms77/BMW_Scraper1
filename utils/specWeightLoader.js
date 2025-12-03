@@ -37,6 +37,18 @@ const specWeightTables = {
         "M Sport brake, red high-gloss": 3,
         "red calipers": 3,
         "Sun Protection Glass": 2,
+    },
+    'i4': {
+        "Technology Plus Pack": 4,
+        "Comfort Plus Pack": 4,
+        "Harman/Kardon": 4,
+        "Carbon Fibre Interior Trim": 3,
+        "M Sport Pro Pack": 2,
+        "Sunroof": 4,
+        "M Adaptive Suspension": 3,
+        "Driving Assistant Professional": 3,
+        "M Sport Brakes with Red Calipers": 3,
+        "Sun Protection Glass": 2,
     }
    };
 
