@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        model_index: [0, 1] # corresponds to ['X5', '5 Series']
+        model_index: [0, 1, 2] # corresponds to ['X5', '5 Series', 'i4']
 
     env:
       MODEL_INDEX: ${{ matrix.model_index }}
