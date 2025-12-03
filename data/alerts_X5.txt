@@ -2972,10 +2972,20 @@ Here are the top matches:
 • BMW X5 xDrive50e M Sport 3.0 5dr — 31% match
 https://usedcars.bmw.co.uk/vehicle/202512028289721
 
+<<<<<<< Updated upstream
 Run on 2025-12-03T00:36:06.464Z
 🚗 BMW Digest: 3 vehicles assessed
 Here are the top matches:
 
+=======
+Run on 2025-12-03T00:37:17.894Z
+🚗 BMW Digest: 4 vehicles assessed
+Here are the top matches:
+
+• BMW X5 xDrive50e M Sport 3.0 5dr — 56% match
+https://usedcars.bmw.co.uk/vehicle/202510297509695
+
+>>>>>>> Stashed changes
 • BMW X5 xDrive50e M Sport 3.0 5dr — 31% match
 https://usedcars.bmw.co.uk/vehicle/202509226534594
 
