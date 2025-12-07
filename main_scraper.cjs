@@ -365,7 +365,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     const expectedText = modelConfig.modeltext.toLowerCase();
     console.log(`Expected text: ${expectedText}`);
 
-    //const matchedModelText = modelNameText.find(alt => alt.toLowerCase().includes(expectedText));
+    const matchedModelText = modelNameText.find(alt => alt.toLowerCase().includes(expectedText));
     const modelText = modelNameText.map(alt => alt.toLowerCase());
     console.log(`Model text: ${modelText}`);
 
