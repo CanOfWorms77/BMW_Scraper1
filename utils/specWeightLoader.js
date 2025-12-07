@@ -41,6 +41,7 @@ const specWeightTables = {
     'i4': {
         "Technology Plus Pack": 4,
         "Comfort Plus Pack": 4,
+        "Comfort Pack": 3,
         "Harman/Kardon": 4,
         "Carbon Fibre Interior Trim": 3,
         "M Sport Pro Pack": 2,
@@ -49,6 +50,9 @@ const specWeightTables = {
         "Driving Assistant Professional": 3,
         "M Sport Brakes with Red Calipers": 3,
         "Sun Protection Glass": 2,
+        "Visibility Pack": 3,
+        "Heated Steering Wheel": 2,
+        "Heated Rear seats":2
     }
    };
 
