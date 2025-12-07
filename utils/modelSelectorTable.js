@@ -17,7 +17,7 @@ const modelSelectorTable = {
     bodyStyleIndex: 1,
     skipBodyStyle: false,
     variant: '50',
-    modeltext: 'i4 M50',
+    modeltext: 'M50',
     seriesText: 'BMW i'
   }
 };
