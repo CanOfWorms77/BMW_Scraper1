@@ -1,7 +1,7 @@
 // utils/modelSelectorTable.js
 const modelSelectorTable = {
   'X5': {
-    bodyStyle: X5,
+    bodyStyle: 'X5',
     skipBodyStyle: false,
     variant: '50e',
     modeltext: 'xDrive50e',
@@ -14,7 +14,7 @@ const modelSelectorTable = {
     seriesText: '5 Series'
   },
   'i4': {
-    bodyStyle: i4,
+    bodyStyle: 'i4',
     skipBodyStyle: true,
     variant: '50',
     modeltext: 'i4 m50',
