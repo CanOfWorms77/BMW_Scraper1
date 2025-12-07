@@ -14,7 +14,7 @@ const modelSelectorTable = {
     seriesText: '5 Series'
   },
   'i4': {
-    bodyStyleIndex: 1,
+    bodyStyleIndex: 3,
     skipBodyStyle: false,
     variant: '50',
     modeltext: 'M50',
