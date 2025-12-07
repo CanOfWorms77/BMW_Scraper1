@@ -266,20 +266,20 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         await page.click('#body_style .uvl-c-react-select__control');
         await page.waitForSelector('.uvl-c-react-select__option', { timeout: 5000 });
 
-        options = await page.$$('.uvl-c-react-select__option');
-        matched = false;
+        const body_options = await page.$$('.uvl-c-react-select__option');
+        let body_matched = false;
 
-        for (option of options) {
-            text = await option.textContent();
-            console.log(`text "${text}"`);
-            if (text?.trim() === modelConfig.bodyStyle) {
-                await option.click();
-                matched = true;
+        for (const body_option of body_options) {
+            const body_text = await body_option.textContent();
+            console.log(`body_text "${body_text}"`);
+            if (body_text?.trim() === modelConfig.bodyStyle) {
+                await body_option.click();
+                body_matched = true;
                 break;
             }
         }
 
-        if (!matched) {
+        if (!body_matched) {
             throw new Error(`Series text "${modelConfig.bodyStyle}" not found in dropdown`);
         }
 
