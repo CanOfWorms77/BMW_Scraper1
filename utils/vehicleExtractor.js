@@ -306,7 +306,7 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
     await auditScrollListeners(page, vehicleId);
     await logAuditEntry({ auditPath, vehicleId, event: 'Waiting for UVL.AD' });
 
-    let adData;
+    /*let adData;
     try {
         const hydrateStart = Date.now();
         adData = await hydrateUVLAD(page, vehicleId);
@@ -364,9 +364,9 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
     } catch (err) {
         await captureFailureArtifacts(page, auditPath, vehicleId, err);
         throw err;
-    }
+    } */
 
-    try {
+    /*try {
         await validateAndLogPayload(adData, vehicleId, auditPath);
     } catch (err) {
         await logAuditEntry({
@@ -430,7 +430,7 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
 
             throw err; // or return null if you're suppressing the error
         }
-    }
+    } */
 
     let pageTitle, features, vehicle;
     try {

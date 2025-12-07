@@ -1001,7 +1001,7 @@ async function retryFailedExtractions(context, currentModel, auditPath, browser)
     fs.unlinkSync(queuePath);
 
     // ✅ Restart logic
-    const models = ['X5', '5 Series'];
+    const models = ['X5', '5 Series', 'i4'];
     const modelIndex = parseInt(process.env.MODEL_INDEX || '0', 10);
 
     if (modelIndex + 1 < models.length) {
