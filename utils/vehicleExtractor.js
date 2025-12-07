@@ -306,7 +306,7 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
     await auditScrollListeners(page, vehicleId);
     await logAuditEntry({ auditPath, vehicleId, event: 'Waiting for UVL.AD' });
 
-    /*let adData;
+    let adData;
     try {
         const hydrateStart = Date.now();
         adData = await hydrateUVLAD(page, vehicleId);
@@ -319,7 +319,7 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
             console.warn(`[${vehicleId}] ⚠️ hydrateUVLAD returned empty or invalid payload`);
         }
 
-        const criticalFields = [
+        /*const criticalFields = [
             'advert_id',
             'dates.registration',
             'cash_price.value',
@@ -360,11 +360,11 @@ async function extractVehicleDataFromPage(page, vehicleId = 'unknown', auditPath
             }
         }
 
-        await captureDOMSnapshot(page, auditPath, vehicleId, retryCount > 0 ? `hydrated_retry${retryCount}` : 'hydrated');
+        await captureDOMSnapshot(page, auditPath, vehicleId, retryCount > 0 ? `hydrated_retry${retryCount}` : 'hydrated');*/
     } catch (err) {
         await captureFailureArtifacts(page, auditPath, vehicleId, err);
         throw err;
-    } */
+    }
 
     /*try {
         await validateAndLogPayload(adData, vehicleId, auditPath);
