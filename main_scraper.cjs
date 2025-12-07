@@ -259,9 +259,33 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         throw new Error(`Invalid auditPath: ${auditPath}`);
     }
 
+
     // Select Body Style (if applicable)
     if (!modelConfig.skipBodyStyle) {
-    await page.waitForSelector('#body_style', { timeout: 60000 });
+        await page.waitForSelector('#body_style .uvl-c-react-select__control', { timeout: 60000 });
+        await page.click('#body_style .uvl-c-react-select__control');
+        await page.waitForSelector('.uvl-c-react-select__option', { timeout: 5000 });
+
+        const options = await page.$$('.uvl-c-react-select__option');
+        let matched = false;
+
+        for (const option of options) {
+            const text = await option.textContent();
+            console.log(`text "${text}"`);
+            if (text?.trim() === modelConfig.bodyStyle {
+                await option.click();
+                matched = true;
+                break;
+            }
+        }
+
+        if (!matched) {
+            throw new Error(`Series text "${modelConfig.bodyStyle}" not found in dropdown`);
+        }
+
+        console.log(`✅ Selected series "${modelConfig.bodyStyle}" for ${currentModel}`);
+
+    /*await page.waitForSelector('#body_style', { timeout: 60000 });
     await page.click('#body_style');
     await page.waitForTimeout(1200);
 
@@ -273,7 +297,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.waitForTimeout(700);
     await page.keyboard.press('Enter');
 
-    console.log(`✅ Selected body style`);
+    console.log(`✅ Selected body style`); */
     } else {
     console.log(`⏭️ Skipping body style for ${currentModel}`);
     fs.appendFileSync(path.join(auditPath, 'skipped_body_style.txt'),
