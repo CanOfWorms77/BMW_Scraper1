@@ -269,10 +269,10 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         options = await page.$$('.uvl-c-react-select__option');
         matched = false;
 
-        for (const option of options) {
+        for (option of options) {
             text = await option.textContent();
             console.log(`text "${text}"`);
-            if (text?.trim() === modelConfig.bodyStyle {
+            if (text?.trim() === modelConfig.bodyStyle) {
                 await option.click();
                 matched = true;
                 break;
