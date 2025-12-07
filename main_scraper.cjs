@@ -264,10 +264,15 @@ async function navigateAndFilter(page, currentModel, auditPath) {
     await page.waitForSelector('#body_style', { timeout: 60000 });
     await page.click('#body_style');
     await page.waitForTimeout(1200);
-    for (let i = 0; i < modelConfig.bodyStyleIndex; i++) await page.keyboard.press('ArrowDown');
+
+    for (let i = 0; i < modelConfig.bodyStyleIndex; i++) {
+        console.log(`Body Style Index count ${i}`);
+        await page.keyboard.press('ArrowDown');
+    }
+
     await page.waitForTimeout(700);
     await page.keyboard.press('Enter');
-    console.log(`Body Style Index count ${i}`);
+
     console.log(`✅ Selected body style`);
     } else {
     console.log(`⏭️ Skipping body style for ${currentModel}`);
