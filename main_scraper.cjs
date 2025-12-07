@@ -266,11 +266,11 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         await page.click('#body_style .uvl-c-react-select__control');
         await page.waitForSelector('.uvl-c-react-select__option', { timeout: 5000 });
 
-        const options = await page.$$('.uvl-c-react-select__option');
-        let matched = false;
+        options = await page.$$('.uvl-c-react-select__option');
+        matched = false;
 
         for (const option of options) {
-            const text = await option.textContent();
+            text = await option.textContent();
             console.log(`text "${text}"`);
             if (text?.trim() === modelConfig.bodyStyle {
                 await option.click();
