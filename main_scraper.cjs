@@ -246,9 +246,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
             matched = true;
             break;
         }
-        if (matched) {
-            console.log(`matched text "${text}"`);
-        }
+        console.log(`matched text "${text?.trim() }"`);
     }
 
 
