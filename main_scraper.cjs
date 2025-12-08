@@ -243,7 +243,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         console.log(`text "${text}"`);
         if (text?.trim() === modelConfig.seriesText) {
             console.log(`matched text "${text?.trim()}"`);
-            //await option.click();
+            await option.click();
             matched = true;
             break;
         }
@@ -282,9 +282,9 @@ async function navigateAndFilter(page, currentModel, auditPath) {
             }
         }
 
-        if (!body_matched) {
+        /*if (!body_matched) {
             throw new Error(`Series text "${modelConfig.bodyStyle}" not found in dropdown`);
-        }
+       }*/
 
         console.log(`✅ Selected series "${modelConfig.bodyStyle}" for ${currentModel}`);
 
