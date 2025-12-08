@@ -243,7 +243,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         console.log(`text "${text}"`);
         if (text?.trim() === modelConfig.seriesText) {
             console.log(`matched text "${text?.trim()}"`);
-            await option.click();
+            //await option.click();
             matched = true;
             break;
         }
