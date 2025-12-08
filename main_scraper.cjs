@@ -264,7 +264,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
 
     // Select Body Style (if applicable)
     if (!modelConfig.skipBodyStyle) {
-        if (modelConfig.bodyStyle != "X") {
+        if (modelConfig.seriesText != "X") {
             await page.waitForSelector('#body_style .uvl-c-react-select__control', { timeout: 60000 });
             await page.click('#body_style .uvl-c-react-select__control');
             await page.waitForSelector('.uvl-c-react-select__option', { timeout: 5000 });
