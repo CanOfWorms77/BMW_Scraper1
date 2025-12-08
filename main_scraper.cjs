@@ -243,7 +243,6 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         console.log(`text "${text}"`);
         if (text?.trim() === modelConfig.seriesText) {
             await option.click();
-            console.log(`matched text "${text}"`);
             matched = true;
             break;
         }
@@ -254,6 +253,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         throw new Error(`Series text "${modelConfig.seriesText}" not found in dropdown`);
     }
 
+    console.log(`matched text "${text}"`);
     console.log(`✅ Selected series "${modelConfig.seriesText}" for ${currentModel}`);
 
     if (!auditPath || typeof auditPath !== 'string') {
