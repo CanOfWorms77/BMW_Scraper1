@@ -52,7 +52,7 @@ const specWeightTables = {
         "Sun Protection Glass": 2,
         "Visibility Pack": 3,
         "Heated Steering Wheel": 2,
-        "Heated Rear seats":2
+        "Heated Front and Rear seats":2
     }
    };
 

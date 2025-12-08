@@ -243,6 +243,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
         console.log(`text "${text}"`);
         if (text?.trim() === modelConfig.seriesText) {
             await option.click();
+            console.log(`matched text "${text}"`);
             matched = true;
             break;
         }
@@ -274,6 +275,7 @@ async function navigateAndFilter(page, currentModel, auditPath) {
             console.log(`body_text "${body_text}"`);
             if (body_text?.trim() === modelConfig.bodyStyle) {
                 await body_option.click();
+                console.log(`matched body style "${body_text}"`);
                 body_matched = true;
                 break;
             }
