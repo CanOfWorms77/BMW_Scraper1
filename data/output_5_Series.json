@@ -132,7 +132,8 @@
       "High-gloss Shadowline Exterior Trim",
       "Indv. high-gloss shadowline- extended"
     ],
-    "timestamp": "2025-12-11T22:26:57.630Z"
+    "timestamp": "2025-12-11T22:26:57.630Z",
+    "missingCount": 1
   },
   {
     "id": "202503240510619",
@@ -281,6 +282,7 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-12-11T22:27:11.928Z"
+    "timestamp": "2025-12-11T22:27:11.928Z",
+    "missingCount": 1
   }
 ]
