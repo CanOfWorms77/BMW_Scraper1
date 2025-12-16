@@ -166,7 +166,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-12-15T22:26:55.801Z"
+    "timestamp": "2025-12-15T22:26:55.801Z",
+    "missingCount": 1
   },
   {
     "id": "202504010808940",
@@ -287,6 +288,7 @@
       "Heated front seats",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2025-12-15T22:27:09.817Z"
+    "timestamp": "2025-12-15T22:27:09.817Z",
+    "missingCount": 1
   }
 ]
