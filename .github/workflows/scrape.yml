@@ -21,6 +21,10 @@ jobs:
         model_index: [0, 1, 2] # corresponds to ['X5', '5 Series', 'i4']
 
     env:
+      ALERT_EMAIL_USER: ${{ secrets.ALERT_EMAIL_USER }}
+      ALERT_EMAIL_PASS: ${{ secrets.ALERT_EMAIL_PASS }}
+      ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+
       MODEL_INDEX: ${{ matrix.model_index }}
 
     steps:
