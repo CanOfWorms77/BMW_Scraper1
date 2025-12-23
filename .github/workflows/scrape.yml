@@ -46,6 +46,12 @@ jobs:
       - name: 🎭 Install Playwright browsers
         run: npx playwright install
 
+      - name: Debug secrets presence
+        run: |
+          echo "ALERT_EMAIL_USER defined: ${{ secrets.ALERT_EMAIL_USER != '' }}"
+          echo "ALERT_EMAIL_PASS defined: ${{ secrets.ALERT_EMAIL_PASS != '' }}"
+          echo "ALERT_EMAIL_TO defined: ${{ secrets.ALERT_EMAIL_TO != '' }}"
+
       - name: 🚀 Run scraper with audit + verbose
         run: node main_scraper.cjs --audit --verbose
 
