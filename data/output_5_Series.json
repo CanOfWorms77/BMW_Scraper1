@@ -184,7 +184,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-12-31T06:20:17.004Z"
+    "timestamp": "2025-12-31T06:20:17.004Z",
+    "missingCount": 1
   },
   {
     "id": "202509306745392",
@@ -371,7 +372,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-12-31T06:20:30.715Z"
+    "timestamp": "2025-12-31T06:20:30.715Z",
+    "missingCount": 1
   },
   {
     "id": "202512028278445",
@@ -558,6 +560,7 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2025-12-31T06:20:52.032Z"
+    "timestamp": "2025-12-31T06:20:52.032Z",
+    "missingCount": 1
   }
 ]
