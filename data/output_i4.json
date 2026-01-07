@@ -149,7 +149,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-07T08:39:55.967Z"
+    "timestamp": "2026-01-07T08:39:55.967Z",
+    "missingCount": 1
   },
   {
     "id": "202601068959276",
@@ -282,7 +283,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-07T08:40:25.756Z"
+    "timestamp": "2026-01-07T08:40:25.756Z",
+    "missingCount": 1
   },
   {
     "id": "202601058934832",
@@ -416,6 +418,7 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-01-07T08:40:11.833Z"
+    "timestamp": "2026-01-07T08:40:11.833Z",
+    "missingCount": 1
   }
 ]
