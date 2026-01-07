@@ -165,7 +165,8 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-01-06T22:28:12.186Z"
+    "timestamp": "2026-01-06T22:28:12.186Z",
+    "missingCount": 1
   },
   {
     "id": "202504101192547",
@@ -301,6 +302,7 @@
       "19\" 935 M Double Spoke Style BiColour Bl",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-01-06T22:27:55.811Z"
+    "timestamp": "2026-01-06T22:27:55.811Z",
+    "missingCount": 1
   }
 ]
