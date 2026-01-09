@@ -174,7 +174,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-08T22:29:18.171Z"
+    "timestamp": "2026-01-08T22:29:18.171Z",
+    "missingCount": 1
   },
   {
     "id": "202601089015269",
@@ -358,7 +359,8 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-01-08T22:28:16.266Z"
+    "timestamp": "2026-01-08T22:28:16.266Z",
+    "missingCount": 1
   },
   {
     "id": "202601089015307",
@@ -517,7 +519,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-08T22:28:30.543Z"
+    "timestamp": "2026-01-08T22:28:30.543Z",
+    "missingCount": 1
   },
   {
     "id": "202601089015306",
@@ -676,7 +679,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-08T22:28:45.214Z"
+    "timestamp": "2026-01-08T22:28:45.214Z",
+    "missingCount": 1
   },
   {
     "id": "202601089015308",
@@ -833,6 +837,7 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-08T22:29:02.583Z"
+    "timestamp": "2026-01-08T22:29:02.583Z",
+    "missingCount": 1
   }
 ]
