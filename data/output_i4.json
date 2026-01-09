@@ -162,7 +162,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-09T16:22:52.847Z"
+    "timestamp": "2026-01-09T16:22:52.847Z",
+    "missingCount": 1
   },
   {
     "id": "202601099028679",
@@ -321,6 +322,7 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-09T16:22:38.968Z"
+    "timestamp": "2026-01-09T16:22:38.968Z",
+    "missingCount": 1
   }
 ]
