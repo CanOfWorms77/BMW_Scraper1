@@ -141,7 +141,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-13T08:39:52.339Z"
+    "timestamp": "2026-01-13T08:39:52.339Z",
+    "missingCount": 1
   },
   {
     "id": "202601078975421",
@@ -291,7 +292,8 @@
       "Towbar",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-13T08:40:18.529Z"
+    "timestamp": "2026-01-13T08:40:18.529Z",
+    "missingCount": 1
   },
   {
     "id": "202601078979655",
@@ -421,6 +423,7 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-01-13T08:40:44.878Z"
+    "timestamp": "2026-01-13T08:40:44.878Z",
+    "missingCount": 1
   }
 ]
