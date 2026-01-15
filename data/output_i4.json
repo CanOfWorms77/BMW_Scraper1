@@ -145,7 +145,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-14T22:31:27.573Z"
+    "timestamp": "2026-01-14T22:31:27.573Z",
+    "missingCount": 1
   },
   {
     "id": "202601129078337",
@@ -277,7 +278,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-14T22:30:55.308Z"
+    "timestamp": "2026-01-14T22:30:55.308Z",
+    "missingCount": 1
   },
   {
     "id": "202601139116024",
@@ -419,7 +421,8 @@
       "Towbar",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-14T22:31:10.494Z"
+    "timestamp": "2026-01-14T22:31:10.494Z",
+    "missingCount": 1
   },
   {
     "id": "202601099032206",
@@ -606,7 +609,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-01-14T22:30:20.898Z"
+    "timestamp": "2026-01-14T22:30:20.898Z",
+    "missingCount": 1
   },
   {
     "id": "202601149142920",
@@ -799,7 +803,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-01-14T22:31:41.540Z"
+    "timestamp": "2026-01-14T22:31:41.540Z",
+    "missingCount": 1
   },
   {
     "id": "202601149146745",
@@ -968,7 +973,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-14T22:31:57.076Z"
+    "timestamp": "2026-01-14T22:31:57.076Z",
+    "missingCount": 1
   },
   {
     "id": "202601149147999",
@@ -1129,7 +1135,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-01-14T22:32:11.846Z"
+    "timestamp": "2026-01-14T22:32:11.846Z",
+    "missingCount": 1
   },
   {
     "id": "202601089000354",
@@ -1263,7 +1270,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-01-14T22:29:42.649Z"
+    "timestamp": "2026-01-14T22:29:42.649Z",
+    "missingCount": 1
   },
   {
     "id": "202601089006583",
@@ -1409,7 +1417,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-01-14T22:29:56.970Z"
+    "timestamp": "2026-01-14T22:29:56.970Z",
+    "missingCount": 1
   },
   {
     "id": "202601099037664",
@@ -1574,6 +1583,7 @@
       "20\" Style 905 Star-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-01-14T22:30:38.342Z"
+    "timestamp": "2026-01-14T22:30:38.342Z",
+    "missingCount": 1
   }
 ]
