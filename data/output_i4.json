@@ -151,7 +151,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-01-24T22:26:15.414Z"
+    "timestamp": "2026-01-24T22:26:15.414Z",
+    "missingCount": 1
   },
   {
     "id": "202601239366232",
@@ -282,7 +283,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-01-24T22:26:32.961Z"
+    "timestamp": "2026-01-24T22:26:32.961Z",
+    "missingCount": 1
   },
   {
     "id": "202601249392399",
@@ -420,6 +422,7 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-01-24T22:26:49.287Z"
+    "timestamp": "2026-01-24T22:26:49.287Z",
+    "missingCount": 1
   }
 ]
