@@ -172,7 +172,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-02-05T22:35:13.637Z"
+    "timestamp": "2026-02-05T22:35:13.637Z",
+    "missingCount": 1
   },
   {
     "id": "202505212647891",
@@ -345,7 +346,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-02-05T22:35:28.498Z"
+    "timestamp": "2026-02-05T22:35:28.498Z",
+    "missingCount": 1
   },
   {
     "id": "202505282902700",
@@ -494,6 +496,7 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-02-05T22:35:44.096Z"
+    "timestamp": "2026-02-05T22:35:44.096Z",
+    "missingCount": 1
   }
 ]
