@@ -171,7 +171,8 @@
       "High-gloss Shadowline Exterior Trim",
       "Indv. high-gloss shadowline- extended"
     ],
-    "timestamp": "2026-02-27T22:31:17.683Z"
+    "timestamp": "2026-02-27T22:31:17.683Z",
+    "missingCount": 1
   },
   {
     "id": "202506033124335",
@@ -314,7 +315,8 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-02-27T22:30:56.247Z"
+    "timestamp": "2026-02-27T22:30:56.247Z",
+    "missingCount": 1
   },
   {
     "id": "202506013041296",
@@ -441,6 +443,7 @@
       "Heated front seats",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-02-27T22:30:42.699Z"
+    "timestamp": "2026-02-27T22:30:42.699Z",
+    "missingCount": 1
   }
 ]
