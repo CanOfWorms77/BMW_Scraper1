@@ -147,7 +147,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-01T12:22:52.929Z"
+    "timestamp": "2026-03-01T12:22:52.929Z",
+    "missingCount": 1
   },
   {
     "id": "202602180036575",
@@ -287,7 +288,8 @@
       "Towbar",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-01T12:21:01.026Z"
+    "timestamp": "2026-03-01T12:21:01.026Z",
+    "missingCount": 1
   },
   {
     "id": "202602190050904",
@@ -423,7 +425,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-01T12:21:33.782Z"
+    "timestamp": "2026-03-01T12:21:33.782Z",
+    "missingCount": 1
   },
   {
     "id": "202602240174523",
@@ -557,7 +560,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-01T12:22:27.997Z"
+    "timestamp": "2026-03-01T12:22:27.997Z",
+    "missingCount": 1
   },
   {
     "id": "202602200094996",
@@ -701,7 +705,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-01T12:21:59.686Z"
+    "timestamp": "2026-03-01T12:21:59.686Z",
+    "missingCount": 1
   },
   {
     "id": "202602190046112",
@@ -827,7 +832,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-03-01T12:21:16.587Z"
+    "timestamp": "2026-03-01T12:21:16.587Z",
+    "missingCount": 1
   },
   {
     "id": "202602280295496",
@@ -971,7 +977,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-03-01T12:23:22.985Z"
+    "timestamp": "2026-03-01T12:23:22.985Z",
+    "missingCount": 1
   },
   {
     "id": "202602230131091",
@@ -1108,7 +1115,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-03-01T12:22:13.607Z"
+    "timestamp": "2026-03-01T12:22:13.607Z",
+    "missingCount": 1
   },
   {
     "id": "202602250196854",
@@ -1219,6 +1227,7 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-03-01T12:23:07.412Z"
+    "timestamp": "2026-03-01T12:23:07.412Z",
+    "missingCount": 1
   }
 ]
