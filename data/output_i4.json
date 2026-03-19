@@ -143,7 +143,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-19T12:32:27.183Z"
+    "timestamp": "2026-03-19T12:32:27.183Z",
+    "missingCount": 1
   },
   {
     "id": "202603180808966",
@@ -273,6 +274,7 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-03-19T12:32:42.306Z"
+    "timestamp": "2026-03-19T12:32:42.306Z",
+    "missingCount": 1
   }
 ]
