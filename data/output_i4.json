@@ -99,7 +99,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-22T06:39:27.454Z"
+    "timestamp": "2026-03-22T06:39:27.454Z",
+    "missingCount": 1
   },
   {
     "id": "202603190831403",
@@ -229,6 +230,7 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-03-22T06:39:13.447Z"
+    "timestamp": "2026-03-22T06:39:13.447Z",
+    "missingCount": 1
   }
 ]
