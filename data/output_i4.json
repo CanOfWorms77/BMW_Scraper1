@@ -141,7 +141,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-27T10:56:06.638Z"
+    "timestamp": "2026-03-27T10:56:06.638Z",
+    "missingCount": 1
   },
   {
     "id": "202603251009516",
@@ -277,6 +278,7 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-27T10:55:51.535Z"
+    "timestamp": "2026-03-27T10:55:51.535Z",
+    "missingCount": 1
   }
 ]
