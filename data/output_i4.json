@@ -127,7 +127,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-03-28T06:46:33.581Z"
+    "timestamp": "2026-03-28T06:46:33.581Z",
+    "missingCount": 1
   },
   {
     "id": "202603271073197",
@@ -270,7 +271,8 @@
       "19\" 903 Double-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-03-28T06:46:05.604Z"
+    "timestamp": "2026-03-28T06:46:05.604Z",
+    "missingCount": 1
   },
   {
     "id": "202603271079339",
@@ -368,6 +370,7 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-03-28T06:46:20.168Z"
+    "timestamp": "2026-03-28T06:46:20.168Z",
+    "missingCount": 1
   }
 ]
