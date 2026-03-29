@@ -1,205 +1,5 @@
 [
   {
-    "id": "202603281096499",
-    "title": "BMW i4 M50 5dr",
-    "url": "https://usedcars.bmw.co.uk/vehicle/202603281096499",
-    "engineFuel": "Electric",
-    "enginePower": "537",
-    "engineSize": null,
-    "mileage": 26580,
-    "registration": "FG23NNR",
-    "manufacturedYear": 2023,
-    "batteryRange": 316,
-    "co2": null,
-    "fuelType": "E",
-    "features": [
-      "19\" 861 M Double-spoke Bicolour Jet Blac",
-      "Extended storage",
-      "Front Lumbar Support",
-      "Front M Sport Seats",
-      "Comfort Access",
-      "Drive Recorder",
-      "Heated Steering Wheel",
-      "Comfort Pack",
-      "Visibility Pack",
-      "High-Beam Assistant",
-      "Laserlights",
-      "Parking Assistant Plus",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Sun Protection Glass",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "Active Guard Plus",
-      "BMW IconicSounds Electric",
-      "BMW Individual Lights Shadow Line",
-      "BMW TeleServices",
-      "Charging cable Professional (Mode 3)",
-      "Connected Package Pro (limited duration)",
-      "Control C",
-      "Control G",
-      "DAB Radio",
-      "Digital Aftermarket - Active Cruise Cont",
-      "Flexible Charging Cable (Mode 2)",
-      "Live Cockpit Pro with Head up Display",
-      "M Sport Brakes with Red Calipers",
-      "M Sport Seat Belts",
-      "Storage for wireless charging",
-      "Tyre Repair Kit",
-      "XtraBoost",
-      "M Sport Pro Pack",
-      "Active Pedestrian Safety",
-      "Alarm System",
-      "BMW Emergency Call",
-      "BMW Online Services",
-      "Cruise Control",
-      "Driving Assistant",
-      "eDrive Exterior Sound",
-      "Harman/Kardon Surround Sound Audio",
-      "M Adaptive Suspension",
-      "Variable Sport Steering",
-      "Extended storage",
-      "Front Lumbar Support",
-      "Front M Sport Seats",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "19\" 861 M Double-spoke Bicolour Jet Blac",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Sun Protection Glass"
-    ],
-    "score": 22,
-    "scorePercent": 52,
-    "maxScore": 42,
-    "matchedSpecs": [
-      {
-        "spec": "Heated Steering Wheel",
-        "matchedText": "Heated Steering Wheel",
-        "weight": 2
-      },
-      {
-        "spec": "Comfort Pack",
-        "matchedText": "Comfort Pack",
-        "weight": 3
-      },
-      {
-        "spec": "Visibility Pack",
-        "matchedText": "Visibility Pack",
-        "weight": 3
-      },
-      {
-        "spec": "Sun Protection Glass",
-        "matchedText": "Sun Protection Glass",
-        "weight": 2
-      },
-      {
-        "spec": "M Sport Brakes with Red Calipers",
-        "matchedText": "M Sport Brakes with Red Calipers",
-        "weight": 3
-      },
-      {
-        "spec": "M Sport Pro Pack",
-        "matchedText": "M Sport Pro Pack",
-        "weight": 2
-      },
-      {
-        "spec": "Harman/Kardon",
-        "matchedText": "Harman/Kardon Surround Sound Audio",
-        "weight": 4
-      },
-      {
-        "spec": "M Adaptive Suspension",
-        "matchedText": "M Adaptive Suspension",
-        "weight": 3
-      }
-    ],
-    "unmatchedSpecs": [
-      "19\" 861 M Double-spoke Bicolour Jet Blac",
-      "Extended storage",
-      "Front Lumbar Support",
-      "Front M Sport Seats",
-      "Comfort Access",
-      "Drive Recorder",
-      "High-Beam Assistant",
-      "Laserlights",
-      "Parking Assistant Plus",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "Active Guard Plus",
-      "BMW IconicSounds Electric",
-      "BMW Individual Lights Shadow Line",
-      "BMW TeleServices",
-      "Charging cable Professional (Mode 3)",
-      "Connected Package Pro (limited duration)",
-      "Control C",
-      "Control G",
-      "DAB Radio",
-      "Digital Aftermarket - Active Cruise Cont",
-      "Flexible Charging Cable (Mode 2)",
-      "Live Cockpit Pro with Head up Display",
-      "M Sport Seat Belts",
-      "Storage for wireless charging",
-      "Tyre Repair Kit",
-      "XtraBoost",
-      "Active Pedestrian Safety",
-      "Alarm System",
-      "BMW Emergency Call",
-      "BMW Online Services",
-      "Cruise Control",
-      "Driving Assistant",
-      "eDrive Exterior Sound",
-      "Variable Sport Steering",
-      "Extended storage",
-      "Front Lumbar Support",
-      "Front M Sport Seats",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "19\" 861 M Double-spoke Bicolour Jet Blac",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler"
-    ],
-    "timestamp": "2026-03-28T18:25:45.349Z",
-    "missingCount": 1
-  },
-  {
     "id": "202509056076350",
     "title": "BMW i4 M60 5dr",
     "url": "https://usedcars.bmw.co.uk/vehicle/202509056076350",
@@ -384,7 +184,8 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:38:12.524Z"
+    "timestamp": "2026-03-28T22:38:12.524Z",
+    "missingCount": 1
   },
   {
     "id": "202509306750096",
@@ -535,7 +336,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:39:46.330Z"
+    "timestamp": "2026-03-28T22:39:46.330Z",
+    "missingCount": 1
   },
   {
     "id": "202507084268927",
@@ -680,7 +482,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:35:56.948Z"
+    "timestamp": "2026-03-28T22:35:56.948Z",
+    "missingCount": 1
   },
   {
     "id": "202507154497210",
@@ -827,7 +630,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:36:26.048Z"
+    "timestamp": "2026-03-28T22:36:26.048Z",
+    "missingCount": 1
   },
   {
     "id": "202507154502854",
@@ -974,7 +778,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:36:40.091Z"
+    "timestamp": "2026-03-28T22:36:40.091Z",
+    "missingCount": 1
   },
   {
     "id": "202507315004770",
@@ -1121,7 +926,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:36:54.761Z"
+    "timestamp": "2026-03-28T22:36:54.761Z",
+    "missingCount": 1
   },
   {
     "id": "202508115335229",
@@ -1270,7 +1076,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:37:25.162Z"
+    "timestamp": "2026-03-28T22:37:25.162Z",
+    "missingCount": 1
   },
   {
     "id": "202508285817764",
@@ -1417,7 +1224,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:37:38.975Z"
+    "timestamp": "2026-03-28T22:37:38.975Z",
+    "missingCount": 1
   },
   {
     "id": "202509256621913",
@@ -1564,7 +1372,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:39:01.237Z"
+    "timestamp": "2026-03-28T22:39:01.237Z",
+    "missingCount": 1
   },
   {
     "id": "202509306745712",
@@ -1711,7 +1520,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:39:31.140Z"
+    "timestamp": "2026-03-28T22:39:31.140Z",
+    "missingCount": 1
   },
   {
     "id": "202510016784895",
@@ -1858,7 +1668,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:40:00.380Z"
+    "timestamp": "2026-03-28T22:40:00.380Z",
+    "missingCount": 1
   },
   {
     "id": "202510016789717",
@@ -2007,7 +1818,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:40:14.806Z"
+    "timestamp": "2026-03-28T22:40:14.806Z",
+    "missingCount": 1
   },
   {
     "id": "202507084288826",
@@ -2136,7 +1948,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:36:11.284Z"
+    "timestamp": "2026-03-28T22:36:11.284Z",
+    "missingCount": 1
   },
   {
     "id": "202508085255347",
@@ -2265,7 +2078,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:37:09.605Z"
+    "timestamp": "2026-03-28T22:37:09.605Z",
+    "missingCount": 1
   },
   {
     "id": "202509025977457",
@@ -2392,7 +2206,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:37:57.111Z"
+    "timestamp": "2026-03-28T22:37:57.111Z",
+    "missingCount": 1
   },
   {
     "id": "202509116233276",
@@ -2519,7 +2334,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:38:30.428Z"
+    "timestamp": "2026-03-28T22:38:30.428Z",
+    "missingCount": 1
   },
   {
     "id": "202509126282658",
@@ -2648,7 +2464,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-03-28T22:38:45.707Z"
+    "timestamp": "2026-03-28T22:38:45.707Z",
+    "missingCount": 1
   },
   {
     "id": "202509256635395",
@@ -2775,6 +2592,7 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-03-28T22:39:17.280Z"
+    "timestamp": "2026-03-28T22:39:17.280Z",
+    "missingCount": 1
   }
 ]
