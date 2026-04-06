@@ -141,7 +141,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:20:33.533Z"
+    "timestamp": "2026-04-06T07:20:33.533Z",
+    "missingCount": 1
   },
   {
     "id": "202603311164458",
@@ -273,7 +274,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:19:14.416Z"
+    "timestamp": "2026-04-06T07:19:14.416Z",
+    "missingCount": 1
   },
   {
     "id": "202603311190103",
@@ -411,7 +413,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:19:47.282Z"
+    "timestamp": "2026-04-06T07:19:47.282Z",
+    "missingCount": 1
   },
   {
     "id": "202604021243612",
@@ -545,7 +548,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:20:47.450Z"
+    "timestamp": "2026-04-06T07:20:47.450Z",
+    "missingCount": 1
   },
   {
     "id": "202603301125703",
@@ -681,7 +685,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:18:59.920Z"
+    "timestamp": "2026-04-06T07:18:59.920Z",
+    "missingCount": 1
   },
   {
     "id": "202512318858820",
@@ -839,7 +844,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-06T07:17:39.778Z"
+    "timestamp": "2026-04-06T07:17:39.778Z",
+    "missingCount": 1
   },
   {
     "id": "202604011219991",
@@ -960,7 +966,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:20:18.311Z"
+    "timestamp": "2026-04-06T07:20:18.311Z",
+    "missingCount": 1
   },
   {
     "id": "202603210882743",
@@ -1091,7 +1098,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:18:37.485Z"
+    "timestamp": "2026-04-06T07:18:37.485Z",
+    "missingCount": 1
   },
   {
     "id": "202604011201988",
@@ -1225,7 +1233,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-04-06T07:20:03.041Z"
+    "timestamp": "2026-04-06T07:20:03.041Z",
+    "missingCount": 1
   },
   {
     "id": "202603110588108",
@@ -1356,7 +1365,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-06T07:18:03.570Z"
+    "timestamp": "2026-04-06T07:18:03.570Z",
+    "missingCount": 1
   },
   {
     "id": "202603311185514",
@@ -1478,6 +1488,7 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-06T07:19:32.727Z"
+    "timestamp": "2026-04-06T07:19:32.727Z",
+    "missingCount": 1
   }
 ]
