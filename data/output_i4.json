@@ -153,7 +153,8 @@
       "Towbar",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-10T22:46:04.725Z"
+    "timestamp": "2026-04-10T22:46:04.725Z",
+    "missingCount": 1
   },
   {
     "id": "202507164535682",
@@ -289,7 +290,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-10T22:44:17.604Z"
+    "timestamp": "2026-04-10T22:44:17.604Z",
+    "missingCount": 1
   },
   {
     "id": "202604071357433",
@@ -423,7 +425,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-10T22:45:02.057Z"
+    "timestamp": "2026-04-10T22:45:02.057Z",
+    "missingCount": 1
   },
   {
     "id": "202604091396540",
@@ -547,7 +550,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-10T22:45:36.548Z"
+    "timestamp": "2026-04-10T22:45:36.548Z",
+    "missingCount": 1
   },
   {
     "id": "202604071357503",
@@ -700,7 +704,8 @@
       "20\" Style 905 Star-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-04-10T22:45:21.552Z"
+    "timestamp": "2026-04-10T22:45:21.552Z",
+    "missingCount": 1
   },
   {
     "id": "202603200873172",
@@ -802,7 +807,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-10T22:44:42.917Z"
+    "timestamp": "2026-04-10T22:44:42.917Z",
+    "missingCount": 1
   },
   {
     "id": "202604091401102",
@@ -911,6 +917,7 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-10T22:45:50.123Z"
+    "timestamp": "2026-04-10T22:45:50.123Z",
+    "missingCount": 1
   }
 ]
