@@ -1,165 +1,5 @@
 [
   {
-    "id": "202604151560729",
-    "title": "BMW i4 M50 5dr",
-    "url": "https://usedcars.bmw.co.uk/vehicle/202604151560729",
-    "engineFuel": "Electric",
-    "enginePower": "537",
-    "engineSize": null,
-    "mileage": 4774,
-    "registration": "YF25PYW",
-    "manufacturedYear": 2025,
-    "batteryRange": 316,
-    "co2": null,
-    "fuelType": "E",
-    "features": [
-      "19\" 859 M Y-spoke Bicolour Jet Black All",
-      "BMW Individual Lights Shadow Line",
-      "Live Cockpit Pro with Head up Display",
-      "M Sport Brakes with Red Calipers",
-      "M Sport Seat Belts",
-      "M Sport Pro Pack",
-      "Technology Pack",
-      "Adaptive LED Headlights",
-      "Driving Assistant",
-      "High-Beam Assistant",
-      "Parking Assistant Plus",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Sun Protection Glass",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Active Guard Plus",
-      "BMW IconicSounds Electric",
-      "BMW TeleServices",
-      "Charging cable Professional (Mode 3)",
-      "COC additional contents",
-      "Connected Package Pro (limited duration)",
-      "Control DAS 18",
-      "Control E",
-      "DAB Radio",
-      "Digital Aftermarket - Active Cruise Cont",
-      "Personal eSIM",
-      "Tyre Repair Kit",
-      "XtraBoost",
-      "Active Pedestrian Safety",
-      "Alarm System",
-      "BMW Emergency Call",
-      "BMW Online Services",
-      "Cruise Control",
-      "eDrive Exterior Sound",
-      "HiFi Loudspeaker Audio System",
-      "M Adaptive Suspension",
-      "Variable Sport Steering",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "19\" 859 M Y-spoke Bicolour Jet Black All",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Sun Protection Glass"
-    ],
-    "score": 10,
-    "scorePercent": 24,
-    "maxScore": 42,
-    "matchedSpecs": [
-      {
-        "spec": "M Sport Brakes with Red Calipers",
-        "matchedText": "M Sport Brakes with Red Calipers",
-        "weight": 3
-      },
-      {
-        "spec": "M Sport Pro Pack",
-        "matchedText": "M Sport Pro Pack",
-        "weight": 2
-      },
-      {
-        "spec": "Sun Protection Glass",
-        "matchedText": "Sun Protection Glass",
-        "weight": 2
-      },
-      {
-        "spec": "M Adaptive Suspension",
-        "matchedText": "M Adaptive Suspension",
-        "weight": 3
-      }
-    ],
-    "unmatchedSpecs": [
-      "19\" 859 M Y-spoke Bicolour Jet Black All",
-      "BMW Individual Lights Shadow Line",
-      "Live Cockpit Pro with Head up Display",
-      "M Sport Seat Belts",
-      "Technology Pack",
-      "Adaptive LED Headlights",
-      "Driving Assistant",
-      "High-Beam Assistant",
-      "Parking Assistant Plus",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Active Guard Plus",
-      "BMW IconicSounds Electric",
-      "BMW TeleServices",
-      "Charging cable Professional (Mode 3)",
-      "COC additional contents",
-      "Connected Package Pro (limited duration)",
-      "Control DAS 18",
-      "Control E",
-      "DAB Radio",
-      "Digital Aftermarket - Active Cruise Cont",
-      "Personal eSIM",
-      "Tyre Repair Kit",
-      "XtraBoost",
-      "Active Pedestrian Safety",
-      "Alarm System",
-      "BMW Emergency Call",
-      "BMW Online Services",
-      "Cruise Control",
-      "eDrive Exterior Sound",
-      "HiFi Loudspeaker Audio System",
-      "Variable Sport Steering",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "19\" 859 M Y-spoke Bicolour Jet Black All",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler"
-    ],
-    "timestamp": "2026-04-15T11:06:49.115Z",
-    "missingCount": 1
-  },
-  {
     "id": "202604131494128",
     "title": "BMW iX xDrive50 M Sport 5dr",
     "url": "https://usedcars.bmw.co.uk/vehicle/202604131494128",
@@ -297,7 +137,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-15T12:53:31.650Z"
+    "timestamp": "2026-04-15T12:53:31.650Z",
+    "missingCount": 1
   },
   {
     "id": "202604131503838",
@@ -453,7 +294,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-15T12:53:45.961Z"
+    "timestamp": "2026-04-15T12:53:45.961Z",
+    "missingCount": 1
   },
   {
     "id": "202604141538030",
@@ -618,7 +460,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-04-15T12:54:00.684Z"
+    "timestamp": "2026-04-15T12:54:00.684Z",
+    "missingCount": 1
   },
   {
     "id": "202604141543750",
@@ -718,7 +561,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-15T12:54:15.507Z"
+    "timestamp": "2026-04-15T12:54:15.507Z",
+    "missingCount": 1
   },
   {
     "id": "202601149151071",
@@ -851,7 +695,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-15T12:53:02.222Z"
+    "timestamp": "2026-04-15T12:53:02.222Z",
+    "missingCount": 1
   },
   {
     "id": "202505192574398",
@@ -958,6 +803,7 @@
       "19\" 903 Double-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-04-15T12:52:46.827Z"
+    "timestamp": "2026-04-15T12:52:46.827Z",
+    "missingCount": 1
   }
 ]
