@@ -172,7 +172,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-04-18T09:01:21.681Z"
+    "timestamp": "2026-04-18T09:01:21.681Z",
+    "missingCount": 1
   },
   {
     "id": "202510026815367",
@@ -341,7 +342,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-18T09:00:05.903Z"
+    "timestamp": "2026-04-18T09:00:05.903Z",
+    "missingCount": 1
   },
   {
     "id": "202510026834978",
@@ -506,7 +508,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-04-18T09:00:21.633Z"
+    "timestamp": "2026-04-18T09:00:21.633Z",
+    "missingCount": 1
   },
   {
     "id": "202510016801550",
@@ -651,7 +654,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-18T08:59:49.999Z"
+    "timestamp": "2026-04-18T08:59:49.999Z",
+    "missingCount": 1
   },
   {
     "id": "202510036861249",
@@ -798,7 +802,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-18T09:00:36.696Z"
+    "timestamp": "2026-04-18T09:00:36.696Z",
+    "missingCount": 1
   },
   {
     "id": "202510046875977",
@@ -947,7 +952,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-18T09:00:52.155Z"
+    "timestamp": "2026-04-18T09:00:52.155Z",
+    "missingCount": 1
   },
   {
     "id": "202510107050742",
@@ -1094,7 +1100,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-18T09:01:37.497Z"
+    "timestamp": "2026-04-18T09:01:37.497Z",
+    "missingCount": 1
   },
   {
     "id": "202510107050767",
@@ -1241,7 +1248,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-04-18T09:02:08.083Z"
+    "timestamp": "2026-04-18T09:02:08.083Z",
+    "missingCount": 1
   },
   {
     "id": "202509306758451",
@@ -1356,7 +1364,8 @@
       "Ext. mirrors- folding with anti-dazzle",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-18T08:59:33.615Z"
+    "timestamp": "2026-04-18T08:59:33.615Z",
+    "missingCount": 1
   },
   {
     "id": "202510076955275",
@@ -1479,7 +1488,8 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-04-18T09:01:07.269Z"
+    "timestamp": "2026-04-18T09:01:07.269Z",
+    "missingCount": 1
   },
   {
     "id": "202510107050765",
@@ -1602,6 +1612,7 @@
       "M Sport Exterior Styling",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-04-18T09:01:53.390Z"
+    "timestamp": "2026-04-18T09:01:53.390Z",
+    "missingCount": 1
   }
 ]
