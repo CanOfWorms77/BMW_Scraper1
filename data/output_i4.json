@@ -141,7 +141,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-18T22:43:12.208Z"
+    "timestamp": "2026-04-18T22:43:12.208Z",
+    "missingCount": 1
   },
   {
     "id": "202604161605531",
@@ -291,7 +292,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-18T22:42:58.835Z"
+    "timestamp": "2026-04-18T22:42:58.835Z",
+    "missingCount": 1
   },
   {
     "id": "202604171632347",
@@ -427,7 +429,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-18T22:43:26.251Z"
+    "timestamp": "2026-04-18T22:43:26.251Z",
+    "missingCount": 1
   },
   {
     "id": "202604171637634",
@@ -561,7 +564,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-18T22:43:52.715Z"
+    "timestamp": "2026-04-18T22:43:52.715Z",
+    "missingCount": 1
   },
   {
     "id": "202604171643934",
@@ -699,7 +703,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-18T22:44:19.810Z"
+    "timestamp": "2026-04-18T22:44:19.810Z",
+    "missingCount": 1
   },
   {
     "id": "202604161598081",
@@ -835,7 +840,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-18T22:42:30.217Z"
+    "timestamp": "2026-04-18T22:42:30.217Z",
+    "missingCount": 1
   },
   {
     "id": "202604171637412",
@@ -967,7 +973,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-04-18T22:43:39.657Z"
+    "timestamp": "2026-04-18T22:43:39.657Z",
+    "missingCount": 1
   },
   {
     "id": "202604161593563",
@@ -1083,7 +1090,8 @@
       "19\" 903 Double-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-04-18T22:42:15.595Z"
+    "timestamp": "2026-04-18T22:42:15.595Z",
+    "missingCount": 1
   },
   {
     "id": "202604161598316",
@@ -1211,7 +1219,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-18T22:42:44.481Z"
+    "timestamp": "2026-04-18T22:42:44.481Z",
+    "missingCount": 1
   },
   {
     "id": "202604171643786",
@@ -1304,6 +1313,7 @@
       "19\" 903 Double-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-04-18T22:44:06.158Z"
+    "timestamp": "2026-04-18T22:44:06.158Z",
+    "missingCount": 1
   }
 ]
