@@ -175,7 +175,8 @@
       "High-gloss Shadowline Roof Rails",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-24T09:51:35.138Z"
+    "timestamp": "2026-04-24T09:51:35.138Z",
+    "missingCount": 1
   },
   {
     "id": "202604241836507",
@@ -356,7 +357,8 @@
       "High-gloss Shadowline Roof Rails",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-24T09:51:06.978Z"
+    "timestamp": "2026-04-24T09:51:06.978Z",
+    "missingCount": 1
   },
   {
     "id": "202604241836551",
@@ -537,7 +539,8 @@
       "High-gloss Shadowline Roof Rails",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-24T09:51:19.934Z"
+    "timestamp": "2026-04-24T09:51:19.934Z",
+    "missingCount": 1
   },
   {
     "id": "202604241833177",
@@ -680,6 +683,175 @@
       "High-gloss Shadowline Roof Rails",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-24T09:50:53.081Z"
+    "timestamp": "2026-04-24T09:50:53.081Z",
+    "missingCount": 1
+  },
+  {
+    "id": "202510066917448",
+    "title": "BMW X5 xDrive30d M Sport 3.0 5dr",
+    "url": "https://usedcars.bmw.co.uk/vehicle/202510066917448",
+    "engineFuel": "Diesel",
+    "enginePower": "294",
+    "engineSize": "3",
+    "mileage": 19441,
+    "registration": "SC73TLX",
+    "manufacturedYear": 2024,
+    "batteryRange": null,
+    "co2": 192,
+    "fuelType": "D",
+    "features": [
+      "21\" 741 M Y-spoke Bi-colour Alloy Wheels",
+      "Indv. high-gloss shadowline- extended",
+      "Sun Protection Glass",
+      "Front and Rear Heated Seats",
+      "Front Comfort Seats",
+      "M Sport Exhaust System",
+      "BMW Individual Lights Shadow Line",
+      "Heat Comfort System",
+      "Heated and Cooled Cupholder",
+      "Iconic Glow Kidney Grille",
+      "M Sport Brakes with Red Calipers",
+      "M Sport Seat Belts",
+      "Comfort Pack",
+      "M Sport Pro Pack",
+      "Ext. mirrors- folding with anti-dazzle",
+      "High-gloss Shadowline Exterior Trim",
+      "High-gloss Shadowline Roof Rails",
+      "M Sport Exterior Styling",
+      "Ambient Lighting",
+      "Anthracite Headlining",
+      "Fineline Black wood. high gloss w/ Metal",
+      "Luggage Net",
+      "BMW TeleServices",
+      "Comfort Access",
+      "Connected Package Pro (limited duration)",
+      "Control K",
+      "DAB Radio",
+      "EU6 RDE II exhaust emissions standard",
+      "Live Cockpit Plus",
+      "Mild Hybrid Technology",
+      "Personal eSIM",
+      "Sport Automatic Transmission with Gearsh",
+      "Storage for wireless charging",
+      "M Sport Package",
+      "Active Guard",
+      "Active Pedestrian Safety",
+      "Active Protection",
+      "Adaptive LED Headlights",
+      "Alarm System",
+      "BMW Emergency Call",
+      "BMW Online Services",
+      "Driving Assistant",
+      "HiFi Loudspeaker Audio System",
+      "High-Beam Assistant",
+      "Parking Assistant",
+      "Run-flat Tyres",
+      "M Adaptive Suspension",
+      "Front and Rear Heated Seats",
+      "Front Comfort Seats",
+      "M Sport Exhaust System",
+      "Ambient Lighting",
+      "Anthracite Headlining",
+      "Fineline Black wood. high gloss w/ Metal",
+      "Luggage Net",
+      "21\" 741 M Y-spoke Bi-colour Alloy Wheels",
+      "Indv. high-gloss shadowline- extended",
+      "Sun Protection Glass",
+      "Ext. mirrors- folding with anti-dazzle",
+      "High-gloss Shadowline Exterior Trim",
+      "High-gloss Shadowline Roof Rails",
+      "M Sport Exterior Styling"
+    ],
+    "score": 9,
+    "scorePercent": 20,
+    "maxScore": 45,
+    "matchedSpecs": [
+      {
+        "spec": "Sun Protection Glass",
+        "matchedText": "Sun Protection Glass",
+        "weight": 1
+      },
+      {
+        "spec": "Front and Rear Heated Seats",
+        "matchedText": "Front and Rear Heated Seats",
+        "weight": 2
+      },
+      {
+        "spec": "Heat Comfort System",
+        "matchedText": "Heat Comfort System",
+        "weight": 1
+      },
+      {
+        "spec": "M Sport Brakes with Red Calipers",
+        "matchedText": "M Sport Brakes with Red Calipers",
+        "weight": 1
+      },
+      {
+        "spec": "Comfort Pack",
+        "matchedText": "Comfort Pack",
+        "weight": 2
+      },
+      {
+        "spec": "M Sport Pro Pack",
+        "matchedText": "M Sport Pro Pack",
+        "weight": 2
+      }
+    ],
+    "unmatchedSpecs": [
+      "21\" 741 M Y-spoke Bi-colour Alloy Wheels",
+      "Indv. high-gloss shadowline- extended",
+      "Front Comfort Seats",
+      "M Sport Exhaust System",
+      "BMW Individual Lights Shadow Line",
+      "Heated and Cooled Cupholder",
+      "Iconic Glow Kidney Grille",
+      "M Sport Seat Belts",
+      "Ext. mirrors- folding with anti-dazzle",
+      "High-gloss Shadowline Exterior Trim",
+      "High-gloss Shadowline Roof Rails",
+      "M Sport Exterior Styling",
+      "Ambient Lighting",
+      "Anthracite Headlining",
+      "Fineline Black wood. high gloss w/ Metal",
+      "Luggage Net",
+      "BMW TeleServices",
+      "Comfort Access",
+      "Connected Package Pro (limited duration)",
+      "Control K",
+      "DAB Radio",
+      "EU6 RDE II exhaust emissions standard",
+      "Live Cockpit Plus",
+      "Mild Hybrid Technology",
+      "Personal eSIM",
+      "Sport Automatic Transmission with Gearsh",
+      "Storage for wireless charging",
+      "M Sport Package",
+      "Active Guard",
+      "Active Pedestrian Safety",
+      "Active Protection",
+      "Adaptive LED Headlights",
+      "Alarm System",
+      "BMW Emergency Call",
+      "BMW Online Services",
+      "Driving Assistant",
+      "HiFi Loudspeaker Audio System",
+      "High-Beam Assistant",
+      "Parking Assistant",
+      "Run-flat Tyres",
+      "M Adaptive Suspension",
+      "Front Comfort Seats",
+      "M Sport Exhaust System",
+      "Ambient Lighting",
+      "Anthracite Headlining",
+      "Fineline Black wood. high gloss w/ Metal",
+      "Luggage Net",
+      "21\" 741 M Y-spoke Bi-colour Alloy Wheels",
+      "Indv. high-gloss shadowline- extended",
+      "Ext. mirrors- folding with anti-dazzle",
+      "High-gloss Shadowline Exterior Trim",
+      "High-gloss Shadowline Roof Rails",
+      "M Sport Exterior Styling"
+    ],
+    "timestamp": "2026-04-24T11:12:45.264Z"
   }
 ]
