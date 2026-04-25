@@ -175,7 +175,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-25T10:53:19.247Z"
+    "timestamp": "2026-04-25T10:53:19.247Z",
+    "missingCount": 1
   },
   {
     "id": "202604171643934",
@@ -313,7 +314,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-25T10:53:39.048Z"
+    "timestamp": "2026-04-25T10:53:39.048Z",
+    "missingCount": 1
   },
   {
     "id": "202604211748340",
@@ -454,7 +456,8 @@
       "Towbar",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-25T10:54:55.870Z"
+    "timestamp": "2026-04-25T10:54:55.870Z",
+    "missingCount": 1
   },
   {
     "id": "202604211748331",
@@ -576,7 +579,8 @@
       "21\" 1011 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-25T10:54:38.616Z"
+    "timestamp": "2026-04-25T10:54:38.616Z",
+    "missingCount": 1
   },
   {
     "id": "202603170759874",
@@ -701,7 +705,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-04-25T10:52:51.237Z"
+    "timestamp": "2026-04-25T10:52:51.237Z",
+    "missingCount": 1
   },
   {
     "id": "202604201715379",
@@ -827,7 +832,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-04-25T10:54:09.949Z"
+    "timestamp": "2026-04-25T10:54:09.949Z",
+    "missingCount": 1
   },
   {
     "id": "202604211742742",
@@ -965,7 +971,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-04-25T10:54:24.084Z"
+    "timestamp": "2026-04-25T10:54:24.084Z",
+    "missingCount": 1
   },
   {
     "id": "202604231811470",
@@ -1099,7 +1106,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-04-25T10:55:25.156Z"
+    "timestamp": "2026-04-25T10:55:25.156Z",
+    "missingCount": 1
   },
   {
     "id": "202604251867623",
@@ -1275,7 +1283,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-25T10:55:39.133Z"
+    "timestamp": "2026-04-25T10:55:39.133Z",
+    "missingCount": 1
   },
   {
     "id": "202604201714188",
@@ -1410,7 +1419,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-25T10:53:54.670Z"
+    "timestamp": "2026-04-25T10:53:54.670Z",
+    "missingCount": 1
   },
   {
     "id": "202601269423157",
@@ -1538,7 +1548,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-25T10:52:16.394Z"
+    "timestamp": "2026-04-25T10:52:16.394Z",
+    "missingCount": 1
   },
   {
     "id": "202506013035342",
@@ -1637,7 +1648,8 @@
       "19\" 903 Double-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-04-25T10:51:49.286Z"
+    "timestamp": "2026-04-25T10:51:49.286Z",
+    "missingCount": 1
   },
   {
     "id": "202604221766077",
@@ -1746,6 +1758,7 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-04-25T10:55:10.205Z"
+    "timestamp": "2026-04-25T10:55:10.205Z",
+    "missingCount": 1
   }
 ]
