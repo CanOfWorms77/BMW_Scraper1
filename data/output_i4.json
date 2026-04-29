@@ -210,7 +210,8 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-04-29T11:44:28.643Z"
+    "timestamp": "2026-04-29T11:44:28.643Z",
+    "missingCount": 1
   },
   {
     "id": "202604291971196",
@@ -381,6 +382,7 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-04-29T11:44:42.456Z"
+    "timestamp": "2026-04-29T11:44:42.456Z",
+    "missingCount": 1
   }
 ]
