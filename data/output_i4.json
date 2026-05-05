@@ -206,7 +206,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-05-05T10:08:38.547Z"
+    "timestamp": "2026-05-05T10:08:38.547Z",
+    "missingCount": 1
   },
   {
     "id": "202604271900752",
@@ -386,6 +387,7 @@
       "Indv. high-gloss shadowline- extended",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-05-05T10:08:22.698Z"
+    "timestamp": "2026-05-05T10:08:22.698Z",
+    "missingCount": 1
   }
 ]
