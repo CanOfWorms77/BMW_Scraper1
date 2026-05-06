@@ -159,7 +159,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-06T15:59:15.449Z"
+    "timestamp": "2026-05-06T15:59:15.449Z",
+    "missingCount": 1
   },
   {
     "id": "202604131499177",
@@ -300,6 +301,7 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-05-06T15:58:59.138Z"
+    "timestamp": "2026-05-06T15:58:59.138Z",
+    "missingCount": 1
   }
 ]
