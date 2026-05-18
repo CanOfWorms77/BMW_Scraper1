@@ -143,7 +143,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-05-18T09:40:44.283Z"
+    "timestamp": "2026-05-18T09:40:44.283Z",
+    "missingCount": 1
   },
   {
     "id": "202605112290569",
@@ -279,7 +280,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-05-18T09:40:26.916Z"
+    "timestamp": "2026-05-18T09:40:26.916Z",
+    "missingCount": 1
   },
   {
     "id": "202605132371977",
@@ -417,7 +419,8 @@
       "Towbar",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-05-18T09:41:14.408Z"
+    "timestamp": "2026-05-18T09:41:14.408Z",
+    "missingCount": 1
   },
   {
     "id": "202605142387634",
@@ -549,7 +552,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-05-18T09:41:29.297Z"
+    "timestamp": "2026-05-18T09:41:29.297Z",
+    "missingCount": 1
   },
   {
     "id": "202605142393024",
@@ -685,7 +689,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-05-18T09:41:45.347Z"
+    "timestamp": "2026-05-18T09:41:45.347Z",
+    "missingCount": 1
   },
   {
     "id": "202605142398598",
@@ -827,7 +832,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-05-18T09:41:59.200Z"
+    "timestamp": "2026-05-18T09:41:59.200Z",
+    "missingCount": 1
   },
   {
     "id": "202605072189381",
@@ -957,7 +963,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-05-18T09:39:52.213Z"
+    "timestamp": "2026-05-18T09:39:52.213Z",
+    "missingCount": 1
   },
   {
     "id": "202605072194406",
@@ -1091,7 +1098,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-05-18T09:40:07.745Z"
+    "timestamp": "2026-05-18T09:40:07.745Z",
+    "missingCount": 1
   },
   {
     "id": "202605182478049",
@@ -1251,7 +1259,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-18T09:42:13.849Z"
+    "timestamp": "2026-05-18T09:42:13.849Z",
+    "missingCount": 1
   },
   {
     "id": "202605132366942",
@@ -1351,6 +1360,7 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-05-18T09:40:59.393Z"
+    "timestamp": "2026-05-18T09:40:59.393Z",
+    "missingCount": 1
   }
 ]
