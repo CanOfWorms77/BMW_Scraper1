@@ -208,7 +208,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-26T23:15:41.130Z"
+    "timestamp": "2026-05-26T23:15:41.130Z",
+    "missingCount": 1
   },
   {
     "id": "202605262711410",
@@ -406,7 +407,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-26T23:16:13.433Z"
+    "timestamp": "2026-05-26T23:16:13.433Z",
+    "missingCount": 1
   },
   {
     "id": "202605262701220",
@@ -602,7 +604,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-26T23:15:12.937Z"
+    "timestamp": "2026-05-26T23:15:12.937Z",
+    "missingCount": 1
   },
   {
     "id": "202605262701245",
@@ -799,7 +802,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-26T23:15:27.396Z"
+    "timestamp": "2026-05-26T23:15:27.396Z",
+    "missingCount": 1
   },
   {
     "id": "202605232638650",
@@ -978,7 +982,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-26T23:14:58.241Z"
+    "timestamp": "2026-05-26T23:14:58.241Z",
+    "missingCount": 1
   },
   {
     "id": "202605262711269",
@@ -1150,6 +1155,7 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-05-26T23:15:58.385Z"
+    "timestamp": "2026-05-26T23:15:58.385Z",
+    "missingCount": 1
   }
 ]
