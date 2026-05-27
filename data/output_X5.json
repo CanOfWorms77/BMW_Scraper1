@@ -254,7 +254,8 @@
       "High-gloss Shadowline Roof Rails",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-05-27T18:23:42.768Z"
+    "timestamp": "2026-05-27T18:23:42.768Z",
+    "missingCount": 1
   },
   {
     "id": "202605112284559",
@@ -420,7 +421,8 @@
       "High-gloss Shadowline Roof Rails",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-05-27T18:23:23.525Z"
+    "timestamp": "2026-05-27T18:23:23.525Z",
+    "missingCount": 1
   },
   {
     "id": "202605272748801",
@@ -596,6 +598,7 @@
       "High-gloss Shadowline Roof Rails",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-05-27T18:23:55.915Z"
+    "timestamp": "2026-05-27T18:23:55.915Z",
+    "missingCount": 1
   }
 ]
