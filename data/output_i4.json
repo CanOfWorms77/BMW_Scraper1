@@ -196,7 +196,8 @@
       "M Sport Exterior Styling",
       "M Sport Spoiler"
     ],
-    "timestamp": "2026-06-10T11:44:12.836Z"
+    "timestamp": "2026-06-10T11:44:12.836Z",
+    "missingCount": 1
   },
   {
     "id": "202606103163855",
@@ -340,7 +341,8 @@
       "22\" 1020 Style Bi-colour Aero Alloy Whee",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-06-10T11:44:26.865Z"
+    "timestamp": "2026-06-10T11:44:26.865Z",
+    "missingCount": 1
   },
   {
     "id": "202606083109730",
@@ -480,7 +482,8 @@
       "Climate Comfort Windscreen",
       "Shadow Line Exterior Trim"
     ],
-    "timestamp": "2026-06-10T11:43:28.440Z"
+    "timestamp": "2026-06-10T11:43:28.440Z",
+    "missingCount": 1
   },
   {
     "id": "202606093123859",
@@ -580,7 +583,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-06-10T11:43:58.343Z"
+    "timestamp": "2026-06-10T11:43:58.343Z",
+    "missingCount": 1
   },
   {
     "id": "202606083109748",
@@ -716,6 +720,7 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-06-10T11:43:43.803Z"
+    "timestamp": "2026-06-10T11:43:43.803Z",
+    "missingCount": 1
   }
 ]
