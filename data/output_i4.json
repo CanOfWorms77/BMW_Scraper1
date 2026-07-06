@@ -1,183 +1,5 @@
 [
   {
-    "id": "202606183400625",
-    "title": "BMW i4 M50 5dr",
-    "url": "https://usedcars.bmw.co.uk/vehicle/202606183400625",
-    "engineFuel": "Electric",
-    "enginePower": "537",
-    "engineSize": null,
-    "mileage": 26602,
-    "registration": "BK73TGY",
-    "manufacturedYear": 2023,
-    "batteryRange": 316,
-    "co2": null,
-    "fuelType": "E",
-    "features": [
-      "20\" M light alloy wheels Double-spoke st",
-      "Control E",
-      "Control K",
-      "Decoding additional functions",
-      "Drive Recorder",
-      "Driver Seat Backrest Width Adjustment",
-      "Driving Assistant Professional",
-      "M Technology Pack",
-      "Technology Plus Pack",
-      "Parking Assistant Plus",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Sun Protection Glass",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "Active Guard Plus",
-      "BMW IconicSounds Electric",
-      "BMW Individual Lights Shadow Line",
-      "BMW TeleServices",
-      "Charging cable Professional (Mode 3)",
-      "Connected Package Pro (limited duration)",
-      "DAB Radio",
-      "Live Cockpit Pro with Head up Display",
-      "M Sport Brakes with Red Calipers",
-      "M Sport Seat Belts",
-      "OAAS Prep High-beam Assist",
-      "Storage for wireless charging",
-      "Tyre Repair Kit",
-      "XtraBoost",
-      "M Sport Pro Pack",
-      "Active Pedestrian Safety",
-      "Alarm System",
-      "BMW Emergency Call",
-      "BMW Online Services",
-      "eDrive Exterior Sound",
-      "Harman/Kardon Surround Sound Audio",
-      "M Adaptive Suspension",
-      "Variable Sport Steering",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Sun Protection Glass"
-    ],
-    "score": 21,
-    "scorePercent": 50,
-    "maxScore": 42,
-    "matchedSpecs": [
-      {
-        "spec": "Driving Assistant Professional",
-        "matchedText": "Driving Assistant Professional",
-        "weight": 3
-      },
-      {
-        "spec": "Technology Plus Pack",
-        "matchedText": "Technology Plus Pack",
-        "weight": 4
-      },
-      {
-        "spec": "Sun Protection Glass",
-        "matchedText": "Sun Protection Glass",
-        "weight": 2
-      },
-      {
-        "spec": "M Sport Brakes with Red Calipers",
-        "matchedText": "M Sport Brakes with Red Calipers",
-        "weight": 3
-      },
-      {
-        "spec": "M Sport Pro Pack",
-        "matchedText": "M Sport Pro Pack",
-        "weight": 2
-      },
-      {
-        "spec": "Harman/Kardon",
-        "matchedText": "Harman/Kardon Surround Sound Audio",
-        "weight": 4
-      },
-      {
-        "spec": "M Adaptive Suspension",
-        "matchedText": "M Adaptive Suspension",
-        "weight": 3
-      }
-    ],
-    "unmatchedSpecs": [
-      "20\" M light alloy wheels Double-spoke st",
-      "Control E",
-      "Control K",
-      "Decoding additional functions",
-      "Drive Recorder",
-      "Driver Seat Backrest Width Adjustment",
-      "M Technology Pack",
-      "Parking Assistant Plus",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "Active Guard Plus",
-      "BMW IconicSounds Electric",
-      "BMW Individual Lights Shadow Line",
-      "BMW TeleServices",
-      "Charging cable Professional (Mode 3)",
-      "Connected Package Pro (limited duration)",
-      "DAB Radio",
-      "Live Cockpit Pro with Head up Display",
-      "M Sport Seat Belts",
-      "OAAS Prep High-beam Assist",
-      "Storage for wireless charging",
-      "Tyre Repair Kit",
-      "XtraBoost",
-      "Active Pedestrian Safety",
-      "Alarm System",
-      "BMW Emergency Call",
-      "BMW Online Services",
-      "eDrive Exterior Sound",
-      "Variable Sport Steering",
-      "Aluminium Rhombicle Interior Trim",
-      "Ambient Lighting",
-      "Anthracite Headlining",
-      "Automatic Air Conditioning",
-      "Electric Memory Seats",
-      "Extended storage",
-      "Heated front seats",
-      "Rear-view Mirror with Auto dimming",
-      "Sensatec Dashboard",
-      "Ext. mirrors- folding with anti-dazzle",
-      "High-gloss Shadowline Exterior Trim",
-      "Indv. high-gloss shadowline- extended",
-      "M Sport Exterior Styling",
-      "M Sport Spoiler"
-    ],
-    "timestamp": "2026-07-06T16:49:06.707Z",
-    "missingCount": 1
-  },
-  {
     "id": "202607033857181",
     "title": "BMW iX xDrive50 M Sport 5dr",
     "url": "https://usedcars.bmw.co.uk/vehicle/202607033857181",
@@ -325,7 +147,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-07-06T18:09:51.743Z"
+    "timestamp": "2026-07-06T18:09:51.743Z",
+    "missingCount": 1
   },
   {
     "id": "202607023821729",
@@ -455,7 +278,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-07-06T18:09:08.572Z"
+    "timestamp": "2026-07-06T18:09:08.572Z",
+    "missingCount": 1
   },
   {
     "id": "202607023821130",
@@ -583,7 +407,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-07-06T18:08:52.080Z"
+    "timestamp": "2026-07-06T18:08:52.080Z",
+    "missingCount": 1
   },
   {
     "id": "202607033868567",
@@ -710,7 +535,8 @@
       "Soft-close Doors",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-07-06T18:10:24.741Z"
+    "timestamp": "2026-07-06T18:10:24.741Z",
+    "missingCount": 1
   },
   {
     "id": "202607063937591",
@@ -839,7 +665,8 @@
       "Climate Comfort Windscreen",
       "Shadow Line Exterior Trim"
     ],
-    "timestamp": "2026-07-06T18:10:38.063Z"
+    "timestamp": "2026-07-06T18:10:38.063Z",
+    "missingCount": 1
   },
   {
     "id": "202607063942551",
@@ -965,7 +792,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-07-06T18:10:51.487Z"
+    "timestamp": "2026-07-06T18:10:51.487Z",
+    "missingCount": 1
   },
   {
     "id": "202607023833070",
@@ -1155,7 +983,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-07-06T18:09:38.615Z"
+    "timestamp": "2026-07-06T18:09:38.615Z",
+    "missingCount": 1
   },
   {
     "id": "202607033862368",
@@ -1255,7 +1084,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-07-06T18:10:05.820Z"
+    "timestamp": "2026-07-06T18:10:05.820Z",
+    "missingCount": 1
   },
   {
     "id": "202607063942559",
@@ -1355,7 +1185,8 @@
       "21\" Aerodynamic Wheels 1012 Bicolour 3D",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-07-06T18:11:05.233Z"
+    "timestamp": "2026-07-06T18:11:05.233Z",
+    "missingCount": 1
   },
   {
     "id": "202607023822032",
@@ -1456,6 +1287,7 @@
       "19\" 903 Double-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-07-06T18:09:23.664Z"
+    "timestamp": "2026-07-06T18:09:23.664Z",
+    "missingCount": 1
   }
 ]
