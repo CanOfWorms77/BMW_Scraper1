@@ -165,7 +165,8 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-08-08T06:34:36.240Z"
+    "timestamp": "2026-08-08T06:34:36.240Z",
+    "missingCount": 1
   },
   {
     "id": "202602079759404",
@@ -317,7 +318,8 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-08-08T06:34:20.783Z"
+    "timestamp": "2026-08-08T06:34:20.783Z",
+    "missingCount": 1
   },
   {
     "id": "202603060469414",
@@ -458,7 +460,8 @@
       "M Sport Spoiler",
       "Tyre Repair Kit Plus"
     ],
-    "timestamp": "2026-08-08T06:34:51.814Z"
+    "timestamp": "2026-08-08T06:34:51.814Z",
+    "missingCount": 1
   },
   {
     "id": "202602059709515",
@@ -577,6 +580,7 @@
       "High-gloss Shadowline Exterior Trim",
       "M Sport Exterior Styling"
     ],
-    "timestamp": "2026-08-08T06:34:06.221Z"
+    "timestamp": "2026-08-08T06:34:06.221Z",
+    "missingCount": 1
   }
 ]
