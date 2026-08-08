@@ -125,7 +125,8 @@
       "Soft-close Doors",
       "Towbar"
     ],
-    "timestamp": "2026-08-08T14:25:49.297Z"
+    "timestamp": "2026-08-08T14:25:49.297Z",
+    "missingCount": 1
   },
   {
     "id": "202608054836525",
@@ -272,7 +273,8 @@
       "Climate Comfort Windows",
       "High-gloss Shadowline Exterior Trim"
     ],
-    "timestamp": "2026-08-08T14:25:21.384Z"
+    "timestamp": "2026-08-08T14:25:21.384Z",
+    "missingCount": 1
   },
   {
     "id": "202608074899148",
@@ -378,7 +380,8 @@
       "22\" Individual 1021 Style Aero Alloy Whe",
       "Climate Comfort Windscreen"
     ],
-    "timestamp": "2026-08-08T14:26:03.752Z"
+    "timestamp": "2026-08-08T14:26:03.752Z",
+    "missingCount": 1
   },
   {
     "id": "202608064850282",
@@ -477,6 +480,7 @@
       "19\" 903 Double-spoke Alloy Wheels",
       "Climate Comfort Windows"
     ],
-    "timestamp": "2026-08-08T14:25:36.084Z"
+    "timestamp": "2026-08-08T14:25:36.084Z",
+    "missingCount": 1
   }
 ]
